@@ -1,0 +1,13 @@
+{
+  "name": "edChain-gui",
+  "version": "0.0.1",
+  "description": "Desktop client for edChain",
+  "repository": "electron/simple-samples",
+  "main": "app.js",
+  "scripts": {
+    "start": "electron app.js"
+  },
+  "devDependencies": {
+    "electron": "^1.7.6"
+  }
+}
