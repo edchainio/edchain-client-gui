@@ -1,5 +1,5 @@
 # Desktop client for edChain
-The gui client will work for Windows/macOS/Linux, hover the nodes only work with macOS/Linux
+The gui client will work for Windows/macOS/Linux, hover the nodes only work with macOS/Linux.
 
 ## Dev set up
 NodeJS version 6x orhigher in required.
