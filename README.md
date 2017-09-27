@@ -8,7 +8,9 @@ NodeJS version 6x orhigher in required.
 `git clone https://github.com/edchainio/client-gui.git`
 
 * Install the nodeJS requirements
-`npm install`
+`npm install electron --save-dev --save-exact`ls
+
+
 
 * Start the app
 `npm start`
