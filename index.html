@@ -1,43 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
+	<head>
+		<meta charset="utf-8">
 
-    <title>edChain</title>
+		<title>edChain</title>
 
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="./vendor/bootstrap-3.3.7.css">
-    <link rel="stylesheet" href="./styles.css">
+		<!-- Stylesheets -->
+		<link rel="stylesheet" href="./vendor/bootstrap-3.3.7.css">
+		<link rel="stylesheet" href="./styles.css">
 
-    <!-- Scripts -->
-    <script>delete module.exports</script>
-    <script src="./vendor/jquery-3.1.1.js"></script>
-    <script src="./vendor/bootstrap-3.3.7.js"></script>
-    <script src="./vendor/Chart-2.4.0.js"></script>
-    <script src="./window.js"></script>
+		<!-- Scripts -->
+		<script>delete module.exports</script>
+		<script src="./vendor/jquery-3.1.1.js"></script>
+		<script src="./vendor/mustache.min.js"></script>
+		<script src="./vendor/bootstrap-3.3.7.js"></script>
+		<script src="./vendor/jsoneditor.min.js"></script>
+		<script src="./window.js"></script>
 
-  </head>
-  <body>
+	</head>
+	<body>
+		<div class="col-sm-12">
+			<ul class="nav nav-tabs">
+				<li class="nav active"><a href="#info" data-toggle="tab">Info</a></li>
+				<li class="nav"><a href="#JSON" data-toggle="tab">Add JSON</a></li>
+				<li class="nav"><a href="#C" data-toggle="tab">C</a></li>
+			</ul>
 
-    <div class="container-fluid">
-      <div class="col-sm-2">
-        <div id="nodeStatus" class="alert">
-        </div>
-      </div>
-      <div class="col-sm-8">
-        <div id="IDs" class="well">
-          <div>
-            <b>Peer ID:</b> <span id="peerID"></span>
-          </div>
-          <div>
-            <b>Publisher ID:</b> <span id="publisherID"></span>
-          </div>
-          <div>
-            <b>Info:</b> <span id="info"></span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </body>
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div class="tab-pane fade in active" id="info">
+					<div class="col-sm-2">
+						<div id="nodeStatus" class="alert">
+						</div>
+					</div>
+					<div class="col-sm-8">
+						<div id="IDs" class="well">
+							<div>
+								<b>Peer ID:</b> <span id="peerID"></span>
+							</div>
+							<div>
+								<b>Publisher ID:</b> <span id="publisherID"></span>
+							</div>
+							<div>
+								<b>Info:</b> <span id="info"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane fade" id="JSON">
+					<button id="open">
+						Content inside tab B
+					</button>
+				</div>
+				<div class="tab-pane fade" id="C">
+					Content inside tab C
+				</div>
+			</div>
+		</div>
+	</div>
 </html>

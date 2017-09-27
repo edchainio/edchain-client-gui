@@ -56,7 +56,12 @@ var getID = function($element){
 	setTimeout(getID, 1001, $element);
 };
 
+const {dialog} = require('electron').remote;
 $(document).ready(function() {
 	setStatus($('#nodeStatus'));
 	getID($('#IDs'));
+
+	$('#open').click(function(){
+		console.log(dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']}))
+	});
 });
