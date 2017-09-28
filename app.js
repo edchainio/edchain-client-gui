@@ -2,6 +2,8 @@ var electron = require('electron'); // http://electron.atom.io/docs/api
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 
+var mcnode = require('./process_mcnode');
+
 var window = null;
 
 const {BrowserWindow, Tray} = electron
