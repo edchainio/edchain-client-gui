@@ -1,10 +1,18 @@
+// const pubsub = require('electron').remote.require('electron-pubsub');
+const {dialog, pubsub} = require('electron').remote;
+
 var node = {
 	up: false,
 	status: 'timed out',
 	peerID: null,
 	publisherID: null,
 	info: '',
-}
+};
+
+var running = {
+	mcnode: require('./process_mcnode')(),
+	ipfs: require('./process_ipfs')()
+};
 
 var setStatus = function($element){
 	setInterval(function($element){
@@ -12,7 +20,6 @@ var setStatus = function($element){
 			url: 'http://127.0.0.1:9002/status',
 			method: 'GET',
 			complete: function(res, status){
-				console.log(arguments);
 				data = (res.responseText || status).trim();
 				$element.removeClass('alert-success alert-info alert-danger');
 
@@ -56,7 +63,6 @@ var getID = function($element){
 	setTimeout(getID, 1001, $element);
 };
 
-const {dialog} = require('electron').remote;
 $(document).ready(function() {
 	setStatus($('#nodeStatus'));
 	getID($('#IDs'));

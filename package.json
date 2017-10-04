@@ -13,5 +13,8 @@
     "electron": "^1.7.6",
     "electron-installer-dmg": "^0.2.1",
     "electron-packager": "^9.1.0"
+  },
+  "dependencies": {
+    "electron-pubsub": "^0.2.2"
   }
 }
