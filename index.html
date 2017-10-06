@@ -5,10 +5,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
+
         <link rel="icon" href="../../../../favicon.ico">
+
         <title>edChain</title>
-        <link href="vendor/css/bootstrap.min.css" rel="stylesheet">
-        <link href="vendor/css/album.css" rel="stylesheet">
+
+        <link href="./vendor/css/bootstrap.css" rel="stylesheet">
+        <link href="./vendor/css/album.css" rel="stylesheet">
+
+        <script>delete module.exports</script>
+        <script src="./vendor/js/jquery-3.1.1.js"></script>
+        <script src="./vendor/js/mustache.min.js"></script>
+        <script src="./vendor/js/jsoneditor.min.js"></script>
+        <script src="./window.js"></script>
+        <script src="./vendor/js/bootstrap.js"></script>
+        <script src="./vendor/js/popper.min.js"></script>
+        <script src="./vendor/js/holder.min.js"></script>
+        <script>
+            $(function () {
+                Holder.addTheme("thumb", { background: "#55595c", foreground: "#eceeef", text: "Thumbnail" });
+            });
+        </script>
+        <script>
+            var shell = require('electron').shell;
+                $(document).on('click', 'a[href^="http"]', function(event) {
+                    event.preventDefault();
+                    shell.openExternal(this.href);
+                });
+        </script>
     </head>
     <body>
         <div class="collapse bg-dark" id="navbarHeader">
@@ -98,30 +122,5 @@
             <p>&copy; 2017 edChain</p>
         </div>
     </footer>
-    <script>delete module.exports</script>
-    <script src="./vendor/jquery-3.1.1.js"></script>
-    <script src="./vendor/mustache.min.js"></script>
-    <script src="./vendor/bootstrap-3.3.7.js"></script>
-    <script src="./vendor/jsoneditor.min.js"></script>
-    <script src="./window.js"></script>
-<!--     // <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    // <script>window.jQuery || document.write('<script src="jquery-slim.min.js"><\/script>')</script>
-    // <script src="vendor/js/popper.min.js"></script>
-    // <script src="vendor/js/holder.min.js"></script>
-    // <script>
-    //     $(function () {
-    //         Holder.addTheme("thumb", { background: "#55595c", foreground: "#eceeef", text: "Thumbnail" });
-    //     });
-    // </script>
-    // <script src="vendor/js/bootstrap.min.js"></script>
-    // <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    // <script src="vendor/js/ie10-viewport-bug-workaround.js"></script>
-    // <script>
-    //     var shell = require('electron').shell;
-    //     $(document).on('click', 'a[href^="http"]', function(event) {
-    //         event.preventDefault();
-    //         shell.openExternal(this.href);
-    //     });
-    // </script>
-  </body> -->
+  </body>
 </html>
