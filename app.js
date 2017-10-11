@@ -3,6 +3,7 @@ var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 
 var mcnode = require('./process_mcnode');
+// var mcnode = require('./process_ipfs');
 
 var window = null;
 

@@ -4,7 +4,7 @@ const pubsub = require('electron-pubsub');
 
 var startIpfs = function(){
 	let ipfs = spawn('bin/'+platform+'/ipfs daemon');
-	
+
 	ipfs.stdout.on('data', function(data){
 		console.log('ipfs out:', data.toString());
 	});

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+ipfs daemon
+./mcnode -d /ip4/104.236.125.197/tcp/9000/p2p/QmRXjzUbsTHYa9t4z47B7tR7zsfAKq3iCkvAdN3NKigWPn
+curl -X POST http://127.0.0.1:9002/status/online
+npm start

@@ -15,6 +15,7 @@
     "electron-packager": "^9.1.0"
   },
   "dependencies": {
-    "electron-pubsub": "^0.2.2"
+    "electron-pubsub": "^0.2.2",
+    "mustache": "^2.3.0"
   }
 }
