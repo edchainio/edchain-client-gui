@@ -8,6 +8,8 @@ var mcnode = require('./process_mcnode');
 
 const { app, BrowserWindow, Menu, ipcMain, Tray } = electron;
 
+const elasticsearch = require('elasticsearch');
+
 let mainWindow;
 let addWindow;
 
@@ -37,9 +39,9 @@ app.on('ready', () => {
 
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
-    mainWindow.once('ready-to-show', () => {
-        mainWindow.show();
-    });
+//    mainWindow.once('ready-to-show', () => {
+//        mainWindow.show();
+//    });
 
     mainWindow.on('closed', () => app.quit());
 
