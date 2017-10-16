@@ -1,29 +1,34 @@
 # Desktop client for edChain
-The gui client will work for Windows/macOS/Linux, hover the nodes only work with macOS/Linux.
 
-## Dev set up
-NodeJS version 6x orhigher in required.
+This is a client that will work for macOS, Linux, and Windows, but the
+nodes only work with macOS and Linux.
 
-* Clone the repo:
+Note: Version 6x, or higher, of NodeJS is required.
+
+## Getting Started
+
+Enter the following commands to get edChain up-and-running:
+
+Note: You have have to preface some of these commands with `sudo` to meet privilege requirements defined by your operating system.
+
+* Clone this repository:
 `git clone https://github.com/edchainio/client-gui.git`
 
-* Install the nodeJS requirements
+* Move into the directory of the project:
+`cd client-gui`
+
+* Install the NodeJS requirements:
 `npm install`
 
-* Start the app
-`npm start`
+* DESCRIPTION
+`./mcnode -d /ip4/104.236.125.197/tcp/9000/p2p/QmRXjzUbsTHYa9t4z47B7tR7zsfAKq3iCkvAdN3NKigWPn`
 
----
-
-### Notes from NOTES
-
-Something like 
+* DESCRIPTION
 `curl -X POST http://127.0.0.1:9002/status/online`
-`mcclient query -r QmbMuPE8RDcS6LvimoZWCQVuXV15sWGUzFq51cFhAAP7ij "SELECT body FROM * LIMIT 9"` and
-`curl "http://127.0.0.1:8080/ipfs/QmZ5pCbMkVMSBuQcyDZqnJckVHAPcWrcHJWRWDY5W1nVvB/contents/index.htm"`
-has to be run for courses to appear on a ~course listings pane
 
+* DESCRIPTION
+* DESCRIPTION
+`ipfs daemon`
 
-
-http://127.0.0.1:8080/ipfs/QmRidUakB93XLGpzMMxFeFk8J1zabUdhkACEjtr46FfAyq/
---> throws a weird error
+* Start the application:
+`npm start`
