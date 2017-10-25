@@ -3,7 +3,7 @@ var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 
 var mcnode = require('./process_mcnode');
-// var mcnode = require('./process_ipfs');
+var ipfs = require('./process_ipfs');
 
 
 const { app, BrowserWindow, Menu, ipcMain, Tray } = electron;
@@ -16,10 +16,10 @@ app.on('ready', () => {
         width: 960,
         height: 540,
         //frame: false,
-        icon: __dirname + '/static/img/fav.png'
+        icon: __dirname + '/static/img/icon.png'
     });
 
-    const tray = new Tray(__dirname + '/static/img/fav.png');
+    const tray = new Tray(__dirname + '/static/img/icon.png');
 
     mainWindow.tray = tray;
 
@@ -62,4 +62,3 @@ function createAddWindow() {
 //    mainWindow.webContents.send('course:audit', course);
 //    addWindow.close();
 //});
-
