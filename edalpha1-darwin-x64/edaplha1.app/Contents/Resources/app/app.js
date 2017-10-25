@@ -24,10 +24,10 @@ electron.app.once('ready', function () {
     // backgroundColor: "#111",
     // Don't show the window until it ready, this prevents any white flickering
     // show: false
-    icon: __dirname + '/static/img/fav.png'
+    icon: __dirname + '/static/img/icon.png'
   });
 
-  const tray = new Tray(__dirname + '/static/img/fav.png')
+  const tray = new Tray(__dirname + '/static/img/icon.png')
 
   window.tray = tray;
 

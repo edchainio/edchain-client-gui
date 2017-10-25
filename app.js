@@ -16,10 +16,10 @@ app.on('ready', () => {
         width: 960,
         height: 540,
         //frame: false,
-        icon: __dirname + '/static/img/fav.png'
+        icon: __dirname + '/static/img/icon.png'
     });
 
-    const tray = new Tray(__dirname + '/static/img/fav.png');
+    const tray = new Tray(__dirname + '/static/img/icon.png');
 
     mainWindow.tray = tray;
 
