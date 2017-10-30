@@ -58,5 +58,5 @@ typings/
 .env
 
 # dist
-dist/*
-ip4/*
+dist/
+ip4/
