@@ -7,7 +7,9 @@
   "license": "GPL-3.0",
   "main": "app.js",
   "scripts": {
-    "start": "electron app.js"
+    "start": "electron app.js",
+    "build": "electron-packager . app --platform linux --arch x64 --out dist/ --overwrite",
+    "rpm64": "electron-installer-redhat --src dist/app-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite"
   },
   "devDependencies": {
     "electron": "^1.7.6",
