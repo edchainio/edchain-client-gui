@@ -3,8 +3,53 @@ var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 
 var mcnode = require('./process_mcnode');
-// var mcnode = require('./process_ipfs');
+var ipfs = require('./process_ipfs');
 
+
+
+
+const { exec } = require('child_process');
+
+const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon')
+const mcnodePath = path.resolve(__dirname,'./','bin','linux','mcnode -d $PWD/ip4/104.236.125.197/tcp/9000/p2p/QmRXjzUbsTHYa9t4z47B7tR7zsfAKq3iCkvAdN3NKigWPn')
+
+
+const spawnIPFS = exec(ipfsPath, (err,stdout,stderr) => {
+  
+    if(err) {
+        console.error(err);
+        return;
+    }
+
+    console.log(stdout);
+
+});
+
+const spawnMcnode = exec(mcnodePath, (err,stdout,stderr) => {
+  
+    if(err) {
+        console.error(err);
+        return;
+    }
+
+    console.log(stdout);
+
+});
+
+/*spawnIPFS.on('close',(code) => {
+
+    console.log('code {$code)');
+
+
+})*/
+
+process.on('exit', function(){
+
+    spawnMcnode.kill('SIGTERM');
+   
+    console.log('kill called');
+
+});
 
 const { app, BrowserWindow, Menu, ipcMain, Tray } = electron;
 
@@ -16,10 +61,10 @@ app.on('ready', () => {
         width: 960,
         height: 540,
         //frame: false,
-        icon: __dirname + '/static/img/fav.png'
+        icon: __dirname + '/static/img/icon.png'
     });
 
-    const tray = new Tray(__dirname + '/static/img/fav.png');
+    const tray = new Tray(__dirname + '/static/img/icon.png');
 
     mainWindow.tray = tray;
 
@@ -41,7 +86,12 @@ app.on('ready', () => {
         mainWindow.show();
     });
 
-    mainWindow.on('closed', () => app.quit());
+    mainWindow.on('closed', () => {
+  //      spawnIPFS.kill('SIGINT');
+         process.exit(1);
+
+
+    });
 
 //    const mainMenu = Menu.buildFromTemplate(menuTemplate);
 //    Menu.setApplicationMenu(mainMenu);
@@ -62,4 +112,3 @@ function createAddWindow() {
 //    mainWindow.webContents.send('course:audit', course);
 //    addWindow.close();
 //});
-
