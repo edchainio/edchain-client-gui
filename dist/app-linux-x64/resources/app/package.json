@@ -8,11 +8,13 @@
   "main": "app.js",
   "scripts": {
     "start": "electron app.js",
-    "build": "electron-packager . app --platform linux --arch x64 --out dist/",
-    "rpm64": "electron-installer-redhat --src dist/app-linux-x64/ --dest dist/installers/ --arch x86_64"
+    "build": "electron-packager . app --platform linux --arch x64 --out dist/ --overwrite --ignore=electron-packager",
+    "rpm64": "electron-installer-redhat --src dist/app-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite",
+    "deb64": "electron-installer-debian --src dist/app-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite"
   },
   "devDependencies": {
     "electron": "^1.7.6",
+    "electron-installer-debian": "^0.6.0",
     "electron-installer-dmg": "^0.2.1",
     "electron-packager": "^9.1.0"
   },
