@@ -57,8 +57,10 @@ var manager = function(){
 	};
 
 	this.start = function(){
-	
+	if(this.ipfs.killed){
 		this.ipfs = startIpfs();
+	}
+	
 	
 	};
 
