@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "electron-pubsub": "^0.2.2",
+    "ipfs-api": "^15.0.1",
     "mustache": "^2.3.0"
   }
 }

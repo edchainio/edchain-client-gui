@@ -66,6 +66,7 @@ var getID = function($element){
 $(document).ready(function() {
     setStatus($('#nodeStatus'));
     getID($('#IDs'));
+    
 
     $('#open').click(function(){
         console.log(dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']}))

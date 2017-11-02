@@ -36,20 +36,15 @@ const spawnMcnode = exec(mcnodePath, (err,stdout,stderr) => {
 
 });
 
-/*spawnIPFS.on('close',(code) => {
-
-    console.log('code {$code)');
-
-
-})*/
 
 process.on('exit', function(){
 
     spawnMcnode.kill('SIGTERM');
-   
+    spawnIPFS.kill('SIGTERM');   
     console.log('kill called');
 
 });
+
 
 const { app, BrowserWindow, Menu, ipcMain, Tray } = electron;
 

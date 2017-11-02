@@ -2,9 +2,8 @@ var electron = require('electron'); // http://electron.atom.io/docs/api
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 
-var mcnode = require('./process_mcnode');
-var ipfs = require('./process_ipfs');
-
+/*var mcnode = require('./process_mcnode')();*/
+var ipfs = require('./process_ipfs')();
 
 
 
@@ -13,7 +12,7 @@ const { exec } = require('child_process');
 const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon')
 const mcnodePath = path.resolve(__dirname,'./','bin','linux','mcnode -d $PWD/ip4/104.236.125.197/tcp/9000/p2p/QmRXjzUbsTHYa9t4z47B7tR7zsfAKq3iCkvAdN3NKigWPn')
 
-
+/*
 const spawnIPFS = exec(ipfsPath, (err,stdout,stderr) => {
   
     if(err) {
@@ -23,9 +22,9 @@ const spawnIPFS = exec(ipfsPath, (err,stdout,stderr) => {
 
     console.log(stdout);
 
-});
+});*/
 
-const spawnMcnode = exec(mcnodePath, (err,stdout,stderr) => {
+/*const spawnMcnode = exec(mcnodePath, (err,stdout,stderr) => {
   
     if(err) {
         console.error(err);
@@ -35,21 +34,17 @@ const spawnMcnode = exec(mcnodePath, (err,stdout,stderr) => {
     console.log(stdout);
 
 });
-
-/*spawnIPFS.on('close',(code) => {
-
-    console.log('code {$code)');
-
-
-})*/
+*/
 
 process.on('exit', function(){
 
-    spawnMcnode.kill('SIGTERM');
-   
-    console.log('kill called');
+   /* spawnMcnode.kill('SIGTERM');*/
+ //   spawnIPFS.kill('SIGTERM');   
+  //  console.log('kill called');
 
 });
+
+
 
 const { app, BrowserWindow, Menu, ipcMain, Tray } = electron;
 

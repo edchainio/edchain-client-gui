@@ -1,4 +1,14 @@
 // const pubsub = require('electron').remote.require('electron-pubsub');
+var path = require('path');         // https://nodejs.org/api/path.html
+var url = require('url');           // https://nodejs.org/api/url.html
+var ipfsAPI = require('ipfs-api');
+var log = require('electron-log');
+var ipfs = require('./process_ipfs')();
+
+
+
+
+const { exec } = require('child_process');
 const {dialog, pubsub} = require('electron').remote;
 
 var node = {
@@ -9,10 +19,7 @@ var node = {
     info: '',
 };
 
-var running = {
-    mcnode: require('./process_mcnode')(),
-    ipfs: require('./process_ipfs')()
-};
+
 
 var setStatus = function($element){
     setInterval(function($element){
@@ -44,9 +51,10 @@ var setStatus = function($element){
 };
 
 var getID = function($element){
+    console.log("here");
     if(node.up && !node.peerID){
         return $.ajax({
-            url: 'http://127.0.0.1:9002/id',
+            url: 'http://127.0.0.1:5001/id',
             method: 'GET',
             success: function(data) {
                 data = JSON.parse(data);
@@ -63,11 +71,37 @@ var getID = function($element){
     setTimeout(getID, 1001, $element);
 };
 
-$(document).ready(function() {
-    setStatus($('#nodeStatus'));
-    getID($('#IDs'));
 
-    $('#open').click(function(){
-        console.log(dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']}))
+$(document).ready(function() {
+   // setStatus($('#nodeStatus'));
+   // getId($('#IDs'));
+ //   getVersion($('#version'));
+
+    
+    $('#start').click(function(){
+       ipfs.start();
+     //  $('#status').text('start clicked');
+
+    });
+
+    $('#stop').click(function(){
+       ipfs.stop();
+    //   $('#status').text('stop clicked');
+
+    });
+    
+    $('#version').click(function(){
+
+        ipfs.checkStatus(function(ver){
+            $('#version').text("version:" + ver.version);
+
+        });
+        
+    });
+
+
+     $('#open').click(function(){
+        console.log(dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']}));
+
     });
 });

@@ -1,39 +1,72 @@
 const platform = require('os').platform();
-const spawn = require('child_process').spawn;
+const exec = require('child_process').exec;
 const pubsub = require('electron-pubsub');
+var path = require('path');  
+var ipfsAPI = require('ipfs-api');
+var log = require('electron-log');
+
 
 var startIpfs = function(){
-	let ipfs = spawn('bin/'+platform+'/ipfs daemon');
 
-	ipfs.stdout.on('data', function(data){
+	const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
+
+	return exec(ipfsPath, function (err,stdout,stderr){
+	log.info("ipfs start exec started");	
+	process.stdout.on('data', function(data){
 		console.log('ipfs out:', data.toString());
 	});
 
-	ipfs.stderr.on('data', function(data){
+	process.stderr.on('data', function(data){
 	 	console.error('ipfs error:', data.toString());
 	});
 
-	ipfs.on('exit', function(code){
+	process.on('exit', function(code){
 		console.error('ipfs exit:', code.toString());
 	});
 
-	return ipfs;
+	});
+	
 };
+
+var ipfsStatus = function(func){
+   
+    var ipfs = ipfsAPI('localhost','5001',{protocol:'http'});
+
+    ipfs.version()
+    	.then((res) => {
+    		log.info(res);
+    		func(res);
+    	})
+    	.catch((err) => {
+    		logger.error(err)
+    	});
+};
+
 
 var manager = function(){
 
 	this.ipfs = startIpfs();
 
+	
+	this.checkStatus = function(response){
+		
+		ipfsStatus(function(response2){
+			response(response2);
+		});
+		
+	};
+
 	this.start = function(){
-		if(this.ipfs.killed){
-			this.ipfs = startIpfs();
-		}
+	
+		this.ipfs = startIpfs();
+	
 	};
 
 	this.stop = function(){
-		if(!this.ipfs.killed){
+		
+			log.info("ipfs stop exec started");
 			this.ipfs.kill();
-		}
+		
 	};
 
 	return this;
