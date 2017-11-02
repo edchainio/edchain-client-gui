@@ -5,9 +5,6 @@ var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
 var ipfs = require('./process_ipfs')();
 
-
-
-
 const { exec } = require('child_process');
 const {dialog, pubsub} = require('electron').remote;
 
