@@ -11,7 +11,9 @@ var startIpfs = function(){
 	const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
 
 	return exec(ipfsPath, function (err,stdout,stderr){
+	
 	log.info("ipfs start exec started");	
+	
 	process.stdout.on('data', function(data){
 		console.log('ipfs out:', data.toString());
 	});
