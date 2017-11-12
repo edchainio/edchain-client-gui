@@ -81,33 +81,44 @@ var getFeaturedData = function(){
         url: featuredURL,
         method: 'GET',
         success: function(data){
-         log.info(data);
-         //write for loop to process data
-         //temp fix
-       //  data="QmSvXUrmXN1XvaQC5dkKfJpxJ2kPunSTXdRDVsvMfMSXTh";
-         //end temp fix
-
-         for(var n=0;n<data["courses"].length;n++){
+      
+        courseLength=data["courses"].length;
+        log.info(courseLength);
+        
+        for(var n=0;n<courseLength;n++){
 
             var url=ipfsGetURL+data["courses"][n].hash+"&encoding=json";
-            log.info(url);
-       
+     //       log.info("url:" + url);
+
                 $.ajax({
                     url:url,
                     method:'GET',
                     success: function(parentData){
-                       for(var i=0;i<parentData["Links"].length;i++){
-                            arr=parentData["Links"][i];
-                            
-                            names=arr.Name;
+           
+                        arr=parentData["Links"];
+                
+                        url2=ipfsGetURL + arr[0].Hash +"&encoding=json";
+     
+                         $.ajax({
+                            url:url2,
+                            method:'GET',
+                            success: function(data1){
+                     
+                       for(var i=0;i<data1["Links"].length;i++){
+                         
+                            arrContents=data1["Links"][i];
+                            names=arrContents.Name;
+                             
                             if(names === 'contents'){
-                           
-                                contentsHash=parentData["Links"][i].Hash;
-                                 $.ajax({
-                                     url: ipfsGetURL+contentsHash,
+                       
+                                contentsHash=data1["Links"][i].Hash;
+                                log.info("parentdata:" + ipfsGetURL + contentsHash);
+                                $.ajax({
+                                     url: ipfsGetURL+contentsHash +"&encoding=json",
                                      method: 'GET',
                                      success: function(data){
-                                            log.info('contents',data);
+                                        
+                                            
                                             arr1 = data["Links"];
                                             len = arr1.length;
 
@@ -124,20 +135,25 @@ var getFeaturedData = function(){
                                                 }
                                                                            
                                             }
-
-                                            createHomePageCard(httpURL + jpgHash,data["courses"][n].title,httpURL + indxHash);
+                                         //data["courses"][n].title
+                                        createHomePageCard(httpURL + jpgHash,"",httpURL + indxHash);
                                           
-                                       }
+                                    }
                                     });
 
                             }
-                        }
+                         }   
+                              }
+
+                            });    
+            
 
                     },
                     error: function(error){
                         log.info(error);
                     }
                 });
+           
 
 
         }
@@ -151,9 +167,9 @@ var getFeaturedData = function(){
 
 
 var createHomePageCard = function(image, title, indexURL){
-
+   
      cardHtml="<div class='card'><img src=" + image +">";
-     cardHtml= cardHtml + "<p class='card-text'>hello";
+     cardHtml= cardHtml + "<p class='card-text'>";
      cardHtml= cardHtml + "<a href=" + indexURL +">Link</a>";
      cardHtml= cardHtml + "</p></div>";
      $('#rows').append(cardHtml);
