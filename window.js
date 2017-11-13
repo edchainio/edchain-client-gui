@@ -77,100 +77,115 @@ var getID = function($element){
 var getFeaturedData = function(){
     
     for(var i=0;i<1;i++){
-     $.ajax({
-        url: featuredURL,
-        method: 'GET',
-        success: function(data){
-      
-        courseLength=data["courses"].length;
-        log.info(courseLength);
-        
-        for(var n=0;n<courseLength;n++){
+        $.ajax({
+            url: featuredURL,
+            method: 'GET',
+            success: function(edchainData){
 
-            var url=ipfsGetURL+data["courses"][n].hash+"&encoding=json";
-     //       log.info("url:" + url);
-
-                $.ajax({
-                    url:url,
-                    method:'GET',
-                    success: function(parentData){
-           
-                        arr=parentData["Links"];
+                courseLength=edchainData["courses"].length;
                 
-                        url2=ipfsGetURL + arr[0].Hash +"&encoding=json";
-     
-                         $.ajax({
-                            url:url2,
-                            method:'GET',
-                            success: function(data1){
-                     
-                       for(var i=0;i<data1["Links"].length;i++){
-                         
-                            arrContents=data1["Links"][i];
-                            names=arrContents.Name;
-                             
-                            if(names === 'contents'){
-                       
-                                contentsHash=data1["Links"][i].Hash;
-                                log.info("parentdata:" + ipfsGetURL + contentsHash);
-                                $.ajax({
-                                     url: ipfsGetURL+contentsHash +"&encoding=json",
-                                     method: 'GET',
-                                     success: function(data){
-                                        
-                                            
-                                            arr1 = data["Links"];
-                                            len = arr1.length;
-
-                                            for(var i=0;i<len;i++){
-                                                if(arr1[i].Name.endsWith('jpg') === true && !arr1[i].Name.endsWith('th.jpg')){
-       
-                                                    jpgHash=arr1[i].Hash;
-                                                    
-                                                }
-                                                else if(arr1[i].Name.endsWith('index.htm')===true){
-
-                                                   indxHash =arr1[i].Hash;
-
-                                                }
-                                                                           
-                                            }
-                                         //data["courses"][n].title
-                                        createHomePageCard(httpURL + jpgHash,"",httpURL + indxHash);
-                                          
-                                    }
-                                    });
-
-                            }
-                         }   
-                              }
-
-                            });    
-            
-
-                    },
-                    error: function(error){
-                        log.info(error);
-                    }
-                });
-           
-
-
-        }
-
-        }
-      });
-
+                for(var n=0;n<courseLength;n++){
+                    let url=ipfsGetURL+edchainData["courses"][n].hash+"&encoding=json";
+                    
+                    let callback = (function(course){
+                        return function(imageURL, indexURL){
+                            var title = course.title;
+                            createHomePageCard(imageURL, title, indexURL);
+                        };
+                    }(edchainData["courses"][n]));
+                    
+                    getParentData(url, callback);
+          
+                }
+            }
+        });
     }
  
 };
 
 
+var getParentData = function(url, callback){
+
+      $.ajax({
+            url:url,
+            method:'GET',
+            success: function(parentData){
+   
+                var arr=parentData["Links"];
+                let courseContentURL=ipfsGetURL + arr[0].Hash +"&encoding=json";
+                getCourseContents(courseContentURL, callback);
+
+            },
+            error: function(error){
+                log.info(error);
+            }
+        });
+}
+
+var getCourseContents = function(url2, callback){
+
+
+    $.ajax({
+        url:url2,
+        method:'GET',
+        success: function(data1){
+       
+           for(var i=0;i<data1["Links"].length;i++){
+             
+                let arrContents=data1["Links"][i];
+                let names=arrContents.Name;
+                 
+                if(names === 'contents'){
+                    let jpgHash;
+                    let indxHash;
+                    getCourseDetails(data1["Links"][i].Hash,jpgHash,indxHash, callback);
+
+                }
+            }   
+        }
+    });    
+
+}
+
+
+
+var getCourseDetails = function(contentsHash,jpgHash,indxHash, callback){
+
+    $.ajax({
+         url: ipfsGetURL+contentsHash +"&encoding=json",
+         method: 'GET',
+         success: function(data){
+            
+                
+                arr1 = data["Links"];
+                len = arr1.length;
+
+                for(var i=0;i<len;i++){
+                    if(arr1[i].Name.endsWith('jpg')  && !arr1[i].Name.endsWith('th.jpg')){
+
+                        jpgHash=arr1[i].Hash;
+                        
+                    }
+                    else if(arr1[i].Name.endsWith('index.htm')){
+
+                       indxHash =arr1[i].Hash;
+
+                    }
+                                               
+                }
+            
+            callback(httpURL + jpgHash, httpURL + indxHash);
+              
+        }
+    });
+
+}
+
 var createHomePageCard = function(image, title, indexURL){
    
      cardHtml="<div class='card'><img src=" + image +">";
      cardHtml= cardHtml + "<p class='card-text'>";
-     cardHtml= cardHtml + "<a href=" + indexURL +">Link</a>";
+     cardHtml= cardHtml + "<a href=" + indexURL +">"+ title + "</a>";
      cardHtml= cardHtml + "</p></div>";
      $('#rows').append(cardHtml);
 
