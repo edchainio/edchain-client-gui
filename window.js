@@ -191,6 +191,9 @@ var createHomePageCard = function(image, title, indexURL){
 
 }
 
+function clearVersion(){
+   $('#version').text("version:" + "");
+}
 
 $(document).ready(function() {
   
@@ -198,11 +201,13 @@ $(document).ready(function() {
     getFeaturedData();
     
     $('#start').click(function(){
+       console.log(ipfs);
        ipfs.start();
    
     });
 
     $('#stop').click(function(){
+        console.log(ipfs);
        ipfs.stop();
    
     });
@@ -211,9 +216,9 @@ $(document).ready(function() {
 
         ipfs.checkStatus(function(ver){
             $('#version').text("version:" + ver.version);
-
+            setTimeout(clearVersion,2000);
         });
-        
+
     });
 
 
