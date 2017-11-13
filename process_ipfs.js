@@ -5,9 +5,6 @@ var path = require('path');
 var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
 
-const testscript = exec('sh')
-
-
 var startIpfs = function(){
 
 	const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
