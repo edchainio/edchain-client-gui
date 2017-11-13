@@ -5,6 +5,8 @@ var path = require('path');
 var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
 
+const testscript = exec('sh')
+
 
 var startIpfs = function(){
 
@@ -12,23 +14,46 @@ var startIpfs = function(){
 
 	return exec(ipfsPath, function (err,stdout,stderr){
 	
-	log.info("ipfs start exec started");	
-	
-	process.stdout.on('data', function(data){
-		console.log('ipfs out:', data.toString());
-	});
+		log.info("ipfs start exec");	
+		
+		process.stdout.on('data', function(data){
+			console.log('ipfs out:', data.toString());
+		});
 
-	process.stderr.on('data', function(data){
-	 	console.error('ipfs error:', data.toString());
-	});
+		process.stderr.on('data', function(data){
+		 	console.error('ipfs error:', data.toString());
+		});
 
-	process.on('exit', function(code){
-		console.error('ipfs exit:', code.toString());
-	});
+		process.on('exit', function(code){
+			console.error('ipfs exit:', code.toString());
+		});
 
 	});
 	
 };
+
+var ipfsStop = function(){
+	const ipfsPath = path.resolve(__dirname,'./','bin','linux','killall -9 ipfs');
+
+	return exec(ipfsPath, function (err,stdout,stderr){
+	
+		log.info("ipfs stop exec started");	
+		
+		process.stdout.on('data', function(data){
+			console.log('ipfs out:', data.toString());
+		});
+
+		process.stderr.on('data', function(data){
+		 	console.error('ipfs error:', data.toString());
+		});
+
+		process.on('exit', function(code){
+			console.error('ipfs exit:', code.toString());
+		});
+
+	});
+}
+
 
 var ipfsStatus = function(func){
    
@@ -46,11 +71,11 @@ var ipfsStatus = function(func){
 
 
 var manager = function(){
-
-	this.ipfs = startIpfs();
+	var self = {};
+	self.ipfs = startIpfs();
 
 	
-	this.checkStatus = function(response){
+	self.checkStatus = function(response){
 		
 		ipfsStatus(function(response2){
 			response(response2);
@@ -58,22 +83,19 @@ var manager = function(){
 		
 	};
 
-	this.start = function(){
-	if(this.ipfs.killed){
-		this.ipfs = startIpfs();
-	}
+	self.start = function(){
 	
+		self.ipfs = startIpfs();
 	
 	};
 
-	this.stop = function(){
+	self.stop = function(){
 		
-			log.info("ipfs stop exec started");
-			this.ipfs.kill();
+	    self.ipfs = ipfsStop();
 		
 	};
 
-	return this;
+	return self;
 };
 
 module.exports = manager;
