@@ -82,7 +82,7 @@ app.on('ready', () => {
     });
 
     mainWindow.on('closed', () => {
-  //      spawnIPFS.kill('SIGINT');
+         ipfs.stop();
          process.exit(1);
 
 

@@ -75,7 +75,7 @@ var getID = function($element){
 
 
 var getFeaturedData = function(){
-    
+  
     for(var i=0;i<1;i++){
         $.ajax({
             url: featuredURL,
@@ -182,7 +182,7 @@ var getCourseDetails = function(contentsHash,jpgHash,indxHash, callback){
 }
 
 var createHomePageCard = function(image, title, indexURL){
-   
+     $(".loader").hide();
      cardHtml="<div class='card'><img src=" + image +">";
      cardHtml= cardHtml + "<p class='card-text'>";
      cardHtml= cardHtml + "<a href=" + indexURL +">"+ title + "</a>";
@@ -198,7 +198,9 @@ function clearVersion(){
 $(document).ready(function() {
   
 
-    getFeaturedData();
+
+    setTimeout(getFeaturedData,2000);
+ 
     
     $('#start').click(function(){
        console.log(ipfs);

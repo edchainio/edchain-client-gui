@@ -30,9 +30,9 @@ var startIpfs = function(){
 };
 
 var ipfsStop = function(){
-	const ipfsPath = path.resolve(__dirname,'./','bin','linux','killall -9 ipfs');
+//	const ipfsPath = path.resolve(__dirname,'./','bin','linux','killall -9 ipfs');
 
-	return exec(ipfsPath, function (err,stdout,stderr){
+	return exec('pkill ipfs', function (err,stdout,stderr){
 	
 		log.info("ipfs stop exec started");	
 		
