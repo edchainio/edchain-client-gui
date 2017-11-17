@@ -5,6 +5,8 @@ var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
 var ipfs = require('./process_ipfs')();
 
+const pubsub1 = require('electron-pubsub');
+
 const httpURL="http://localhost:8080/ipfs/";
 const featuredURL="http://139.59.66.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://127.0.0.1:5001/api/v0/object/get?arg="
@@ -21,7 +23,11 @@ var node = {
     info: '',
 };
 
+pubsub1.subscribe('uiLogging',(message,value) => {
+  
+   $('#console').append(value.info + "<br>");
 
+});
 
 var setStatus = function($element){
     setInterval(function($element){
@@ -75,7 +81,7 @@ var getID = function($element){
 
 
 var getFeaturedData = function(){
-    
+  
     for(var i=0;i<1;i++){
         $.ajax({
             url: featuredURL,
@@ -102,6 +108,7 @@ var getFeaturedData = function(){
     }
  
 };
+
 
 
 var getParentData = function(url, callback){
@@ -182,12 +189,49 @@ var getCourseDetails = function(contentsHash,jpgHash,indxHash, callback){
 }
 
 var createHomePageCard = function(image, title, indexURL){
-   
+
+     $(".loader").hide();
      cardHtml="<div class='card'><img src=" + image +">";
      cardHtml= cardHtml + "<p class='card-text'>";
      cardHtml= cardHtml + "<a href=" + indexURL +">"+ title + "</a>";
      cardHtml= cardHtml + "</p></div>";
      $('#rows').append(cardHtml);
+ 
+
+
+}
+
+
+var uiLog = function(message){
+    $('#console').append('<span id=logMessage>' + message + '</span>');
+}
+
+
+function isIPFSOnline(){
+   
+    ipfs.getId(function(value){
+        if(value['addresses']){
+            setIPFSStatusButton(true);
+        }
+        else{
+            setIPFSStatusButton(false);
+        }
+    });
+
+    
+}
+
+function setIPFSStatusButton(isOnline){
+
+    if(isOnline){
+      $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
+      $('#ipfsStatus').text('IPFS Online');
+  
+    }
+    else{
+         $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
+         $('#ipfsStatus').text('IPFS Offline');
+    }
 
 }
 
@@ -196,19 +240,31 @@ function clearVersion(){
 }
 
 $(document).ready(function() {
-  
+   
+    setTimeout(getFeaturedData,3000);
+    setInterval(isIPFSOnline,5000); 
+   
+    $('#ipfsStatus').click(function(){
+         
+        if($('#ipfsStatus').hasClass('btn-outline-danger')){
+            ipfs.start();
+            $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
+            $('#ipfsStatus').text('IPFS Online');
+        }
 
-    getFeaturedData();
-    
-    $('#start').click(function(){
-       console.log(ipfs);
-       ipfs.start();
+        else if($('#ipfsStatus').hasClass('btn-outline-success')){
+            ipfs.stop();
+            $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
+            $('#ipfsStatus').text('IPFS Offline');
+
+        }
+     
    
     });
 
     $('#stop').click(function(){
-        console.log(ipfs);
-       ipfs.stop();
+       
+      ipfs.getId();
    
     });
     
@@ -219,6 +275,19 @@ $(document).ready(function() {
             setTimeout(clearVersion,2000);
         });
 
+    });
+
+
+    $('#refresh').click(function(){
+    
+        $(".card").remove(function(){
+         getFeaturedData();
+      });
+   
+  //   getFeaturedData();
+
+      
+   
     });
 
 

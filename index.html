@@ -32,11 +32,13 @@
                     event.preventDefault();
                     shell.openExternal(this.href);
                 });
-              
+           
+               
         </script>
+
     </head>
     <body>
-        <div class="collapse bg-dark" id="navbarHeader">
+        <div class="bg-dark" id="navbarHeader">
             <div class="container">
                 <div class="row">
                     <div class="col-sm-10 py-4">
@@ -53,25 +55,34 @@
                         <h4 class="text-white">Status</h4>
                         <div>
                             <div id="nodeStatus" class="alert"></div>
-                            <button type="button" id="start" class="btn">start</button>
-                            <br><br>
-                            <button type="button" id="stop" class="btn">stop</button>
-                            <div id="version" class="text-white">version</div>
+                            <button type="button" id="ipfsStatus" class="btn btn-outline-danger">Starting Up</button>
+                            <button type="button" id="refresh" class="btn btn-outline-info">Refresh</button>
                             
+
+                            <br><br>
+                                                      
                         </div>                        
                     </div>
                 </div>
             </div>
         </div>
-        <div class="navbar navbar-dark bg-dark">
+
+
+        <!-- <div class="navbar navbar-dark bg-dark">
             <div class="container d-flex justify-content-between">
                 <a href="#" class="navbar-brand"><img src="header_logo.png" alt="edChain"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
-        </div>
+        </div> -->
         <section class="jumbotron text-center">
+           <!--  <div class="container" style="height:200px;overflow:scroll">
+                <div id="console">
+                    console here
+                </div>
+
+            </div> -->
             <div class="container">
                 <h1 class="jumbotron-heading">Featured Courses</h1>
                 <p class="lead text-muted">edChain is a shared repository for educators to publish content onto.  No central servers are needed.</p>
@@ -83,10 +94,11 @@
         </section>
         <div class="album text-muted">
             <div class="container">
+                <div class="loader"></div>
                 <div class="row" id="rows">
                     <div class="card">
                         <img src="http://127.0.0.1:8080/ipfs/QmXZekU9WdPHE628j57ehJKvBE6WkYRjybce7q4xVFB9ZE/contents/18-786s06.jpg" alt="Image caption for Topics in Algebraic Number Theory">
-                        <p class="card-text"><a href="" onclick="window.open('http://127.0.0.1:8080/ipfs/QmXZekU9WdPHE628j57ehJKvBE6WkYRjybce7q4xVFB9ZE/contents/index.htm', 'newwindow', 'width=1024,height=576'); return false;">Topics in Algebraic Number Theory</a></p>
+                        <p class="card-text"><a href="" onclick="window.open('http://www.google.com'); return false;">Topics in Algebraic Number Theory</a></p>
                     </div>
                 </div>
             </div>

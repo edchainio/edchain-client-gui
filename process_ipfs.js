@@ -6,46 +6,45 @@ var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
 
 var startIpfs = function(){
-
+	
 	const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
-
+	
 	return exec(ipfsPath, function (err,stdout,stderr){
 	
-		log.info("ipfs start exec");	
-		
+		pubsub.publish('uiLogging', {info: stdout});
+
 		process.stdout.on('data', function(data){
-			console.log('ipfs out:', data.toString());
+			log.info('ipfs out:', data.toString());
+
 		});
 
-		process.stderr.on('data', function(data){
-		 	console.error('ipfs error:', data.toString());
+		process.stderr.on('data', function(data){;
+		 	log.info('ipfs error:', data.toString());
 		});
 
 		process.on('exit', function(code){
-			console.error('ipfs exit:', code.toString());
+			log.info('ipfs exit:', code.toString());
 		});
-
+	
 	});
 	
 };
 
 var ipfsStop = function(){
-	const ipfsPath = path.resolve(__dirname,'./','bin','linux','killall -9 ipfs');
 
-	return exec(ipfsPath, function (err,stdout,stderr){
-	
-		log.info("ipfs stop exec started");	
+	return exec('pkill ipfs', function (err,stdout,stderr){
 		
 		process.stdout.on('data', function(data){
-			console.log('ipfs out:', data.toString());
+			log.info('ipfs out:', data.toString());
+		
 		});
 
 		process.stderr.on('data', function(data){
-		 	console.error('ipfs error:', data.toString());
+		 	log.info('ipfs error:', data.toString());
 		});
 
 		process.on('exit', function(code){
-			console.error('ipfs exit:', code.toString());
+			log.info('ipfs exit:', code.toString());
 		});
 
 	});
@@ -53,9 +52,7 @@ var ipfsStop = function(){
 
 
 var ipfsStatus = function(func){
-   
-    var ipfs = ipfsAPI('localhost','5001',{protocol:'http'});
-
+ 
     ipfs.version()
     	.then((res) => {
     		log.info(res);
@@ -66,10 +63,35 @@ var ipfsStatus = function(func){
     	});
 };
 
+var ipfsId = function(fn){
+	var iID;
+	var ipfs = ipfsAPI('localhost','5001',{protocol:'http'});
+	var funcId = function (err,identity){
+		if(err){
+			throw err;
+		}
+		
+		fn(identity);
+	};
+	
+	ipfs.id(funcId);
+	
+}
+
+
+
+
 
 var manager = function(){
 	var self = {};
 	self.ipfs = startIpfs();
+	
+
+	self.getId = function(fn){
+		ipfsId(function(id){
+			fn(id);
+		});
+	}
 
 	
 	self.checkStatus = function(response){
@@ -81,7 +103,7 @@ var manager = function(){
 	};
 
 	self.start = function(){
-	
+		pubsub.publish('uiLogging', {info: 'Starting IPFS...'});
 		self.ipfs = startIpfs();
 	
 	};

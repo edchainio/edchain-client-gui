@@ -13,12 +13,14 @@
     "deb64": "electron-installer-debian --src dist/app-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite"
   },
   "devDependencies": {
-    "electron": "^1.7.6",
+    "electron": "^1.7.9",
     "electron-installer-debian": "^0.6.0",
     "electron-installer-dmg": "^0.2.1",
+    "electron-log": "^2.2.11",
     "electron-packager": "^9.1.0"
   },
   "dependencies": {
+    "electron-log": "^2.2.11",
     "electron-pubsub": "^0.2.2",
     "ipfs-api": "^15.0.1",
     "mustache": "^2.3.0"
