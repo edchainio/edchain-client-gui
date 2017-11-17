@@ -3,14 +3,13 @@ var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
-var ipfs = require('./process_ipfs')();
+var ipfs = require(__dirname + '/process_ipfs')();
 
 const pubsub1 = require('electron-pubsub');
 
 const httpURL="http://localhost:8080/ipfs/";
 const featuredURL="http://139.59.66.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://127.0.0.1:5001/api/v0/object/get?arg="
-
 
 const { exec } = require('child_process');
 const {dialog, pubsub} = require('electron').remote;

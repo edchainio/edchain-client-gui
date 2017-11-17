@@ -10,7 +10,7 @@
 
         <title>edChain</title>
 
-        <link href="./vendor/css/bootstrap.css" rel="stylesheet">
+        <link href="./vendor/js/bootstrap.js" rel="stylesheet">
         <link href="./vendor/css/album.css" rel="stylesheet">
 
         <script>delete module.exports</script>
@@ -18,7 +18,7 @@
         <script src="./vendor/js/mustache.min.js"></script>
         <script src="./vendor/js/jsoneditor.min.js"></script>
         <script src="./window.js"></script>
-        <script src="./vendor/js/bootstrap.js"></script>
+        <link href="./vendor/css/bootstrap.css" rel="stylesheet">
         <script src="./vendor/js/popper.min.js"></script>
         <script src="./vendor/js/holder.min.js"></script>
         <script>
@@ -31,6 +31,7 @@
                 $(document).on('click', 'a[href^="http"]', function(event) {
                     event.preventDefault();
                     shell.openExternal(this.href);
+                    alert("here");
                 });
            
                
@@ -98,7 +99,9 @@
                 <div class="row" id="rows">
                     <div class="card">
                         <img src="http://127.0.0.1:8080/ipfs/QmXZekU9WdPHE628j57ehJKvBE6WkYRjybce7q4xVFB9ZE/contents/18-786s06.jpg" alt="Image caption for Topics in Algebraic Number Theory">
-                        <p class="card-text"><a href="" onclick="window.open('http://www.google.com'); return false;">Topics in Algebraic Number Theory</a></p>
+                        <p class="card-text"><a href="" onclick="window.open(__dirname + '/src/html/settings.html'); return false;">Topics in Algebraic Number Theory</a></p>
+
+                      
                     </div>
                 </div>
             </div>
