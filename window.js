@@ -23,7 +23,7 @@ var node = {
     info: '',
 };
 
-pubsub1.subscribe('testPubSub',(message,value) => {
+pubsub1.subscribe('uiLogging',(message,value) => {
   
    $('#console').append(value.info + "<br>");
 
