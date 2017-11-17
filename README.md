@@ -19,20 +19,3 @@ Note: You have have to preface some of these commands with `sudo` to meet privil
 * Install the NodeJS requirements:
 `npm install`
 
-* Change into the directory that contains edChain's binary files for Linux:
-`cd bin/linux`
-
-* Change into the directory that contains edChain's binary files for macOS:
-`cd bin/darwin`
-
-* Start the MediaChain's node application:
-`./mcnode -d /ip4/104.236.125.197/tcp/9000/p2p/QmRXjzUbsTHYa9t4z47B7tR7zsfAKq3iCkvAdN3NKigWPn`
-
-* Change the status of the node from offline to online:
-`curl -X POST http://127.0.0.1:9002/status/online`
-
-* Start the IPFS daemon:
-`ipfs daemon`
-
-* Start the edChain client:
-`npm start`
