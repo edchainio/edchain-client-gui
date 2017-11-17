@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <link rel="icon" href="../../../../favicon.ico">
+
+        <title>edChain Settings</title>
+
+          <link href="../../vendor/css/bootstrap.css" rel="stylesheet">
+        <link href="../../vendor/css/album.css" rel="stylesheet">
+        <link href="../../src/css/toggle-switch.css" rel="stylesheet">
+        <script>delete module.exports</script>
+        <script>window.$ = window.jQuery = require('../../vendor/js/jquery-3.1.1.js');</script>
+        
+        <script src="../../vendor/js/mustache.min.js"></script>
+        <script src="../../vendor/js/jsoneditor.min.js"></script>
+       <!--  <script src="../../window.js"></script> -->
+        <link href="../../vendor/js/bootstrap.js" rel="stylesheet">
+        <script src="../js/settings.js"></script>
+        <script src="../../vendor/js/holder.min.js"></script>
+        <script>
+            $(function () {
+                Holder.addTheme("thumb", { background: "#55595c", foreground: "#eceeef", text: "Thumbnail" });
+            });
+        </script>
+        <script>
+            var shell = require('electron').shell;
+                $(document).on('click', 'a[href^="http"]', function(event) {
+                    event.preventDefault();
+                    shell.openExternal(this.href);
+                });
+             
+               
+        </script>
+    </head>
+    <body>
+        <div class="container">
+               
+        </div>
+        <!-- <div class="navbar navbar-dark bg-dark">
+            <div class="container d-flex justify-content-between">
+                <a href="#" class="navbar-brand"><img src="header_logo.png" alt="edChain"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </div> -->
+        <section class="jumbotron text-center">
+           
+                <label class="switch">
+                    <input type="checkbox" id="ipfs-slider">
+                    <span class="slider round"></span>
+                </label>
+            
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#logs" role="tab">logs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#settings">settings</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="logs" role="tabpanel">logs</div>
+              <div class="tab-pane" id="settings" role="tabpanel">settings</div>
+            </div>
+        </section>
+    
+    <footer class="text-muted">
+        <div class="container">
+            <p class="float-right">
+                <a href="#">Back to top</a>
+            </p>
+            <p>&copy; 2017 edChain</p>
+        </div>
+    </footer>
+  </body>
+</html>

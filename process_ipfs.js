@@ -103,13 +103,14 @@ var manager = function(){
 	};
 
 	self.start = function(){
+		log.info('starting..');
 		pubsub.publish('uiLogging', {info: 'Starting IPFS...'});
 		self.ipfs = startIpfs();
 	
 	};
 
 	self.stop = function(){
-		
+		log.info('stopping..');
 	    self.ipfs = ipfsStop();
 		
 	};

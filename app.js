@@ -42,8 +42,9 @@ app.on('ready', () => {
         tray.setHighlightMode('never');
     });
 
+  /*  mainWindow.loadURL(`file://${__dirname}/src/html/settings.html`);*/
     mainWindow.loadURL(`file://${__dirname}/index.html`);
-
+    
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
     });
@@ -52,7 +53,7 @@ app.on('ready', () => {
          ipfs.stop();
          process.exit(1);
     });
-
+    mainWindow.openDevTools();
     /*mainWindow.webContents.on('new-window',(event,url,frameName,disposition,options,additionalFeatures) => {
         if(frameName === 'modal'){
             event.preventDefault();
