@@ -7,8 +7,10 @@ var log = require('electron-log');
 
 var startIpfs = function(){
 	
-	const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
-	
+	// const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
+	const ipfsPath = path.resolve(__dirname,'./','bin','darwin','ipfs daemon');
+	process.stdout.write("terminal");
+
 	return exec(ipfsPath, function (err,stdout,stderr){
 	
 		pubsub.publish('uiLogging', {info: stdout});
