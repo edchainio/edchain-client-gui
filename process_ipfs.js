@@ -5,6 +5,7 @@ var path = require('path');
 var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
 
+
 var startIpfs = function(){
 	
 	const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
@@ -14,8 +15,7 @@ var startIpfs = function(){
 		pubsub.publish('uiLogging', {info: stdout});
 
 		process.stdout.on('data', function(data){
-			log.info('ipfs out:', data.toString());
-
+			log.info(data.toString());
 		});
 
 		process.stderr.on('data', function(data){;
@@ -27,7 +27,7 @@ var startIpfs = function(){
 		});
 	
 	});
-	
+
 };
 
 var ipfsStop = function(){
@@ -36,7 +36,6 @@ var ipfsStop = function(){
 		
 		process.stdout.on('data', function(data){
 			log.info('ipfs out:', data.toString());
-		
 		});
 
 		process.stderr.on('data', function(data){
@@ -50,6 +49,100 @@ var ipfsStop = function(){
 	});
 }
 
+var ipfsPeerId = function(fn){
+	
+	getIPFS().config.get('Identity.PeerID',(err,config) => {
+		if(err){
+			throw err;
+		}
+		fn(config);
+	});
+}
+
+var ipfsDatastorePath = function(fn){
+
+	getIPFS().config.get('Datastore.Path',(err,config) => {
+		if(err){
+			throw err;
+		}
+		fn(config);
+	});
+}
+
+var ipfsGatewayAddress = function(fn){
+
+	getIPFS().config.get('Addresses.Gateway',(err,config) => {
+		if(err){
+			throw err;
+		}
+		fn(config);
+	});
+
+}
+/*
+var funcipfsGWAddr = function (){
+	return new Promise((resolve,reject) => {
+
+		let value="hello1";
+
+		if(true){
+			resolve(value);
+		}
+		else{
+			reject(Error("broken"));
+		} 
+		});
+}
+
+var ipfsGWAddr = new Promise((resolve,reject) => {
+
+		let value="hello1";
+
+		if(true){
+			resolve(value);
+		}
+		else{
+			reject(Error("broken"));
+		}
+
+
+
+	getIPFS().config.get('Addresses.Gateway',(err,config) => {
+		if(err){
+			throw err;
+		}
+		console.log(config);
+		
+	});
+
+
+
+
+});*/
+
+
+var ipfsAPIAddress = function(fn){
+
+	getIPFS().config.get('Addresses.API',(err,config) => {
+		if(err){
+			throw err;
+		}
+		fn(config);
+	});
+
+}
+
+var ipfsLogTail = function(fn){
+
+	getIPFS().log.tail((err,value) => {
+		if(err){
+			throw err;
+		}
+		log.info(value);
+		fn(value);
+	});
+
+};
 
 var ipfsStatus = function(func){
  
@@ -65,7 +158,7 @@ var ipfsStatus = function(func){
 
 var ipfsId = function(fn){
 	var iID;
-	var ipfs = ipfsAPI('localhost','5001',{protocol:'http'});
+	
 	var funcId = function (err,identity){
 		if(err){
 			throw err;
@@ -74,19 +167,26 @@ var ipfsId = function(fn){
 		fn(identity);
 	};
 	
-	ipfs.id(funcId);
+	getIPFS().id(funcId);
 	
 }
 
 
 
+var getIPFS = function(){
+	let ipfs=null;
+	if(ipfs === null){
+		ipfs= ipfsAPI('localhost','5001',{protocol:'http'});
+	}
+	return ipfs;
+
+}
 
 
 var manager = function(){
 	var self = {};
 	self.ipfs = startIpfs();
 	
-
 	self.getId = function(fn){
 		ipfsId(function(id){
 			fn(id);
@@ -114,6 +214,34 @@ var manager = function(){
 	    self.ipfs = ipfsStop();
 		
 	};
+
+	self.getPeerId = function(fn){
+		ipfsPeerId(function(peerId){
+			fn(peerId);
+		});
+	
+	}
+	self.getIPFSDatastorePath = function(fn){
+	
+		ipfsDatastorePath(function(path){
+			fn(path);
+		});
+	
+	} 
+	self.getIPFSAPIAddress = function(fn){
+	
+		ipfsAPIAddress(function(addr){
+			fn(addr);
+		});
+	
+	}
+	self.getIPFSGWAddr = function(fn){
+	
+		ipfsGatewayAddress(function(dAddr){
+			fn(dAddr);
+		});
+	
+	}
 
 	return self;
 };

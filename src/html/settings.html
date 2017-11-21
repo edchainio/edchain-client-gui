@@ -28,12 +28,29 @@
             });
         </script>
         <script>
-            var shell = require('electron').shell;
-                $(document).on('click', 'a[href^="http"]', function(event) {
+           // var shell = require('electron').shell;
+                /*$(document).on('click', 'a[href^="http"]', function(event) {
                     event.preventDefault();
                     shell.openExternal(this.href);
+                });*/
+                $(document).on('click','#settings',function(event){
+                    event.preventDefault();
+                    $('#settings-pane').show();
+                    $('#logs-pane').hide();
+                    $('#logs').removeClass('active');
+                    $('#settings').addClass('active');
+                    
                 });
+
              
+                 $(document).on('click','#logs',function(event){
+                    event.preventDefault();
+                    $('#settings-pane').hide();
+                    $('#logs-pane').show();
+                    $('#logs').addClass('active');
+                    $('#settings').removeClass('active');
+                    
+                });
                
         </script>
     </head>
@@ -49,6 +66,14 @@
                 </button>
             </div>
         </div> -->
+         <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" id="logs" href="#logs" role="tab">logs</a>
+                </li>
+                <li class="nav-item">
+                   <a class="nav-link" data-toggle="tab" id="settings" href="#settings">settings</a>
+                </li>
+         </ul>
         <section class="jumbotron text-center">
            
                 <label class="switch">
@@ -56,17 +81,23 @@
                     <span class="slider round"></span>
                 </label>
             
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#logs" role="tab">logs</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" href="#settings">settings</a>
-                </li>
-            </ul>
+           
             <div class="tab-content">
-              <div class="tab-pane active" id="logs" role="tabpanel">logs</div>
-              <div class="tab-pane" id="settings" role="tabpanel">settings</div>
+              <div class="tab-pane" id="logs-pane" role="tabpanel">
+                <div class="container" style="height:200px;overflow:scroll">
+                    <div id="console">
+                            console here
+                    </div>
+                </div> 
+              </div>
+              <div class="tab-pane active" id="settings-pane" role="tabpanel">
+  
+                Peer Id<div id="peerId"></div>
+                Gateway Address <input type="text" id="gateway-addr">
+                Datastore Path<input type="text" id="ipfs-datastore-path">
+                API Addr<input type="text" id="ipfs-api-addr">
+  
+              </div>
             </div>
         </section>
     

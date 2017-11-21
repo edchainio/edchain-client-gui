@@ -5,15 +5,14 @@ var log = require('electron-log');
 /*var mcnode = require('./process_mcnode')();*/
 var ipfs = require('./process_ipfs')();
 
-
-
+var ipcMain=require('electron').ipcMain;
 const { exec } = require('child_process');
 
 const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon')
 const mcnodePath = path.resolve(__dirname,'./','bin','linux','mcnode -d $PWD/ip4/104.236.125.197/tcp/9000/p2p/QmRXjzUbsTHYa9t4z47B7tR7zsfAKq3iCkvAdN3NKigWPn')
 
 
-const { app, BrowserWindow, Menu, ipcMain, Tray } = electron;
+const { app, BrowserWindow, Menu, Tray } = electron;
 
 let mainWindow;
 let addWindow;
@@ -42,7 +41,7 @@ app.on('ready', () => {
         tray.setHighlightMode('never');
     });
 
-  /*  mainWindow.loadURL(`file://${__dirname}/src/html/settings.html`);*/
+    /*mainWindow.loadURL(`file://${__dirname}/src/html/settings.html`);*/
     mainWindow.loadURL(`file://${__dirname}/index.html`);
     
     mainWindow.once('ready-to-show', () => {
@@ -54,18 +53,12 @@ app.on('ready', () => {
          process.exit(1);
     });
     mainWindow.openDevTools();
-    /*mainWindow.webContents.on('new-window',(event,url,frameName,disposition,options,additionalFeatures) => {
-        if(frameName === 'modal'){
-            event.preventDefault();
-            Object.assign(options,{
-                modal:true,
-                parent:mainWindow,
-                width:100,
-                height:100
-            })
-            event.newGuest = new BrowserWindow(options);
-        }
-    })*/
+   
+   
+    ipcMain.on('openChildWindow', function(event,url){
+
+        createChildWindow(mainWindow,url);
+    });
 
 
 
@@ -73,15 +66,6 @@ app.on('ready', () => {
 //    Menu.setApplicationMenu(mainMenu);
 });
 
-
-function createChildWindow(mainWindow) {
-    
-    var child= new BrowserWindow({parent: mainWindow, modal:true, show:false});
-    child.loadURL('https://github.com');
-    child.once('ready-to-show', () => {
-        child.show();
-    });
-}
 
 
 function createAddWindow() {
@@ -95,6 +79,17 @@ function createAddWindow() {
     addWindow.on('closed', () => addWindow = null);
 }
 
+
+var createChildWindow= function (mainWindow,url) {
+    
+    var child= new BrowserWindow({parent: mainWindow, modal:true, show:false});
+    child.loadURL('file://'+url);
+    child.once('ready-to-show', () => {
+        child.show();
+        child.openDevTools();
+    });
+
+}
 //ipcMain.on('course:audit', (event, course) => {
 //    mainWindow.webContents.send('course:audit', course);
 //    addWindow.close();
