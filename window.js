@@ -5,14 +5,15 @@ var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
 var ipfs = require(__dirname + '/process_ipfs')();
 
-const pubsub1 = require('electron-pubsub');
-
 const httpURL="http://localhost:8080/ipfs/";
 const featuredURL="http://139.59.66.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://127.0.0.1:5001/api/v0/object/get?arg="
 
 const { exec } = require('child_process');
+const {remote} = require('electron')
 const {dialog, pubsub} = require('electron').remote;
+const currentWindow = remote.getCurrentWindow();
+var ipcRenderer=require('electron').ipcRenderer;
 
 var node = {
     up: false,
@@ -22,11 +23,16 @@ var node = {
     info: '',
 };
 
-pubsub1.subscribe('uiLogging',(message,value) => {
-  
-   $('#console').append(value.info + "<br>");
 
-});
+
+ var openSettings = function(event){
+                event.preventDefault();
+               // currentWindow.open(); return false;
+   //            ipcRenderer.createChildWindow(currentWindow);
+            let url=__dirname + '/src/html/settings.html';
+            ipcRenderer.send('openChildWindow',url);
+};  
+
 
 var setStatus = function($element){
     setInterval(function($element){
@@ -80,7 +86,7 @@ var getID = function($element){
 
 
 var getFeaturedData = function(){
-  
+   
     for(var i=0;i<1;i++){
         $.ajax({
             url: featuredURL,
@@ -102,6 +108,10 @@ var getFeaturedData = function(){
                     getParentData(url, callback);
           
                 }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                log.info('error');
+                log.info(errorThrown);
             }
         });
     }
@@ -148,6 +158,9 @@ var getCourseContents = function(url2, callback){
 
                 }
             }   
+        },
+        error: function(error){
+            log.info(error);
         }
     });    
 
@@ -206,15 +219,13 @@ var uiLog = function(message){
 }
 
 
-function isIPFSOnline(){
-   
+var isIPFSOnline=function(){
+   let isOnline=false;
     ipfs.getId(function(value){
         if(value['addresses']){
-            setIPFSStatusButton(true);
+            isOnline=true;
         }
-        else{
-            setIPFSStatusButton(false);
-        }
+       setIPFSStatusButton(isOnline);
     });
 
     
