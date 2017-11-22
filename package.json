@@ -22,6 +22,7 @@
   "dependencies": {
     "electron-log": "^2.2.11",
     "electron-pubsub": "^0.2.2",
+    "ipfs": "^0.26.0",
     "ipfs-api": "^15.0.1",
     "mustache": "^2.3.0"
   }

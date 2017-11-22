@@ -4,29 +4,35 @@ const pubsub = require('electron-pubsub');
 var path = require('path');  
 var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
+const {spawn} = require('child_process');
+var fs = require('fs');
+
 
 
 var startIpfs = function(){
 	
 	const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
 	
-	return exec(ipfsPath, function (err,stdout,stderr){
-	
-		pubsub.publish('uiLogging', {info: stdout});
+	const ps= spawn('./bin/linux/ipfs',['daemon']);
 
-		process.stdout.on('data', function(data){
-			log.info(data.toString());
+		ps.stdout.on('data', function(data){
+			fs.appendFile("/tmp/log",data,function(err){
+				if(err){
+					log.info(error);
+				}
+			});
+		 log.info('publish called');		
+		 pubsub.publish('uiLogging', {info: data.toString()});
+		
 		});
 
-		process.stderr.on('data', function(data){;
+		ps.stderr.on('data', function(data){;
 		 	log.info('ipfs error:', data.toString());
 		});
 
-		process.on('exit', function(code){
+		ps.on('exit', function(code){
 			log.info('ipfs exit:', code.toString());
 		});
-	
-	});
 
 };
 
@@ -156,6 +162,16 @@ var ipfsStatus = function(func){
     	});
 };
 
+var isOnline = function(fn){
+	 let isUp=false;
+    ipfs.getId(function(value){
+        if(value['addresses']){
+            isUp=true;
+        }
+       fn(isUp); 
+    });
+}
+
 var ipfsId = function(fn){
 	var iID;
 	
@@ -193,6 +209,12 @@ var manager = function(){
 		});
 	}
 
+	self.isOnline = function(fn){
+		isOnline(function(online){
+			fn(online);
+		});
+	}
+
 	
 	self.checkStatus = function(response){
 		
@@ -206,6 +228,7 @@ var manager = function(){
 		log.info('starting..');
 		pubsub.publish('uiLogging', {info: 'Starting IPFS...'});
 		self.ipfs = startIpfs();
+
 	
 	};
 

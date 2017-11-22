@@ -219,15 +219,13 @@ var uiLog = function(message){
 }
 
 
-function isIPFSOnline(){
-   
+var isIPFSOnline=function(){
+   let isOnline=false;
     ipfs.getId(function(value){
         if(value['addresses']){
-            setIPFSStatusButton(true);
+            isOnline=true;
         }
-        else{
-            setIPFSStatusButton(false);
-        }
+       setIPFSStatusButton(isOnline);
     });
 
     
