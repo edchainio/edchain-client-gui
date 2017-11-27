@@ -11,24 +11,12 @@ const pubsub = remote.require('electron-pubsub');
 var fs = require('fs');
 var ipcRenderer=require('electron').ipcRenderer;
 
-var getFileData = function(fn){
-	fs.readFile('/tmp/log','r',(err,fd) => {
-   	if(err){
-   		if(err.code === 'ENOENT'){
-   			log.info('file does not exist');
-   			return;
-   		}
-   		throw err;
-   	}
-   	fn(fd);
-});
-}
-
 
 ipcRenderer.on('ipfsChildLog',(event,data) => {
 	log.info('data',data);
 	$('#console').text(data);
 })
+
 
 var checkOnline = function(){ 
 
@@ -40,9 +28,6 @@ var checkOnline = function(){
 	
 	});
 }
-
-
-
 
 
 $(document).ready(function() {

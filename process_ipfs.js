@@ -17,6 +17,7 @@ var startIpfs = function(){
 
 		ps.stdout.on('data', function(data){
  			pubsub.publish('uiLogging', data.toString());
+ 			
  		});
 
 		ps.stderr.on('data', function(data){;
@@ -79,46 +80,7 @@ var ipfsGatewayAddress = function(fn){
 	});
 
 }
-/*
-var funcipfsGWAddr = function (){
-	return new Promise((resolve,reject) => {
 
-		let value="hello1";
-
-		if(true){
-			resolve(value);
-		}
-		else{
-			reject(Error("broken"));
-		} 
-		});
-}
-
-var ipfsGWAddr = new Promise((resolve,reject) => {
-
-		let value="hello1";
-
-		if(true){
-			resolve(value);
-		}
-		else{
-			reject(Error("broken"));
-		}
-
-
-
-	getIPFS().config.get('Addresses.Gateway',(err,config) => {
-		if(err){
-			throw err;
-		}
-		console.log(config);
-		
-	});
-
-
-
-
-});*/
 
 
 var ipfsAPIAddress = function(fn){

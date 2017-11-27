@@ -90,8 +90,11 @@ app.on('ready', () => {
 });
 
 function ipfsChildLog(value){
+
     if(null != settingsWindow){
-        //log.info(settingsWindow.);
+
+        settingsWindow.webContents.executeJavaScript('$(#console).text('+ value + ')');
+
     }
 }
 
