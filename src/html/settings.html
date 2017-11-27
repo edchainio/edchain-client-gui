@@ -20,7 +20,7 @@
         <script src="../../vendor/js/jsoneditor.min.js"></script>
        <!--  <script src="../../window.js"></script> -->
         <link href="../../vendor/js/bootstrap.js" rel="stylesheet">
-        <script src="../js/settings.js"></script>
+<!--         <script src="../js/settings.js"></script> -->
         <script src="../../vendor/js/holder.min.js"></script>
         <script>
             $(function () {
@@ -28,30 +28,7 @@
             });
         </script>
         <script>
-           // var shell = require('electron').shell;
-                /*$(document).on('click', 'a[href^="http"]', function(event) {
-                    event.preventDefault();
-                    shell.openExternal(this.href);
-                });*/
-                $(document).on('click','#settings',function(event){
-                    event.preventDefault();
-                    $('#settings-pane').show();
-                    $('#logs-pane').hide();
-                    $('#logs').removeClass('active');
-                    $('#settings').addClass('active');
-                    
-                });
-
-             
-                 $(document).on('click','#logs',function(event){
-                    event.preventDefault();
-
-                    $('#settings-pane').hide();
-                    $('#logs-pane').show();
-                    $('#logs').addClass('active');
-                    $('#settings').removeClass('active');
-                    
-                });
+           
                
         </script>
     </head>
@@ -78,9 +55,11 @@
            
             <div class="tab-content">
               <div class="tab-pane" id="logs-pane" role="tabpanel">
-                <div class="container" style="height:200px;overflow:scroll">
+                <div class="container" style="height:500px;overflow:scroll">                                           
                     <div id="console">
-                            console here
+                        <ul id="output-log">
+                            
+                        </ul>
                     </div>
                 </div> 
               </div>
@@ -94,7 +73,7 @@
                                         Peer Id
                                     </td>
                                     <td>
-                                        <div id="peerId">QmTEpwFY9PnX9ktjgGtBDZrUT8g4gB4szWyy7HEh1oNtca</div> 
+                                        <div id="peerId"></div> 
                                     </td>
                                 </tr>
                                 <tr>    
@@ -136,5 +115,6 @@
             <p>&copy; 2017 edChain</p>
         </div>
     </footer>
+    <script src="../js/settings.js"></script>
   </body>
 </html>

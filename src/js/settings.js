@@ -3,47 +3,52 @@ const {remote} = require('electron');
 
 const {dialog, BrowserWindow} = remote;
 
-var log1 = require('electron-log')
+var log = require('electron-log')
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 var ipfsAPI = require('ipfs-api');
-const pubsub1 = require('electron-pubsub');
+const pubsub = remote.require('electron-pubsub');
 var fs = require('fs');
-var ipfs = require('../../process_ipfs')();
+var ipcRenderer=require('electron').ipcRenderer;
 
-var getFileData = function(fn){
-	fs.readFile('/tmp/log','r',(err,fd) => {
-   	if(err){
-   		if(err.code === 'ENOENT'){
-   			log1.info('file does not exist');
-   			return;
-   		}
-   		throw err;
-   	}
-   	fn(fd);
+
+$(document).on('click','#settings',function(event){
+    event.preventDefault();
+    $('#settings-pane').show();
+    $('#logs-pane').hide();
+    $('#logs').removeClass('active');
+    $('#settings').addClass('active');
+    
 });
-}
 
-pubsub1.subscribe('uiLogging',(message,value) => {
-    		
-   getFileData(function(fval){
-   	log1.info(fval);
-   	$('#console').append(fval);
 
-   });
-   
-   });
+ $(document).on('click','#logs',function(event){
+    event.preventDefault();
+    ipcRenderer.send('ipfsChildLog',"");
+    $('#settings-pane').hide();
+    $('#logs-pane').show();
+    $('#logs').addClass('active');
+    $('#settings').removeClass('active');
+    
+});
+
+
+pubsub.subscribe('ipfs:childLog', function(event,data){
+    var $outputElement = $('#console');
+    var output = "<p><code>" + data.join("</code></p><p><code>") + "</code></p>";
+    $outputElement.html(output);
+});
 
 var checkOnline = function(){ 
-		
-		ipfs.isOnline(function(val){
 
-		if(val ==true){
+	pubsub.publish("ipfs:isOnline").then(function(value){
+
+		if(value ==true){
 			$("#ipfs-slider").prop("checked",true);
 		}
+	
 	});
 }
-
 
 
 $(document).ready(function() {
@@ -51,46 +56,37 @@ $(document).ready(function() {
 
 	checkOnline();
 
-
 	$("#ipfs-slider").click(function(){
 		
 		if($(this).prop("checked")==true){
-			ipfs.start();
+			pubsub.publish("ipfs:start");
 		}
 		else if($(this).prop("checked")==false){
-			ipfs.stop();
+			pubsub.publish("ipfs:stop");
 		}
 	});
 
-	ipfs.getPeerId(function(val){
-		log1.info(val);
-		$("#peerId").text(val);
-		
+	pubsub.publish("ipfs:getPeerId").then(function(value){
+
+		$("#peerId").text(value);
+	
+	});
+	
+	pubsub.publish("ipfs:getIPFSGWAddr").then(function(value){
+			
+		$("#gateway-addr").val(value);
+			
 	});
 
 
-	ipfs.getIPFSGWAddr(function(val){
-		
-		$("#gateway-addr").val(val);
-		
-	});
-
-	ipfs.getIPFSGWAddr(function(val){
-		
-		$("#gateway-addr").val(val);
-		
-	});
-
-	ipfs.getIPFSAPIAddress(function(val){
-		
-		$("#ipfs-api-addr").val(val);
-		
+	pubsub.publish("ipfs:getIPFSAPIAddress").then(function(value){
+		$("#ipfs-api-addr").val(value);
 	});
 
 
-	ipfs.getIPFSDatastorePath(function(val){
-		
-		$("#ipfs-datastore-path").val(val);
+	pubsub.publish("ipfs:getIPFSDatastorePath").then(function(value){
+				
+		$("#ipfs-datastore-path").val(value);
 		
 	});
 
