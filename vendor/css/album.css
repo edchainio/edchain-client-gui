@@ -74,3 +74,14 @@ footer p {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+.edchain-header {
+    
+    background-color:rgba(103, 162, 220, 1);
+
+}
+
+.ipfs-icon {
+
+    border-width: 2px;
+
+}

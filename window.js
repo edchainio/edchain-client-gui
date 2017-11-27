@@ -3,7 +3,7 @@ var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
-var ipfs = require(__dirname + '/process_ipfs')();
+// var ipfs = require(__dirname + '/process_ipfs')();
 
 const httpURL="http://localhost:8080/ipfs/";
 const featuredURL="http://139.59.66.198:5000/content/addresses/featured";
@@ -11,7 +11,9 @@ const ipfsGetURL=  "http://127.0.0.1:5001/api/v0/object/get?arg="
 
 const { exec } = require('child_process');
 const {remote} = require('electron')
-const {dialog, pubsub} = require('electron').remote;
+const {BrowserWindow} = remote;
+const {dialog} = remote.require('electron');
+const pubsub = remote.require('electron-pubsub');
 const currentWindow = remote.getCurrentWindow();
 var ipcRenderer=require('electron').ipcRenderer;
 
@@ -23,15 +25,37 @@ var node = {
     info: '',
 };
 
+var createAndShowChildWindow = function(url){
+             
+    ipcRenderer.send('createAndShowChildWindow',url);
+           
+};
 
+pubsub.subscribe('uiLogging', (event,val) => {
 
- var openSettings = function(event){
-                event.preventDefault();
-               // currentWindow.open(); return false;
-   //            ipcRenderer.createChildWindow(currentWindow);
-            let url=__dirname + '/src/html/settings.html';
-            ipcRenderer.send('openChildWindow',url);
-};  
+  //  log.info('payload',val);
+ 
+   
+    if(settingsWindow != null){
+   
+ //   settingsWindow.webContents.executeJavaScript('$("#console").append("' + val + '");');
+//     ipcRenderer.send('ipfsChildLog',val);
+
+}
+});
+
+var openSettings = function(){
+  
+    let url='file://' + __dirname + '/src/html/settings.html';
+    ipcRenderer.send('createChildWindow',url);
+           
+};
+
+var showSettings = function(event){
+    openSettings();
+    event.preventDefault();
+    ipcRenderer.send('showChildWindow');
+}  
 
 
 var setStatus = function($element){
@@ -62,6 +86,9 @@ var setStatus = function($element){
         });
     }, 1000, $element);
 };
+
+
+
 
 var getID = function($element){
     console.log("here");
@@ -197,15 +224,22 @@ var getCourseDetails = function(contentsHash,jpgHash,indxHash, callback){
               
         }
     });
+}
+
+
+var openCourseLink = function(event,url){
+    event.preventDefault();
+    createAndShowChildWindow(url);
 
 }
+
 
 var createHomePageCard = function(image, title, indexURL){
 
      $(".loader").hide();
      cardHtml="<div class='card'><img src=" + image +">";
      cardHtml= cardHtml + "<p class='card-text'>";
-     cardHtml= cardHtml + "<a href=" + indexURL +">"+ title + "</a>";
+     cardHtml= cardHtml + "<a id='courseLink' onclick=openCourseLink(event,'" + indexURL +"') href='#'>"+ title + "</a>";   
      cardHtml= cardHtml + "</p></div>";
      $('#rows').append(cardHtml);
  
@@ -220,12 +254,9 @@ var uiLog = function(message){
 
 
 var isIPFSOnline=function(){
-   let isOnline=false;
-    ipfs.getId(function(value){
-        if(value['addresses']){
-            isOnline=true;
-        }
-       setIPFSStatusButton(isOnline);
+     
+    pubsub.publish("ipfs:isOnline").then(function(value){
+          setIPFSStatusButton(value);
     });
 
     
@@ -234,13 +265,13 @@ var isIPFSOnline=function(){
 function setIPFSStatusButton(isOnline){
 
     if(isOnline){
-      $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
-      $('#ipfsStatus').text('IPFS Online');
+      $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-outline-success');
+      $('#img-ipfs-icon').prop("alt",'IPFS Online');
   
     }
     else{
-         $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
-         $('#ipfsStatus').text('IPFS Offline');
+         $('#ipfs-icon-ref').removeClass('btn-outline-success').addClass('btn-outline-danger');
+     //    $('#ipfsStatus').text('IPFS Offline');
     }
 
 }
@@ -249,23 +280,31 @@ function clearVersion(){
    $('#version').text("version:" + "");
 }
 
+function t(){
+    pubsub.publish()
+}
+
 $(document).ready(function() {
    
     setTimeout(getFeaturedData,3000);
-    setInterval(isIPFSOnline,5000); 
+    setInterval(isIPFSOnline,3000);
    
     $('#ipfsStatus').click(function(){
          
         if($('#ipfsStatus').hasClass('btn-outline-danger')){
-            ipfs.start();
-            $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
-            $('#ipfsStatus').text('IPFS Online');
+            pubsub.once("ipfs:start", function(){
+
+                $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
+                $('#ipfsStatus').text('IPFS Online');
+            });
         }
 
         else if($('#ipfsStatus').hasClass('btn-outline-success')){
-            ipfs.stop();
-            $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
-            $('#ipfsStatus').text('IPFS Offline');
+            pubsub.once("ipfs:stop", function(){
+
+                $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
+                $('#ipfsStatus').text('IPFS Offline');
+            });
 
         }
      
@@ -274,13 +313,13 @@ $(document).ready(function() {
 
     $('#stop').click(function(){
        
-      ipfs.getId();
+      pubsub.publish("ipfs:getId");
    
     });
     
     $('#version').click(function(){
 
-        ipfs.checkStatus(function(ver){
+        pubsub.once("ipfs:checkStatus", function(ver){
             $('#version').text("version:" + ver.version);
             setTimeout(clearVersion,2000);
         });

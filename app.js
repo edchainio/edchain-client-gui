@@ -2,7 +2,8 @@ var electron = require('electron'); // http://electron.atom.io/docs/api
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 var log = require('electron-log');
-/*var mcnode = require('./process_mcnode')();*/
+const pubsub = require('electron-pubsub');
+
 var ipfs = require('./process_ipfs')();
 
 var ipcMain=require('electron').ipcMain;
@@ -16,6 +17,14 @@ const { app, BrowserWindow, Menu, Tray } = electron;
 
 let mainWindow;
 let addWindow;
+let settingsWindow;
+
+for(let prop in ipfs){
+    if(ipfs[prop]){
+        pubsub.subscribe("ipfs:" + prop, ipfs[prop]);
+    }    
+}
+
 
 app.on('ready', () => {
     mainWindow = new BrowserWindow({
@@ -51,22 +60,40 @@ app.on('ready', () => {
     mainWindow.on('closed', () => {
          ipfs.stop();
          process.exit(1);
+        
+        
     });
-    mainWindow.openDevTools();
+  //  mainWindow.openDevTools();
    
-   
-    ipcMain.on('openChildWindow', function(event,url){
-
-        createChildWindow(mainWindow,url);
+    ipcMain.on('createAndShowChildWindow', function(event,url){
+        
+        showChildWindow(createChildWindow(mainWindow,url));
     });
 
+    ipcMain.on('createChildWindow', function(event,url){
 
+       settingsWindow= createChildWindow(mainWindow,url);
+    
+    });
+     ipcMain.on('showChildWindow', function(){
+
+        showChildWindow(settingsWindow);
+    });
+
+      ipcMain.on('ipfsChildLog', function(){
+
+        ipfsChildLog(settingsWindow);
+    });
 
 //    const mainMenu = Menu.buildFromTemplate(menuTemplate);
 //    Menu.setApplicationMenu(mainMenu);
 });
 
-
+function ipfsChildLog(value){
+    if(null != settingsWindow){
+        //log.info(settingsWindow.);
+    }
+}
 
 function createAddWindow() {
     addWindow = new BrowserWindow({
@@ -83,13 +110,20 @@ function createAddWindow() {
 var createChildWindow= function (mainWindow,url) {
     
     var child= new BrowserWindow({parent: mainWindow, modal:true, show:false});
-    child.loadURL('file://'+url);
-    child.once('ready-to-show', () => {
-        child.show();
-        child.openDevTools();
-    });
+    child.loadURL(url);
+    return child;
 
 }
+
+var showChildWindow= function(windowName){
+ 
+      windowName.show();
+    //  windowName.openDevTools();
+  //    log.info(windowName.webContents);
+ 
+
+}
+
 //ipcMain.on('course:audit', (event, course) => {
 //    mainWindow.webContents.send('course:audit', course);
 //    addWindow.close();
