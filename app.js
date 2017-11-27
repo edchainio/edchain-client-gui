@@ -60,8 +60,6 @@ app.on('ready', () => {
     mainWindow.on('closed', () => {
          ipfs.stop();
          process.exit(1);
-        
-        
     });
   //  mainWindow.openDevTools();
    
@@ -80,21 +78,24 @@ app.on('ready', () => {
         showChildWindow(settingsWindow);
     });
 
-      ipcMain.on('ipfsChildLog', function(){
-
-        ipfsChildLog(settingsWindow);
+      ipcMain.on('ipfsChildLog', function(event,val){
+      
+        ipfsChildLog(val);
     });
 
-//    const mainMenu = Menu.buildFromTemplate(menuTemplate);
-//    Menu.setApplicationMenu(mainMenu);
+
 });
 
+
+var globalLog = [];
 function ipfsChildLog(value){
-
-    if(null != settingsWindow){
-
-        settingsWindow.webContents.executeJavaScript('$(#console).text('+ value + ')');
-
+    if(value){
+        globalLog.push(value.toString());
+    }
+    if(settingsWindow){
+      
+        pubsub.publish("ipfs:childLog", globalLog);
+    
     }
 }
 
@@ -120,14 +121,8 @@ var createChildWindow= function (mainWindow,url) {
 
 var showChildWindow= function(windowName){
  
-      windowName.show();
-    //  windowName.openDevTools();
-  //    log.info(windowName.webContents);
- 
-
+    windowName.show();
+   // windowName.openDevTools();
+     // log.info(windowName.webContents); 
 }
 
-//ipcMain.on('course:audit', (event, course) => {
-//    mainWindow.webContents.send('course:audit', course);
-//    addWindow.close();
-//});

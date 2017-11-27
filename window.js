@@ -6,7 +6,7 @@ var log = require('electron-log');
 
 
 const httpURL="http://localhost:8080/ipfs/";
-const featuredURL="http://139.59.66.198:5000/content/addresses/featured";
+const edchainNodeURL="http://139.59.66.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://127.0.0.1:5001/api/v0/object/get?arg="
 
 const { exec } = require('child_process');
@@ -32,17 +32,12 @@ var createAndShowChildWindow = function(url){
 };
 
 pubsub.subscribe('uiLogging', (event,val) => {
+  
+    ipcRenderer.send('ipfsChildLog',val);
 
-  //  log.info('payload',val);
- 
-   
-    if(settingsWindow != null){
-   
- //   settingsWindow.webContents.executeJavaScript('$("#console").append("' + val + '");');
-//     ipcRenderer.send('ipfsChildLog',val);
-
-}
 });
+
+
 
 var openSettings = function(){
   
@@ -52,9 +47,12 @@ var openSettings = function(){
 };
 
 var showSettings = function(event){
+
     openSettings();
     event.preventDefault();
-    ipcRenderer.send('showChildWindow');
+     ipcRenderer.send('showChildWindow');
+   
+
 }  
 
 
@@ -116,23 +114,25 @@ var getFeaturedData = function(){
    
     for(var i=0;i<1;i++){
         $.ajax({
-            url: featuredURL,
+            url: edchainNodeURL,
             method: 'GET',
             success: function(edchainData){
 
                 courseLength=edchainData["courses"].length;
                 
                 for(var n=0;n<courseLength;n++){
-                    let url=ipfsGetURL+edchainData["courses"][n].hash+"&encoding=json";
+                    parentHash=edchainData["courses"][n].hash;
                     
+                   
                     let callback = (function(course){
                         return function(imageURL, indexURL){
                             var title = course.title;
+                          
                             createHomePageCard(imageURL, title, indexURL);
                         };
                     }(edchainData["courses"][n]));
                     
-                    getParentData(url, callback);
+                    getParentData(parentHash, callback);
           
                 }
             },
@@ -147,8 +147,8 @@ var getFeaturedData = function(){
 
 
 
-var getParentData = function(url, callback){
-
+var getParentData = function(parentHash, callback){
+     let url=ipfsGetURL+parentHash+"&encoding=json";
       $.ajax({
             url:url,
             method:'GET',
@@ -156,7 +156,7 @@ var getParentData = function(url, callback){
    
                 var arr=parentData["Links"];
                 let courseContentURL=ipfsGetURL + arr[0].Hash +"&encoding=json";
-                getCourseContents(courseContentURL, callback);
+                getCourseContents(arr[0].Hash,courseContentURL, callback);
 
             },
             error: function(error){
@@ -165,11 +165,11 @@ var getParentData = function(url, callback){
         });
 }
 
-var getCourseContents = function(url2, callback){
+var getCourseContents = function(contentHash,courseContentURL, callback){
 
-
+    
     $.ajax({
-        url:url2,
+        url:courseContentURL,
         method:'GET',
         success: function(data1){
        
@@ -180,8 +180,9 @@ var getCourseContents = function(url2, callback){
                  
                 if(names === 'contents'){
                     let jpgHash;
-                    let indxHash;
-                    getCourseDetails(data1["Links"][i].Hash,jpgHash,indxHash, callback);
+                  
+                   
+                    getCourseDetails(data1["Links"][i].Hash,jpgHash,contentHash, callback);
 
                 }
             }   
@@ -214,7 +215,8 @@ var getCourseDetails = function(contentsHash,jpgHash,indxHash, callback){
                     }
                     else if(arr1[i].Name.endsWith('index.htm')){
 
-                       indxHash =arr1[i].Hash;
+                     indxHash = indxHash + '/contents/index.htm';
+                   //   indxHash = contentsHash + '/index.htm';
 
                     }
                                                
@@ -248,10 +250,10 @@ var createHomePageCard = function(image, title, indexURL){
 }
 
 
-var uiLog = function(message){
+/*var uiLog = function(message){
     $('#console').append('<span id=logMessage>' + message + '</span>');
 }
-
+*/
 
 var isIPFSOnline=function(){
      
@@ -265,12 +267,12 @@ var isIPFSOnline=function(){
 function setIPFSStatusButton(isOnline){
 
     if(isOnline){
-      $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-outline-success');
+      $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
       $('#img-ipfs-icon').prop("alt",'IPFS Online');
   
     }
     else{
-         $('#ipfs-icon-ref').removeClass('btn-outline-success').addClass('btn-outline-danger');
+         $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
      //    $('#ipfsStatus').text('IPFS Offline');
     }
 

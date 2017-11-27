@@ -12,11 +12,32 @@ var fs = require('fs');
 var ipcRenderer=require('electron').ipcRenderer;
 
 
-ipcRenderer.on('ipfsChildLog',(event,data) => {
-	log.info('data',data);
-	$('#console').text(data);
-})
+$(document).on('click','#settings',function(event){
+    event.preventDefault();
+    $('#settings-pane').show();
+    $('#logs-pane').hide();
+    $('#logs').removeClass('active');
+    $('#settings').addClass('active');
+    
+});
 
+
+ $(document).on('click','#logs',function(event){
+    event.preventDefault();
+    ipcRenderer.send('ipfsChildLog',"");
+    $('#settings-pane').hide();
+    $('#logs-pane').show();
+    $('#logs').addClass('active');
+    $('#settings').removeClass('active');
+    
+});
+
+
+pubsub.subscribe('ipfs:childLog', function(event,data){
+    var $outputElement = $('#console');
+    var output = "<p><code>" + data.join("</code></p><p><code>") + "</code></p>";
+    $outputElement.html(output);
+});
 
 var checkOnline = function(){ 
 

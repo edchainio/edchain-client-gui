@@ -16,8 +16,7 @@ var startIpfs = function(){
 	const ps= spawn('./bin/linux/ipfs',['daemon']);
 
 		ps.stdout.on('data', function(data){
- 			pubsub.publish('uiLogging', data.toString());
- 			
+ 			pubsub.publish('uiLogging', data.toString()); 			
  		});
 
 		ps.stderr.on('data', function(data){;
@@ -87,7 +86,7 @@ var ipfsAPIAddress = function(fn){
 
 	getIPFS().config.get('Addresses.API',(err,config) => {
 		if(err){
-			throw err;
+		//	throw err;
 		}
 		fn.resolve(config);
 	});
@@ -98,7 +97,7 @@ var ipfsLogTail = function(fn){
 
 	getIPFS().log.tail((err,value) => {
 		if(err){
-			throw err;
+		//	throw err;
 		}
 	
 		fn(value);
