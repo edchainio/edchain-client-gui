@@ -20,6 +20,8 @@ Note: You have have to preface some of these commands with `sudo` to meet privil
 `npm install`
 
 ## Readings
+If you are not familiar with git, please look at this tutorial: https://try.github.io/levels/1/challenges/1
+
 This is the framework that the application is built on. Please read before you start working on the application. 
 https://electronjs.org/docs/tutorial/quick-start
 
