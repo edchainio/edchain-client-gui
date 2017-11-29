@@ -35,5 +35,7 @@ The main file in our case is app.js and the main ui file is index.html.
 Coding Guidlines:
 
 [General] (https://github.com/Automattic/wp-calypso/blob/master/docs/coding-guidelines.md)
+
 [Javascript] (https://github.com/Automattic/wp-calypso/blob/master/docs/coding-guidelines/javascript.md)
+
 
