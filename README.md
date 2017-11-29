@@ -10,6 +10,7 @@ You need a mac os or linux to get started. If you have neither, please install [
 
 You will also need to install Git. Follow instructions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to install it. Once complete, please get edchain running on your machine. The instructions are stated below.
 
+NodeJS is also required. Please install node js with instructions [here](https://nodejs.org/en/download/package-manager/)
 
 Enter the following commands to get edChain up-and-running:
 
