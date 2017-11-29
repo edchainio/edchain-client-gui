@@ -6,6 +6,11 @@ Note: Version 6x, or higher, of NodeJS is required.
 
 ## Getting Started For Developers
 
+You need a mac os or linux to get started. If you have neither, please install [Oracle Virtual Box] https://www.virtualbox.org/wiki/Downloads and follow instructions [here](https://www.lifewire.com/run-ubuntu-within-windows-virtualbox-2202098) to install Ubuntu on the virtual box. 
+
+You will also need to install Git. Follow instructions [here](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) to install it. Once complete, please get edchain running on your machine. The instructions are stated below.
+
+
 Enter the following commands to get edChain up-and-running:
 
 Note: You have have to preface some of these commands with `sudo` to meet privilege requirements defined by your operating system.
