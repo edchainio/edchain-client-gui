@@ -10,22 +10,22 @@ var fs = require('fs');
 
 
 var startIpfs = function(){
+	const os = process.platform;
+	const ipfsPath = path.resolve(__dirname,'./','bin', os,'ipfs daemon');
 	
-	const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
-	
-	const ps= spawn('./bin/linux/ipfs',['daemon']);
+	const ps= spawn('./bin/' + os + '/ipfs',['daemon']);
 
-		ps.stdout.on('data', function(data){
- 			pubsub.publish('uiLogging', data.toString()); 			
- 		});
-
-		ps.stderr.on('data', function(data){;
-		 	log.info('ipfs error:', data.toString());
+	ps.stdout.on('data', function(data){
+			pubsub.publish('uiLogging', data.toString()); 			
 		});
 
-		ps.on('exit', function(code){
-			log.info('ipfs exit:', code.toString());
-		});
+	ps.stderr.on('data', function(data){;
+	 	log.info('ipfs error:', data.toString());
+	});
+
+	ps.on('exit', function(code){
+		log.info('ipfs exit:', code.toString());
+	});
 
 };
 
