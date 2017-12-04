@@ -1,4 +1,5 @@
 const platform = require('os').platform();
+
 const exec = require('child_process').exec;
 const pubsub = require('electron-pubsub');
 var path = require('path');  
@@ -10,23 +11,22 @@ var fs = require('fs');
 
 
 var startIpfs = function(){
-	const os = process.platform;
-	const ipfsPath = path.resolve(__dirname,'./','bin', os,'ipfs daemon');
-	
-	const ps= spawn('./bin/' + os + '/ipfs',['daemon']);
+	const ipfsPath = path.resolve(__dirname, 'bin', platform, 'ipfs');
+	const ipfs = spawn(ipfsPath, ['daemon', '--init']);
 
-	ps.stdout.on('data', function(data){
+	ipfs.stdout.on('data', function(data){
 			pubsub.publish('uiLogging', data.toString()); 			
 		});
 
-	ps.stderr.on('data', function(data){;
+	ipfs.stderr.on('data', function(data){;
 	 	log.info('ipfs error:', data.toString());
 	});
 
-	ps.on('exit', function(code){
+	ipfs.on('exit', function(code){
 		log.info('ipfs exit:', code.toString());
 	});
 
+	return ipfs;
 };
 
 var ipfsStop = function(){

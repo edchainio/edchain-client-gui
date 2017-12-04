@@ -9,10 +9,6 @@ var ipfs = require('./process_ipfs')();
 var ipcMain=require('electron').ipcMain;
 const { exec } = require('child_process');
 
-const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon')
-const mcnodePath = path.resolve(__dirname,'./','bin','linux','mcnode -d $PWD/ip4/104.236.125.197/tcp/9000/p2p/QmRXjzUbsTHYa9t4z47B7tR7zsfAKq3iCkvAdN3NKigWPn')
-
-
 const { app, BrowserWindow, Menu, Tray } = electron;
 
 let mainWindow;
@@ -20,7 +16,7 @@ let addWindow;
 let settingsWindow;
 
 for(let prop in ipfs){
-    if(ipfs[prop]){
+    if(typeof ipfs[prop] === 'function'){
         pubsub.subscribe("ipfs:" + prop, ipfs[prop]);
     }    
 }
@@ -105,7 +101,8 @@ function createAddWindow() {
         height,
         title: 'Single Course pane'
     });
-// Need to make course.html 
+    // Need to make course.html 
+    // What is going on here?
     addWindow.loadURL(`file://${__dirname}/course.html`);
     addWindow.on('closed', () => addWindow = null);
 }
