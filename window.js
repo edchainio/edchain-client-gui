@@ -259,6 +259,7 @@ var isIPFSOnline=function(){
      
     pubsub.publish("ipfs:isOnline").then(function(value){
           setIPFSStatusButton(value);
+          setTimeout(isIPFSOnline, 3000);
     });
 
     
@@ -289,7 +290,8 @@ function t(){
 $(document).ready(function() {
    
     setTimeout(getFeaturedData,3000);
-    setInterval(isIPFSOnline,3000);
+    // setInterval(isIPFSOnline,3000);
+    isIPFSOnline()
    
     $('#ipfsStatus').click(function(){
          
