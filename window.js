@@ -290,6 +290,7 @@ function t(){
 $(document).ready(function() {
    
     setTimeout(getFeaturedData,3000);
+    // Avoid setInterval is a bit unwieldy
     // setInterval(isIPFSOnline,3000);
     isIPFSOnline()
    
