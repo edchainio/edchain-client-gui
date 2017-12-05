@@ -15,8 +15,8 @@ var startIpfs = function(){
 	const ipfs = spawn(ipfsPath, ['daemon', '--init']);
 
 	ipfs.stdout.on('data', function(data){
-			pubsub.publish('uiLogging', data.toString()); 			
-		});
+		pubsub.publish('ipfs:logging', data.toString()); 			
+	});
 
 	ipfs.stderr.on('data', function(data){;
 	 	log.info('ipfs error:', data.toString());
@@ -186,7 +186,7 @@ var manager = function(){
 
 	self.start = function(){
 		log.info('starting..');
-		pubsub.publish('uiLogging', {info: 'Starting IPFS...'});
+		pubsub.publish('ipfs:logging', {info: 'Starting IPFS...'});
 		self.ipfs = startIpfs();
 
 	

@@ -15,6 +15,7 @@ const {BrowserWindow} = remote;
 const {dialog} = remote.require('electron');
 const pubsub = remote.require('electron-pubsub');
 const currentWindow = remote.getCurrentWindow();
+
 var ipcRenderer=require('electron').ipcRenderer;
 
 var node = {
@@ -31,12 +32,6 @@ var createAndShowChildWindow = function(url){
            
 };
 
-pubsub.subscribe('uiLogging', (event,val) => {
-  
-    ipcRenderer.send('ipfsChildLog',val);
-
-});
-
 
 
 var openSettings = function(){
@@ -50,7 +45,7 @@ var showSettings = function(event){
 
     openSettings();
     event.preventDefault();
-     ipcRenderer.send('showChildWindow');
+    ipcRenderer.send('showChildWindow');
    
 
 }  
@@ -244,16 +239,8 @@ var createHomePageCard = function(image, title, indexURL){
      cardHtml= cardHtml + "<a id='courseLink' onclick=openCourseLink(event,'" + indexURL +"') href='#'>"+ title + "</a>";   
      cardHtml= cardHtml + "</p></div>";
      $('#rows').append(cardHtml);
- 
-
-
 }
 
-
-/*var uiLog = function(message){
-    $('#console').append('<span id=logMessage>' + message + '</span>');
-}
-*/
 
 var isIPFSOnline=function(){
      
@@ -283,10 +270,6 @@ function clearVersion(){
    $('#version').text("version:" + "");
 }
 
-function t(){
-    pubsub.publish()
-}
-
 $(document).ready(function() {
    
     setTimeout(getFeaturedData,3000);
@@ -294,7 +277,7 @@ $(document).ready(function() {
     // setInterval(isIPFSOnline,3000);
     isIPFSOnline()
    
-    $('#ipfsStatus').click(function(){
+    $('#ipfsStatus').on("click", function(){
          
         if($('#ipfsStatus').hasClass('btn-outline-danger')){
             pubsub.once("ipfs:start", function(){
@@ -316,13 +299,15 @@ $(document).ready(function() {
    
     });
 
-    $('#stop').click(function(){
+    $("#ipfs-icon-ref").on("click", showSettings);
+
+    $('#stop').on("click", function(){
        
       pubsub.publish("ipfs:getId");
    
     });
     
-    $('#version').click(function(){
+    $('#version').on("click", function(){
 
         pubsub.once("ipfs:checkStatus", function(ver){
             $('#version').text("version:" + ver.version);
@@ -332,7 +317,7 @@ $(document).ready(function() {
     });
 
 
-    $('#refresh').click(function(){
+    $('#refresh').on("click", function(){
     
         $(".card").remove(function(){
          getFeaturedData();
@@ -345,7 +330,7 @@ $(document).ready(function() {
     });
 
 
-     $('#open').click(function(){
+     $('#open').on("click", function(){
         console.log(dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']}));
 
     });

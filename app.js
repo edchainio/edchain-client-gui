@@ -60,40 +60,42 @@ app.on('ready', () => {
   //  mainWindow.openDevTools();
    
     ipcMain.on('createAndShowChildWindow', function(event,url){
-        
+        // Is it really a good idea 
+        // to just spawn windows like this?
+        // Should they be tracked?
         showChildWindow(createChildWindow(mainWindow,url));
     });
 
     ipcMain.on('createChildWindow', function(event,url){
-
-       settingsWindow= createChildWindow(mainWindow,url);
-    
+        settingsWindow = createChildWindow(mainWindow,url);
+        settingsWindow.on("show", function(){
+            ipfsChildLog();
+        });
     });
-     ipcMain.on('showChildWindow', function(){
 
+    ipcMain.on('showChildWindow', function(){
         showChildWindow(settingsWindow);
     });
 
-      ipcMain.on('ipfsChildLog', function(event,val){
-      
+    pubsub.subscribe('ipfs:logging', function(event,val){
         ipfsChildLog(val);
     });
 
 
 });
 
+var ipfsChildLog = (function(){
+    var __log = [];
+    return function ipfsChildLog(value){
+        if(value){
+            __log.push(value.toString());
+        }
+        if(settingsWindow){          
+            pubsub.publish("ipfsChildLog", __log);        
+        }
+    }
+})();
 
-var globalLog = [];
-function ipfsChildLog(value){
-    if(value){
-        globalLog.push(value.toString());
-    }
-    if(settingsWindow){
-      
-        pubsub.publish("ipfs:childLog", globalLog);
-    
-    }
-}
 
 function createAddWindow() {
     addWindow = new BrowserWindow({
@@ -107,19 +109,22 @@ function createAddWindow() {
     addWindow.on('closed', () => addWindow = null);
 }
 
-
-var createChildWindow= function (mainWindow,url) {
+var createChildWindow = function (mainWindow,url) {
     
-    var child= new BrowserWindow({parent: mainWindow, modal:true, show:false});
+    var child= new BrowserWindow({
+        parent: mainWindow, 
+        modal:true, 
+        show:false
+    });
     child.loadURL(url);
     return child;
 
 }
 
-var showChildWindow= function(windowName){
+var showChildWindow= function(browserWindow){
  
-    windowName.show();
-   // windowName.openDevTools();
-     // log.info(windowName.webContents); 
+    browserWindow.show();
+   // browserWindow.openDevTools();
+     // log.info(browserWindow.webContents); 
 }
 
