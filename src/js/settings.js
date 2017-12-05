@@ -31,10 +31,9 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#close").on("click", function(event){
+	$("#close-window").on("click", function(event){
 		event.preventDefault();
 		window.close();
-		// pubsub.publish("kill:window");
 	});
 
 	pubsub.publish("ipfs:getPeerId").then(function(value){

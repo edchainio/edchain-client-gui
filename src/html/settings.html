@@ -35,17 +35,19 @@
     </head>
     <body>
         <div class="container">
-       
+            <button type="button" class="close" id="close-window" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
             <nav class="nav nav-tabs" role="tablist">
                 <a class="nav-item nav-link" data-toggle="tab" id="logs-tab" href="#logs-pane" role="tab">logs</a>
                 <a class="nav-item nav-link active" data-toggle="tab" id="settings-tab" href="#settings-pane">settings</a>
             </nav>
             <div class="tab-content text-center">
                    
-                <!-- <label class="switch">
+                <label class="switch">
                     <input type="checkbox" id="ipfs-slider">
                     <span class="slider round"></span>
-                </label> -->
+                </label>
                 <div class="tab-pane fade" id="logs-pane" role="tabpanel">
                     <div class="container" style="height:500px;overflow:scroll">                                           
                         <div id="console">
