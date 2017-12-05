@@ -1,19 +1,18 @@
-
-const {remote} = require('electron');
-const pubsub = remote.require('electron-pubsub');
+const { ipcRenderer } =require('electron');
 
 
 var checkOnline = function(){ 
-
-	pubsub.publish("ipfs:isOnline").then(function(value){
-		// Is non strict comparison the intent here?
-		if(value == true){
-			$("#ipfs-slider").prop("checked",true);
-		}
-	
-	});
+	ipcRenderer.send("ipfs:isOnline");
 }
 
+
+ipcRenderer.on("isOnline", function(event, value){
+	// Is non strict comparison the intent here?
+	if(value == true){
+		$("#ipfs-slider").prop("checked",true);
+	}
+
+});
 
 $(document).ready(function() {
 
@@ -24,10 +23,10 @@ $(document).ready(function() {
 	$("#ipfs-slider").on("click",function(){
 		
 		if($(this).prop("checked")==true){
-			pubsub.publish("ipfs:start");
+			ipcRenderer.send("ipfs:start");
 		}
 		else if($(this).prop("checked")==false){
-			pubsub.publish("ipfs:stop");
+			ipcRenderer.send("ipfs:stop");
 		}
 	});
 
@@ -36,31 +35,31 @@ $(document).ready(function() {
 		window.close();
 	});
 
-	pubsub.publish("ipfs:getPeerId").then(function(value){
-
+	ipcRenderer.on("getPeerId", function(event, value){
 		$("#peerId").text(value);
-	
 	});
 	
-	pubsub.publish("ipfs:getIPFSGWAddr").then(function(value){
-			
-		$("#gateway-addr").val(value);
-			
+	ipcRenderer.send("ipfs:getPeerId");
+	
+	ipcRenderer.on("getIPFSGWAddr", function(event, value){
+		$("#gateway-addr").val(value);	
 	});
 
+	ipcRenderer.send("ipfs:getIPFSGWAddr");
 
-	pubsub.publish("ipfs:getIPFSAPIAddress").then(function(value){
+
+	ipcRenderer.on("getIPFSAPIAddress", function(event, value){
 		$("#ipfs-api-addr").val(value);
 	});
 
+	ipcRenderer.send("ipfs:getIPFSAPIAddress");
 
-	pubsub.publish("ipfs:getIPFSDatastorePath").then(function(value){
-				
-		$("#ipfs-datastore-path").val(value);
-		
+	ipcRenderer.on("getIPFSDatastorePath", function(event, value){
+		$("#ipfs-datastore-path").val(value);	
 	});
+	ipcRenderer.send("ipfs:getIPFSDatastorePath");
 
-	pubsub.subscribe('ipfsChildLog', function(event,data){
+	ipcRenderer.on('ipfs:logging', function(event, data){
 	    var $outputElement = $('#console');
 	    var output = "<p><code>" + data.join("</code></p><p><code>") + "</code></p>";
 	    $outputElement.html(output);

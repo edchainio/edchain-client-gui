@@ -1,33 +1,59 @@
-var electron = require('electron'); // http://electron.atom.io/docs/api
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 var log = require('electron-log');
-const pubsub = require('electron-pubsub');
-
-var ipfs = require('./process_ipfs')();
-
-var ipcMain=require('electron').ipcMain;
 const { exec } = require('child_process');
 
-const { app, BrowserWindow, Menu, Tray } = electron;
+const { ipcMain, app, BrowserWindow, Menu, Tray } = require('electron');
 
-let mainWindow;
-let addWindow;
-let settingsWindow;
+
+
+let mainWindow, addWindow, settingsWindow;
 
 var __windows = {};
 
+var __logSubscribers = {};
+
+
+var ipfs = require('./process_ipfs')({
+    "afterLogUpdateHook": function(ipfsLog){
+        for(let subscriber in __logSubscribers){
+            if(typeof subscriber.send === 'function'){
+                subscriber.send("ipfs:logging", ipfsLog);
+            }
+        }
+    }
+});
+
 for(let prop in ipfs){
     if(typeof ipfs[prop] === 'function'){
-        pubsub.subscribe("ipfs:" + prop, ipfs[prop]);
-    }    
+        ipcMain.on("ipfs:" + prop, ipfs[prop]);
+    }
 }
 
 var createWindow = function createWindow(config){
-    var browserWindow = new BrowserWindow(config);
-    var __id = browserWindow.id;
+    var 
+        __id, browserWindow, 
+        hasIpfsLogging = false;
+    
+    if(Object.hasOwnProperty.call(config, "hasIpfsLogging")){
+        hasIpfsLogging = config["hasIpfsLogging"];
+        config["hasIpfsLogging"] = null;
+    }
+
+    browserWindow = new BrowserWindow(config);
+    __id = browserWindow.id;
+    
     __windows[__id] = browserWindow;
+    
+    if(hasIpfsLogging){
+        __logSubscribers[__id] = browserWindow.webContents;
+    }
+
     browserWindow.on('closed', function(){
+        __windows[__id].removeAllListeners();
+        
+        if(__logSubscribers[__id]) __logSubscribers[__id] = null;
+
         __windows[__id] = null;
     });
     return browserWindow;
@@ -77,16 +103,13 @@ var createMainWindow = function createMainWindow(){
     ipcMain.on('createChildWindow', function(event,url){
         settingsWindow = createChildWindow(mainWindow,url);
         settingsWindow.on("show", function(){
-            ipfsChildLog();
+            // hack
+            ipfs.getLog({"sender": settingsWindow.webContents});
         });
     });
 
     ipcMain.on('showChildWindow', function(){
         showChildWindow(settingsWindow);
-    });
-
-    pubsub.subscribe('ipfs:logging', function(event,val){
-        ipfsChildLog(val);
     });
 };
 
@@ -112,19 +135,7 @@ app.on('activate', () => {
     if (!__windows.length) {
         createMainWindow();
     }
-})
-
-var ipfsChildLog = (function(){
-    var __log = [];
-    return function ipfsChildLog(value){
-        if(value){
-            __log.push(value.toString());
-        }
-        if(settingsWindow){          
-            pubsub.publish("ipfsChildLog", __log);        
-        }
-    }
-})();
+});
 
 
 function createAddWindow() {
@@ -145,7 +156,8 @@ var createChildWindow = function (mainWindow, url) {
     var child = createWindow({
         parent: mainWindow, 
         modal:true, 
-        show:false
+        show:false,
+        hasIpfsLogging: true
     });
     child.loadURL(url);
     return child;

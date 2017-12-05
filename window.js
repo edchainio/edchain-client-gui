@@ -1,7 +1,5 @@
-// const pubsub = require('electron').remote.require('electron-pubsub');
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
-var ipfsAPI = require('ipfs-api');
 var log = require('electron-log');
 
 
@@ -10,13 +8,12 @@ const edchainNodeURL="http://139.59.66.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://127.0.0.1:5001/api/v0/object/get?arg="
 
 const { exec } = require('child_process');
-const {remote} = require('electron')
+const {remote} = require('electron');
 const {BrowserWindow} = remote;
 const {dialog} = remote.require('electron');
-const pubsub = remote.require('electron-pubsub');
 const currentWindow = remote.getCurrentWindow();
 
-var ipcRenderer=require('electron').ipcRenderer;
+var ipcRenderer = require('electron').ipcRenderer;
 
 var node = {
     up: false,
@@ -242,15 +239,14 @@ var createHomePageCard = function(image, title, indexURL){
 }
 
 
-var isIPFSOnline=function(){
-     
-    pubsub.publish("ipfs:isOnline").then(function(value){
-          setIPFSStatusButton(value);
-          setTimeout(isIPFSOnline, 3000);
-    });
+var isIPFSOnline = function(){
+    ipcRenderer.send("ipfs:isOnline");
+};
 
-    
-}
+ipcRenderer.on("isOnline", function(event, value){
+    setIPFSStatusButton(value);
+    setTimeout(isIPFSOnline, 3000);
+});
 
 function setIPFSStatusButton(isOnline){
 
@@ -276,23 +272,25 @@ $(document).ready(function() {
     // Avoid setInterval is a bit unwieldy
     // setInterval(isIPFSOnline,3000);
     isIPFSOnline()
-   
+    
+    ipcRenderer.on("start", function(){
+        $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
+        $('#ipfsStatus').text('IPFS Online');
+    });
+
+    ipcRenderer.on("stop", function(){
+        $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
+        $('#ipfsStatus').text('IPFS Offline');
+    });
+
     $('#ipfsStatus').on("click", function(){
          
         if($('#ipfsStatus').hasClass('btn-outline-danger')){
-            pubsub.once("ipfs:start", function(){
-
-                $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
-                $('#ipfsStatus').text('IPFS Online');
-            });
+            ipcRenderer.send("ipfs:start");
         }
 
         else if($('#ipfsStatus').hasClass('btn-outline-success')){
-            pubsub.once("ipfs:stop", function(){
-
-                $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
-                $('#ipfsStatus').text('IPFS Offline');
-            });
+            ipcRenderer.send("ipfs:stop");
 
         }
      
@@ -303,30 +301,27 @@ $(document).ready(function() {
 
     $('#stop').on("click", function(){
        
-      pubsub.publish("ipfs:getId");
+      ipcRenderer.send("ipfs:getId");
    
     });
     
     $('#version').on("click", function(){
 
-        pubsub.once("ipfs:checkStatus", function(ver){
-            $('#version').text("version:" + ver.version);
-            setTimeout(clearVersion,2000);
-        });
+        ipcRenderer.send("ipfs:checkStatus");
 
+    });
+
+    ipcRenderer.on("checkStatus", function(event, ver){
+        $('#version').text("version:" + ver.version);
+        setTimeout(clearVersion,2000);
     });
 
 
     $('#refresh').on("click", function(){
     
         $(".card").remove(function(){
-         getFeaturedData();
-      });
-   
-  //   getFeaturedData();
-
-      
-   
+            getFeaturedData();
+        });
     });
 
 

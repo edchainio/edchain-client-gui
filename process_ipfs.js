@@ -1,21 +1,22 @@
 const platform = require('os').platform();
 
 const exec = require('child_process').exec;
-const pubsub = require('electron-pubsub');
+const { ipcMain } = require('electron');
+
 var path = require('path');  
 var ipfsAPI = require('ipfs-api');
+
 var log = require('electron-log');
-const {spawn} = require('child_process');
-var fs = require('fs');
+
+const { spawn } = require('child_process');
 
 
-
-var startIpfs = function(){
+var startIpfs = function(callback){
 	const ipfsPath = path.resolve(__dirname, 'bin', platform, 'ipfs');
 	const ipfs = spawn(ipfsPath, ['daemon', '--init']);
 
 	ipfs.stdout.on('data', function(data){
-		pubsub.publish('ipfs:logging', data.toString()); 			
+		callback(data.toString());	
 	});
 
 	ipfs.stderr.on('data', function(data){;
@@ -54,7 +55,7 @@ var ipfsPeerId = function(fn){
 		if(err){
 //			throw err;
 		}
-		fn.resolve(config);
+		fn(config);
 	});
 }
 
@@ -64,7 +65,7 @@ var ipfsDatastorePath = function(fn){
 		if(err){
 	//		throw err;
 		}
-		fn.resolve(config);
+		fn(config);
 	});
 }
 
@@ -74,7 +75,7 @@ var ipfsGatewayAddress = function(fn){
 		if(err){
 	//		throw err;
 		}
-	fn.resolve(config);
+		fn(config);
 		
 	});
 
@@ -88,7 +89,7 @@ var ipfsAPIAddress = function(fn){
 		if(err){
 		//	throw err;
 		}
-		fn.resolve(config);
+		fn(config);
 	});
 
 }
@@ -107,14 +108,12 @@ var ipfsLogTail = function(fn){
 
 var ipfsStatus = function(func){
  
-    ipfs.version()
-    	.then((res) => {
-    		log.info(res);
-    		func(res);
-    	})
-    	.catch((err) => {
-    		logger.error(err)
-    	});
+    ipfs.version().then((res) => {
+		// log.info(res);
+		func(res);
+	}).catch((err) => {
+		logger.error(err)
+	});
 };
 
 var isOnline = function(fn){
@@ -124,8 +123,7 @@ var isOnline = function(fn){
 	    if(value!=null && value['addresses']){
 	            isUp=true;
 	     }
-	    
-	     fn.resolve(isUp); 
+	    fn(isUp); 
     
     });
 }
@@ -162,22 +160,64 @@ var getIPFS = function(){
 
 }
 
-
-var manager = function(){
+var manager = function(options){
 	var self = {};
-	self.ipfs = startIpfs();
+
+	var __log = [];
+
+	var logOutput = function (value){
+        if(value){
+            __log.push(value.toString());
+            cb = options.afterLogUpdateHook || function(){};
+            cb(__log);
+        }
+    };
+
+    self.getLog = function(event, ...args){
+    	event.sender.send("getLog", __log);
+    };
 	
-	self.getId = function(fn){
-		ipfsId(fn);
+	self.getId = function(event, ...args){
+		ipfsId(function(payload){
+			event.sender.send("getId", payload);
+		});
 	}
 	
-	self.isOnline = function(fn){
-		isOnline(fn);
+	self.isOnline = function(event, ...args){
+		isOnline(function(payload){
+			event.sender.send("isOnline", payload);
+		});
 	}
 
+	self.getPeerId = function(event, ...args){
+		ipfsPeerId(function(payload){
+			event.sender.send("getPeerId", payload);
+		});
+	
+	};
+
+	self.getIPFSDatastorePath = function(event, ...args){
+		ipfsDatastorePath(function(payload){
+			event.sender.send("getIPFSDatastorePath", payload);
+		});
+	
+	};
+
+	self.getIPFSAPIAddress = function(event, ...args){
+		ipfsAPIAddress(function(payload){
+			event.sender.send("getIPFSAPIAddress", payload);
+		});
+	
+	};
+
+	self.getIPFSGWAddr = function(event, ...args){
+		ipfsGatewayAddress(function(payload){
+			event.sender.send("getIPFSGWAddr", payload);
+		});
+	};
 	
 	self.checkStatus = function(response){
-		
+		// TODO: Figure out why this is different
 		ipfsStatus(function(response2){
 			response(response2);
 		});
@@ -186,37 +226,16 @@ var manager = function(){
 
 	self.start = function(){
 		log.info('starting..');
-		pubsub.publish('ipfs:logging', {info: 'Starting IPFS...'});
-		self.ipfs = startIpfs();
-
-	
+		logOutput('Starting IPFS...');
+		self.ipfs = startIpfs(logOutput);
 	};
 
 	self.stop = function(){
 		log.info('stopping..');
 	    self.ipfs = ipfsStop();
-		
 	};
 
-	self.getPeerId = function(fn){
-		ipfsPeerId(fn);
-	
-	}
-	self.getIPFSDatastorePath = function(fn){
-	
-		ipfsDatastorePath(fn);
-	
-	} 
-	self.getIPFSAPIAddress = function(fn){
-	
-		ipfsAPIAddress(fn);
-	
-	}
-	self.getIPFSGWAddr = function(fn){
-	
-		ipfsGatewayAddress(fn);
-	
-	}
+	self.ipfs = self.start();
 
 	return self;
 };
