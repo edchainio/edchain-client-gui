@@ -19,7 +19,8 @@
         <script src="../../vendor/js/mustache.min.js"></script>
         <script src="../../vendor/js/jsoneditor.min.js"></script>
        <!--  <script src="../../window.js"></script> -->
-        <link href="../../vendor/js/bootstrap.js" rel="stylesheet">
+        <script src="../../vendor/js/popper.min.js"></script>
+        <script src="../../vendor/js/bootstrap.js"></script>
 <!--         <script src="../js/settings.js"></script> -->
         <script src="../../vendor/js/holder.min.js"></script>
         <script>
@@ -34,36 +35,27 @@
     </head>
     <body>
         <div class="container">
-               
-        </div>
        
-         <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="tab" id="logs" href="#logs" role="tab">logs</a>
-                </li>
-                <li class="nav-item">
-                   <a class="nav-link" data-toggle="tab" id="settings" href="#settings">settings</a>
-                </li>
-         </ul>
-        <section class="jumbotron text-center">
-           
-                <label class="switch">
+            <nav class="nav nav-tabs" role="tablist">
+                <a class="nav-item nav-link" data-toggle="tab" id="logs-tab" href="#logs-pane" role="tab">logs</a>
+                <a class="nav-item nav-link active" data-toggle="tab" id="settings-tab" href="#settings-pane">settings</a>
+            </nav>
+            <div class="tab-content text-center">
+                   
+                <!-- <label class="switch">
                     <input type="checkbox" id="ipfs-slider">
                     <span class="slider round"></span>
-                </label>
-            
-           
-            <div class="tab-content">
-              <div class="tab-pane" id="logs-pane" role="tabpanel">
-                <div class="container" style="height:500px;overflow:scroll">                                           
-                    <div id="console">
-                        <ul id="output-log">
-                            
-                        </ul>
-                    </div>
-                </div> 
-              </div>
-                <div class="tab-pane active" id="settings-pane" role="tabpanel">
+                </label> -->
+                <div class="tab-pane fade" id="logs-pane" role="tabpanel">
+                    <div class="container" style="height:500px;overflow:scroll">                                           
+                        <div id="console">
+                            <ul id="output-log">
+                                
+                            </ul>
+                        </div>
+                    </div> 
+                </div>
+                <div class="tab-pane fade show active" id="settings-pane" role="tabpanel">
                  
                     <div class="table-responsive">
                         <table class="table">
@@ -104,17 +96,17 @@
                          </table>
                     </div>
                 </div>
+            </div>
+        
+            <footer class="text-muted">
+                <div class="container">
+                    <p class="float-right">
+                        <a href="#">Back to top</a>
+                    </p>
+                    <p>&copy; 2017 edChain</p>
                 </div>
-        </section>
-    
-    <footer class="text-muted">
-        <div class="container">
-            <p class="float-right">
-                <a href="#">Back to top</a>
-            </p>
-            <p>&copy; 2017 edChain</p>
+            </footer>
         </div>
-    </footer>
-    <script src="../js/settings.js"></script>
-  </body>
+        <script src="../js/settings.js"></script>
+    </body>
 </html>

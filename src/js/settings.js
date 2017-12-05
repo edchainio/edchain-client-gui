@@ -19,25 +19,6 @@ $(document).ready(function() {
 
 
 	checkOnline();
-	var $nav = $(".nav");
-	$nav.on('click', '#settings',function(event){
-	    event.preventDefault();
-	    $('#settings-pane').show();
-	    $('#logs-pane').hide();
-	    $('#logs').removeClass('active');
-	    $('#settings').addClass('active');
-	    
-	});
-
-
-	 $nav.on('click', '#logs',function(event){
-	    event.preventDefault();
-	    $('#settings-pane').hide();
-	    $('#logs-pane').show();
-	    $('#logs').addClass('active');
-	    $('#settings').removeClass('active');
-	    
-	});	
 
 
 	$("#ipfs-slider").on("click",function(){
@@ -48,6 +29,12 @@ $(document).ready(function() {
 		else if($(this).prop("checked")==false){
 			pubsub.publish("ipfs:stop");
 		}
+	});
+
+	$("#close").on("click", function(event){
+		event.preventDefault();
+		window.close();
+		// pubsub.publish("kill:window");
 	});
 
 	pubsub.publish("ipfs:getPeerId").then(function(value){

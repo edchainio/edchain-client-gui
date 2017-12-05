@@ -15,21 +15,33 @@ let mainWindow;
 let addWindow;
 let settingsWindow;
 
+var __windows = {};
+
 for(let prop in ipfs){
     if(typeof ipfs[prop] === 'function'){
         pubsub.subscribe("ipfs:" + prop, ipfs[prop]);
     }    
 }
 
+var createWindow = function createWindow(config){
+    var browserWindow = new BrowserWindow(config);
+    var __id = browserWindow.id;
+    __windows[__id] = browserWindow;
+    browserWindow.on('closed', function(){
+        __windows[__id] = null;
+    });
+    return browserWindow;
+};
 
-app.on('ready', () => {
-    mainWindow = new BrowserWindow({
+var createMainWindow = function createMainWindow(){
+    mainWindow = createWindow({
         width: 960,
         height: 540,
         //frame: false,
         icon: __dirname + '/static/img/icon.png'
     });
-//    createChildWindow(mainWindow);
+    
+    //    createChildWindow(mainWindow);
     const tray = new Tray(__dirname + '/static/img/icon.png');
 
     mainWindow.tray = tray;
@@ -53,11 +65,7 @@ app.on('ready', () => {
         mainWindow.show();
     });
 
-    mainWindow.on('closed', () => {
-         ipfs.stop();
-         process.exit(1);
-    });
-  //  mainWindow.openDevTools();
+    //  mainWindow.openDevTools();
    
     ipcMain.on('createAndShowChildWindow', function(event,url){
         // Is it really a good idea 
@@ -80,9 +88,27 @@ app.on('ready', () => {
     pubsub.subscribe('ipfs:logging', function(event,val){
         ipfsChildLog(val);
     });
+};
 
+app.on('ready', createMainWindow);
 
+// Quit when all windows are closed.
+app.on('window-all-closed', () => {
+    // On macOS it is common for applications and their menu bar
+    // to stay active until the user quits explicitly with Cmd + Q
+    if (process.platform !== 'darwin') {
+        ipfs.stop();
+        app.quit();
+    }
 });
+
+app.on('activate', () => {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (!__windows.length) {
+        createMainWindow();
+    }
+})
 
 var ipfsChildLog = (function(){
     var __log = [];
@@ -98,7 +124,8 @@ var ipfsChildLog = (function(){
 
 
 function createAddWindow() {
-    addWindow = new BrowserWindow({
+    addWindow = createWindow({
+        // width and height are not defined
         width,
         height,
         title: 'Single Course pane'
@@ -106,12 +133,12 @@ function createAddWindow() {
     // Need to make course.html 
     // What is going on here?
     addWindow.loadURL(`file://${__dirname}/course.html`);
-    addWindow.on('closed', () => addWindow = null);
-}
+    return addWindow;
+};
 
-var createChildWindow = function (mainWindow,url) {
+var createChildWindow = function (mainWindow, url) {
     
-    var child= new BrowserWindow({
+    var child = createWindow({
         parent: mainWindow, 
         modal:true, 
         show:false
@@ -119,12 +146,12 @@ var createChildWindow = function (mainWindow,url) {
     child.loadURL(url);
     return child;
 
-}
+};
 
 var showChildWindow= function(browserWindow){
  
     browserWindow.show();
    // browserWindow.openDevTools();
      // log.info(browserWindow.webContents); 
-}
+};
 
