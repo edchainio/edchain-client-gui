@@ -15,112 +15,126 @@ var node = {
     info: '',
 };
 
-var openCourseLink = function(event,url){
-    event.preventDefault();
-    ipcRenderer.send('createAndShowChildWindow', url);
+// these open new windows
+var __actions = {
+    openCourseLink: function(url){
+        ipcRenderer.send('createAndShowChildWindow', url);
+    },
+    showSettings: function(){
+        // why is the file directly referenced here?
+        let url='file://' + __dirname + '/src/html/settings.html';
+        ipcRenderer.send('createChildWindow', url);
+        ipcRenderer.send('showChildWindow');
+    },
+    isIPFSOnline: function(){
+        ipcRenderer.send("ipfs:isOnline");
+    }
 };
 
-var showSettings = function(event){
-    event.preventDefault();
-    // why is the file directly referenced here?
-    let url='file://' + __dirname + '/src/html/settings.html';
-    ipcRenderer.send('createChildWindow', url);
-    ipcRenderer.send('showChildWindow');
-};  
-
-var createHomePageCard = function(image, title, indexURL){
-    $(".loader").hide();
-    cardHtml="<div class='card'><img src=" + image +">";
-    cardHtml= cardHtml + "<p class='card-text'>";
-    // ... shameful ...
-    cardHtml= cardHtml + "<a id='courseLink' onclick=openCourseLink(event,'" + indexURL +"') href='#'>"+ title + "</a>";   
-    cardHtml= cardHtml + "</p></div>";
-    $('#rows').append(cardHtml);
-};
 // Feels like there is a course object in here somewhere
-
-var getData = function(url){
-    return $.ajax({
-        url: url,
-        method: 'GET',
-    });
-};
-
-var onFailure = function(){
-    log.info(arguments);
-};
-
-// async and await would work wonders here
-var getFeaturedData = function(){
-    getData(edchainNodeURL).done(function(edchainData){
-        
-        edchainData["courses"].forEach(function(course){
-
-            var parentData = getData(ipfsGetURL + course.hash + "&encoding=json");
-
-            parentData.done(function(data){
-                
-                var contentHash = data["Links"][0].Hash;
-                var courseContents = getData(ipfsGetURL + contentHash + "$encoding=json");
-                
-                courseContents.done(function(data){
-                    data.Links.forEach(function(link){
-                        if(link.Name === "contents") {
-                            getCourseDetails(link.Hash, contentHash, function(imageURL, indexURL){
-                                var title = course.title;
-                                createHomePageCard(imageURL, title, indexURL);
-                            });
-                        }
-                    });
-                }).fail(onFailure);
-
-            }).fail(onFailure);
-        });        
-    }).fail(onFailure);
-};
-
-var getCourseDetails = function(contentsHash, indxHash, callback){
-    getData(ipfsGetURL + contentsHash + "&encoding=json").done(function(data){    
-        
-        data.Links.forEach(function(link){
-            if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
-                jpgHash = link.Hash;
-            } else if (link.Name.endsWith('index.htm')){
-                indxHash = contentsHash + '/index.htm';
-            }
+var __state = {
+    getData: function(url){
+        return $.ajax({
+            url: url,
+            method: 'GET',
         });
+    },
+    onFailure: function(){
+        log.info(arguments);
+    },
+    // async and await would work wonders here
+    getFeaturedData: function(){
+        var featuredData = __state.getData(edchainNodeURL);
 
-        callback(httpURL + jpgHash, httpURL + indxHash);
-    });
-};
+        // failure case
+        featuredData.fail(__state.onFailure);
 
+        // success case
+        featuredData.done(function({courses}){
+            
+            courses.forEach(function(course){
 
-var isIPFSOnline = function(){
-    ipcRenderer.send("ipfs:isOnline");
-};
+                var parentData = __state.getData(ipfsGetURL + course.hash + "&encoding=json");
+                
+                // failure case
+                parentData.fail(__state.onFailure);
+                
+                // success case
+                parentData.done(function(data){
+                    
+                    // parent data parsing
+                    var contentHash = data["Links"][0].Hash;
 
-ipcRenderer.on("isOnline", function(event, value){
-    setIPFSStatusButton(value);
-    setTimeout(isIPFSOnline, 3000);
-});
+                    var courseContents = __state.getData(ipfsGetURL + contentHash + "$encoding=json");
+                    
+                    // failure case
+                    courseContents.fail(__state.onFailure);
+                    
+                    // success case
+                    courseContents.done(function(data){
+                        // course contents
+                        data.Links.forEach(function(link){
+                            if(link.Name === "contents") {
+                                __state.getCourseDetails(link.Hash, contentHash, function(imageURL, indexURL){
+                                    var title = course.title;
+                                    // this should not be here
+                                    __ui.createHomePageCard(imageURL, title, indexURL);
+                                });
+                            }
+                        });
+                    });
 
-function setIPFSStatusButton(isOnline){
+                });
+            });        
+        });
+    },
+    getCourseDetails: function(contentsHash, indxHash, callback){
+        __state.getData(ipfsGetURL + contentsHash + "&encoding=json").done(function(data){    
+            
+            data.Links.forEach(function(link){
+                if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
+                    jpgHash = link.Hash;
+                } else if (link.Name.endsWith('index.htm')){
+                    indxHash = contentsHash + '/index.htm';
+                }
+            });
 
-    if(isOnline){
-      $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
-      $('#img-ipfs-icon').prop("alt",'IPFS Online');
-  
+            callback(httpURL + jpgHash, httpURL + indxHash);
+        });
     }
-    else{
-        $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
-        // $('#ipfsStatus').text('IPFS Offline');
+};
+
+var __ui = {
+    setIPFSStatusButton: function (isOnline){
+
+        if(isOnline){
+          $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
+          $('#img-ipfs-icon').prop("alt",'IPFS Online');
+      
+        }
+        else{
+            $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
+            // $('#ipfsStatus').text('IPFS Offline');
+        }
+
+    }, 
+    createHomePageCard: function(image, title, indexURL){
+        $(".loader").hide();
+        var template = [
+            '<div class="card">',
+            '<img src=' + image + '>',
+            '<p class="card-text">',
+            '<a class="course-link" data-url="' + indexURL + '" href="#">' + title + '</a>',
+            '</p></div>'
+        ];
+        
+        $('#course-cards').append(template.join(""));
     }
 
 };
+
 
 $(document).ready(function() {
-    setTimeout(getFeaturedData, 3000);
-    isIPFSOnline();
     
     ipcRenderer.on("start", function(){
         $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
@@ -130,6 +144,11 @@ $(document).ready(function() {
     ipcRenderer.on("stop", function(){
         $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
         $('#ipfsStatus').text('IPFS Offline');
+    });
+
+    ipcRenderer.on("isOnline", function(event, value){
+        __ui.setIPFSStatusButton(value);
+        setTimeout(__actions.isIPFSOnline, 3000);
     });
 
     ipcRenderer.on("checkStatus", function(event, ver){
@@ -147,7 +166,16 @@ $(document).ready(function() {
         }
     });
 
-    $("#ipfs-icon-ref").on("click", showSettings);
+    $("#ipfs-icon-ref").on("click", function(event){
+        event.preventDefault();
+        __actions.showSettings();
+    });
+
+    $('#course-cards').on("click", ".card a.course-link", function(event){
+        event.preventDefault();
+        var url = $(this).data("url");
+        __actions.openCourseLink(url);
+    });
 
     $('#stop').on("click", function(){
         ipcRenderer.send("ipfs:getId");
@@ -158,7 +186,6 @@ $(document).ready(function() {
     });
 
     $('#refresh').on("click", function(){
-    
         $(".card").remove(function(){
             getFeaturedData();
         });
@@ -174,6 +201,9 @@ $(document).ready(function() {
             )
         );
     });
+    // Why is there a timeout?
+    setTimeout(getFeaturedData, 3000);
+    __actions.isIPFSOnline();
 });
 
 
