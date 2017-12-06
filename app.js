@@ -98,7 +98,7 @@ var createMainWindow = function createMainWindow(){
         showChildWindow(createChildWindow(mainWindow,url));
     });
 
-    ipcMain.on('createChildWindow', function(event,url){
+    ipcMain.on('createChildWindow', function(event, url){
         settingsWindow = createChildWindow(mainWindow,url);
     });
 

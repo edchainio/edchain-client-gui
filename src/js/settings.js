@@ -1,22 +1,19 @@
-const { ipcRenderer } =require('electron');
+const { ipcRenderer } = require('electron');
 
 
 var checkOnline = function(){ 
 	ipcRenderer.send("ipfs:isOnline");
-}
+};
 
-
-ipcRenderer.on("isOnline", function(event, value){
-	// Is non strict comparison the intent here?
-	if(value == true){
-		$("#ipfs-slider").prop("checked",true);
-	}
-
-});
+var initPage = function(){
+	ipcRenderer.send("ipfs:getPeerId");
+	ipcRenderer.send("ipfs:getIPFSGWAddr");
+	ipcRenderer.send("ipfs:getIPFSAPIAddress");
+	ipcRenderer.send("ipfs:getIPFSDatastorePath");
+	ipcRenderer.send("ipfs:getLog");
+};
 
 $(document).ready(function() {
-
-
 	checkOnline();
 
 
@@ -39,25 +36,18 @@ $(document).ready(function() {
 		$("#peerId").text(value);
 	});
 	
-	ipcRenderer.send("ipfs:getPeerId");
-	
 	ipcRenderer.on("getIPFSGWAddr", function(event, value){
 		$("#gateway-addr").val(value);	
 	});
-
-	ipcRenderer.send("ipfs:getIPFSGWAddr");
 
 
 	ipcRenderer.on("getIPFSAPIAddress", function(event, value){
 		$("#ipfs-api-addr").val(value);
 	});
 
-	ipcRenderer.send("ipfs:getIPFSAPIAddress");
-
 	ipcRenderer.on("getIPFSDatastorePath", function(event, value){
 		$("#ipfs-datastore-path").val(value);	
 	});
-	ipcRenderer.send("ipfs:getIPFSDatastorePath");
 
 	ipcRenderer.on('ipfs:logging', function(event, data){
 	    var $outputElement = $('#console');
@@ -70,6 +60,13 @@ $(document).ready(function() {
 	    var output = "<p><code>" + data.join("</code></p><p><code>") + "</code></p>";
 	    $outputElement.html(output);
 	});
-	ipcRenderer.send("ipfs:getLog");
+	
+	ipcRenderer.on("isOnline", function(event, value){
+		// Is non strict comparison the intent here?
+		if(value == true){
+			$("#ipfs-slider").prop("checked",true);
+		}
+	});
+	initPage();
 });
 
