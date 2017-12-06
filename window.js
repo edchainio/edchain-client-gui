@@ -47,6 +47,10 @@ var getData = function(url){
     });
 };
 
+var onFailure = function(){
+    log.info(arguments);
+};
+
 var getFeaturedData = function(){
     getData(edchainNodeURL).done(function(edchainData){
         var courses = edchainData["courses"];
@@ -63,50 +67,37 @@ var getFeaturedData = function(){
             let parentData = getData(ipfsGetURL + course.hash + "&encoding=json");
 
             parentData.done(function(data){
-                getCourseContents(data["Links"][0].Hash, callbacks);
-            }).fail(function(jqXHR, textStatus, errorThrown){
-                log.info(errorThrown);
-            });
-        }
-    }).fail(function(jqXHR, textStatus, errorThrown){
-        log.info(errorThrown);
-    });
-};
+                
+                var contentHash = data["Links"][0].Hash;
+                var courseContents = getData(ipfsGetURL + contentHash + "$encoding=json");
+                
+                courseContents.done(function(data){
+                    data.Links.forEach(function(link){
+                        if(link.Name === "contents") {
+                            getCourseDetails(link.Hash, contentHash, callback);
+                        }
+                    });
+                }).fail(onFailure);
 
-var getCourseContents = function(contentHash, callback){
-    $.ajax({
-        url: ipfsGetURL + contentHash + "&encoding=json";,
-        method:'GET',
-    }).done(function(data){
-        for(let i = 0; i < data["Links"].length; i++){
-            let link = data["Links"][i];
-            if(link.Name === 'contents'){
-                ;
-                getCourseDetails(link.Hash, contentHash, callback);
-            }
-        }   
-    }).fail(function(jqXHR, textStatus, errorThrown){
-        log.info(errorThrown);
-    });
+                
+            }).fail(onFailure);
+        }
+    }).fail(onFailure);
 };
 
 var getCourseDetails = function(contentsHash, indxHash, callback){
-    $.ajax({
-        url: ipfsGetURL + contentsHash + "&encoding=json",
-        method: 'GET',
-    }).done(function(data){    
-        var dataLinks = data["Links"];
-
-        for(let i = 0; i < dataLinks.length; i++){
-            let link = dataLinks[i];
-            
+    var url = ipfsGetURL + contentsHash + "&encoding=json";
+    
+    getData(url).done(function(data){    
+        
+        data.Links.forEach(function(link){
             if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
                 jpgHash = link.Hash;
             } else if (link.Name.endsWith('index.htm')){
                 indxHash = contentsHash + '/index.htm';
-            }                           
-        }
-        
+            }
+        });
+
         callback(httpURL + jpgHash, httpURL + indxHash);
     });
 };
@@ -129,8 +120,8 @@ function setIPFSStatusButton(isOnline){
   
     }
     else{
-         $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
-     //    $('#ipfsStatus').text('IPFS Offline');
+        $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
+        // $('#ipfsStatus').text('IPFS Offline');
     }
 
 };
