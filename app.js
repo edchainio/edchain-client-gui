@@ -32,7 +32,7 @@ var registerListeners = function(listeners){
 
 registerListeners({ipfs});
 
-function createAddWindow() {
+var createAddWindow = function () {
     var addWindow = createWindow({
         // width and height are not defined
         width,
