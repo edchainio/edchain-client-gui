@@ -33,17 +33,22 @@ var __actions = {
 
 // Feels like there is a course object in here somewhere
 var __state = {
+    buildIpfsUrl: function(hash){
+        return ipfsGetURL + hash + "&encoding=json";
+    },
     getData: function(url){
         return $.ajax({
             url: url,
             method: 'GET',
         });
     },
+    getIpfsData: function(hash){
+        return __state.getData(__state.buildIpfsUrl(hash));
+    },
     onFailure: function(){
         log.info(arguments);
     },
-    // async and await would work wonders here
-    getFeaturedData: function(){
+    getFeaturedData: function(callback){
         var featuredData = __state.getData(edchainNodeURL);
 
         // failure case
@@ -51,55 +56,65 @@ var __state = {
 
         // success case
         featuredData.done(function({courses}){
-            
             courses.forEach(function(course){
-
-                var parentData = __state.getData(ipfsGetURL + course.hash + "&encoding=json");
-                
-                // failure case
-                parentData.fail(__state.onFailure);
-                
-                // success case
-                parentData.done(function(data){
-                    
-                    // parent data parsing
-                    var contentHash = data["Links"][0].Hash;
-
-                    var courseContents = __state.getData(ipfsGetURL + contentHash + "$encoding=json");
-                    
-                    // failure case
-                    courseContents.fail(__state.onFailure);
-                    
-                    // success case
-                    courseContents.done(function(data){
-                        // course contents
-                        data.Links.forEach(function(link){
-                            if(link.Name === "contents") {
-                                __state.getCourseDetails(link.Hash, contentHash, function(imageURL, indexURL){
-                                    var title = course.title;
-                                    // this should not be here
-                                    __ui.createHomePageCard(imageURL, title, indexURL);
-                                });
-                            }
-                        });
-                    });
-
-                });
+                __state.getCourseDetail(course, callback);
             });        
         });
     },
-    getCourseDetails: function(contentsHash, indxHash, callback){
-        __state.getData(ipfsGetURL + contentsHash + "&encoding=json").done(function(data){    
-            
-            data.Links.forEach(function(link){
-                if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
-                    jpgHash = link.Hash;
-                } else if (link.Name.endsWith('index.htm')){
-                    indxHash = contentsHash + '/index.htm';
-                }
-            });
+    getCourseDetail: function(course){
+        // actual course ref
+        var courseRoot = __state.getIpfsData(coures.hash);
+        
+        course.META = {
+            "hashes": {}
+        };
+        var __hashes = course.META.hashes;
+        // failure case
+        courseRoot.fail(__state.onFailure);
+        
+        // success case
+        courseRoot.done(function(data){
 
-            callback(httpURL + jpgHash, httpURL + indxHash);
+            __hashes.courseDirectoryHash = data["Links"][0].Hash;
+
+            var courseDirectory = __state.getIpfsData(__hashes.courseDirectoryHash);
+            
+            // failure case
+            courseDirectory.fail(__state.onFailure);
+            
+            // success case
+            courseDirectory.done(function(directory){
+                
+                // course contents
+                directory.Links.forEach(function(link){
+                    if(link.Name !== "contents") return;
+                    
+                    __hashes.contentsDirectoryHash = link.Hash;
+                    var contentsDirectory = __state.getIpfsData(__hashes.contentsDirectoryHash);
+                    
+                    // failure case
+                    contentsDirectory.fail(__state.onFailure);
+
+                    // success case
+                    contentsDirectory.done(function(contents){
+
+                        contents.Links.forEach(function(link){
+                            
+                            if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
+                                
+                                course.META.imageUrl = httpURL + link.Hash;
+
+                            } else if (link.Name.endsWith('index.htm')){
+                                
+                                course.META.indexUrl = httpURL + course.META.contentsDirectoryHash + '/index.htm';
+                            
+                            }
+                        });
+                        
+                        __ui.createHomePageCard(course.META.imageUrl, course.title, course.META.indexUrl);
+                    });
+                });
+            });
         });
     }
 };
@@ -205,61 +220,3 @@ $(document).ready(function() {
     setTimeout(getFeaturedData, 3000);
     __actions.isIPFSOnline();
 });
-
-
-// REMOVE THESE IF THEY ARE NOT BEING USED
-
-// NOT USED
-var setStatus = function($element){
-    // we should probably move away from setInterval
-    setInterval(function($element){
-        $.ajax({
-            url: 'http://127.0.0.1:9002/status',
-            method: 'GET',
-            complete: function(res, status){
-                data = (res.responseText || status).trim();
-                $element.removeClass('alert-success alert-info alert-danger');
-
-                if(data === 'public'){
-                    node.up = true;
-                    $element.addClass('alert alert-success');
-                }else if(data === 'online'){
-                    node.up = true;
-                    $element.addClass('alert-info');
-                }else if(data === 'offline'){
-                    node.up = true;
-                    $element.addClass('alert-danger');
-                }else{
-                    node.up = false;
-                    $element.addClass('alert-danger');
-                }
-
-                $element.text(data);
-            }
-        });
-    }, 1000, $element);
-};
-
-
-
-// NOT USED
-var getID = function($element){
-   
-    if(node.up && !node.peerID){
-        return $.ajax({
-            url: 'http://127.0.0.1:5001/id',
-            method: 'GET',
-            success: function(data) {
-                data = JSON.parse(data);
-                node.peerID = data.peer;
-                node.publisherID = data.publisher;
-                node.info = data.info
-
-                $element.find('#peerID').text(node.peerID);
-                $element.find('#publisherID').text(node.publisherID);
-                $element.find('#info').text(node.info);
-            }
-        });
-    }
-    setTimeout(getID, 1001, $element);
-};
