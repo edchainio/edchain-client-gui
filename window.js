@@ -38,98 +38,38 @@ var showSettings = function(event){
     ipcRenderer.send('showChildWindow');
 };  
 
-// NOT USED
-var setStatus = function($element){
-    // we should probably move away from setInterval
-    setInterval(function($element){
-        $.ajax({
-            url: 'http://127.0.0.1:9002/status',
-            method: 'GET',
-            complete: function(res, status){
-                data = (res.responseText || status).trim();
-                $element.removeClass('alert-success alert-info alert-danger');
-
-                if(data === 'public'){
-                    node.up = true;
-                    $element.addClass('alert alert-success');
-                }else if(data === 'online'){
-                    node.up = true;
-                    $element.addClass('alert-info');
-                }else if(data === 'offline'){
-                    node.up = true;
-                    $element.addClass('alert-danger');
-                }else{
-                    node.up = false;
-                    $element.addClass('alert-danger');
-                }
-
-                $element.text(data);
-            }
-        });
-    }, 1000, $element);
-};
-
-
-
-// NOT USED
-var getID = function($element){
-   
-    if(node.up && !node.peerID){
-        return $.ajax({
-            url: 'http://127.0.0.1:5001/id',
-            method: 'GET',
-            success: function(data) {
-                data = JSON.parse(data);
-                node.peerID = data.peer;
-                node.publisherID = data.publisher;
-                node.info = data.info
-
-                $element.find('#peerID').text(node.peerID);
-                $element.find('#publisherID').text(node.publisherID);
-                $element.find('#info').text(node.info);
-            }
-        });
-    }
-    setTimeout(getID, 1001, $element);
-};
-
 // Feels like there is a course object in here somewhere
-var getFeaturedData = function(){
-    $.ajax({
-        url: edchainNodeURL,
-        method: 'GET',
-        success: function(edchainData){
 
-            var courses = edchainData["courses"];
-            
-            for(let idx = 0; idx < courses.Length; idx++){
-                let course = courses[idx];
-                getParentData(course.hash, (function(course){
-                    return function(imageURL, indexURL){
-                        var title = course.title;
-                      
-                        createHomePageCard(imageURL, title, indexURL);
-                    };
-                }(course)));
-            }
-        },
-        error: function(jqXHR, textStatus, errorThrown){
-            log.info('error');
-            log.info(errorThrown);
-        }
+var getData = function(url){
+    return $.ajax({
+        url: url,
+        method: 'GET',
     });
 };
 
-var getParentData = function(parentHash, callback){
-    $.ajax({
-        url: ipfsGetURL + parentHash + "&encoding=json",
-        method:'GET',
-        success: function(data){
-            getCourseContents(data["Links"][0].Hash, callback);
-        },
-        error: function(error){
-            log.info(error);
+var getFeaturedData = function(){
+    getData(edchainNodeURL).done(function(edchainData){
+        var courses = edchainData["courses"];
+        
+        for(let idx = 0; idx < courses.Length; idx++){
+            let course = courses[idx];
+            let callback = (function(course){
+                return function(imageURL, indexURL){
+                    var title = course.title;
+                    createHomePageCard(imageURL, title, indexURL);
+                };
+            }(course));
+
+            let parentData = getData(ipfsGetURL + course.hash + "&encoding=json");
+
+            parentData.done(function(data){
+                getCourseContents(data["Links"][0].Hash, callbacks);
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                log.info(errorThrown);
+            });
         }
+    }).fail(function(jqXHR, textStatus, errorThrown){
+        log.info(errorThrown);
     });
 };
 
@@ -137,42 +77,37 @@ var getCourseContents = function(contentHash, callback){
     $.ajax({
         url: ipfsGetURL + contentHash + "&encoding=json";,
         method:'GET',
-        success: function(data){
-            for(let i = 0; i < data["Links"].length; i++){
-                let link = data["Links"][i];
-                if(link.Name === 'contents'){
-                    getCourseDetails(link.Hash, contentHash, callback);
-                }
-            }   
-        },
-        error: function(error){
-            log.info(error);
-        }
+    }).done(function(data){
+        for(let i = 0; i < data["Links"].length; i++){
+            let link = data["Links"][i];
+            if(link.Name === 'contents'){
+                ;
+                getCourseDetails(link.Hash, contentHash, callback);
+            }
+        }   
+    }).fail(function(jqXHR, textStatus, errorThrown){
+        log.info(errorThrown);
     });
 };
 
-
-
 var getCourseDetails = function(contentsHash, indxHash, callback){
-
     $.ajax({
-         url: ipfsGetURL + contentsHash + "&encoding=json",
-         method: 'GET',
-         success: function(data){    
-            var dataLinks = data["Links"];
+        url: ipfsGetURL + contentsHash + "&encoding=json",
+        method: 'GET',
+    }).done(function(data){    
+        var dataLinks = data["Links"];
 
-            for(let i = 0; i < dataLinks.length; i++){
-                let link = dataLinks[i];
-                
-                if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
-                    jpgHash = link.Hash;
-                } else if (link.Name.endsWith('index.htm')){
-                    indxHash = contentsHash + '/index.htm';
-                }                           
-            }
+        for(let i = 0; i < dataLinks.length; i++){
+            let link = dataLinks[i];
             
-            callback(httpURL + jpgHash, httpURL + indxHash);
+            if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
+                jpgHash = link.Hash;
+            } else if (link.Name.endsWith('index.htm')){
+                indxHash = contentsHash + '/index.htm';
+            }                           
         }
+        
+        callback(httpURL + jpgHash, httpURL + indxHash);
     });
 };
 
@@ -270,3 +205,61 @@ $(document).ready(function() {
         );
     });
 });
+
+
+// REMOVE THESE IF THEY ARE NOT BEING USED
+
+// NOT USED
+var setStatus = function($element){
+    // we should probably move away from setInterval
+    setInterval(function($element){
+        $.ajax({
+            url: 'http://127.0.0.1:9002/status',
+            method: 'GET',
+            complete: function(res, status){
+                data = (res.responseText || status).trim();
+                $element.removeClass('alert-success alert-info alert-danger');
+
+                if(data === 'public'){
+                    node.up = true;
+                    $element.addClass('alert alert-success');
+                }else if(data === 'online'){
+                    node.up = true;
+                    $element.addClass('alert-info');
+                }else if(data === 'offline'){
+                    node.up = true;
+                    $element.addClass('alert-danger');
+                }else{
+                    node.up = false;
+                    $element.addClass('alert-danger');
+                }
+
+                $element.text(data);
+            }
+        });
+    }, 1000, $element);
+};
+
+
+
+// NOT USED
+var getID = function($element){
+   
+    if(node.up && !node.peerID){
+        return $.ajax({
+            url: 'http://127.0.0.1:5001/id',
+            method: 'GET',
+            success: function(data) {
+                data = JSON.parse(data);
+                node.peerID = data.peer;
+                node.publisherID = data.publisher;
+                node.info = data.info
+
+                $element.find('#peerID').text(node.peerID);
+                $element.find('#publisherID').text(node.publisherID);
+                $element.find('#info').text(node.info);
+            }
+        });
+    }
+    setTimeout(getID, 1001, $element);
+};
