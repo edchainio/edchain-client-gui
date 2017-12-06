@@ -51,20 +51,13 @@ var onFailure = function(){
     log.info(arguments);
 };
 
+// async and await would work wonders here
 var getFeaturedData = function(){
     getData(edchainNodeURL).done(function(edchainData){
-        var courses = edchainData["courses"];
         
-        for(let idx = 0; idx < courses.Length; idx++){
-            let course = courses[idx];
-            let callback = (function(course){
-                return function(imageURL, indexURL){
-                    var title = course.title;
-                    createHomePageCard(imageURL, title, indexURL);
-                };
-            }(course));
+        edchainData["courses"].forEach(function(course){
 
-            let parentData = getData(ipfsGetURL + course.hash + "&encoding=json");
+            var parentData = getData(ipfsGetURL + course.hash + "&encoding=json");
 
             parentData.done(function(data){
                 
@@ -74,14 +67,16 @@ var getFeaturedData = function(){
                 courseContents.done(function(data){
                     data.Links.forEach(function(link){
                         if(link.Name === "contents") {
-                            getCourseDetails(link.Hash, contentHash, callback);
+                            getCourseDetails(link.Hash, contentHash, function(imageURL, indexURL){
+                                var title = course.title;
+                                createHomePageCard(imageURL, title, indexURL);
+                            });
                         }
                     });
                 }).fail(onFailure);
 
-                
             }).fail(onFailure);
-        }
+        });        
     }).fail(onFailure);
 };
 
