@@ -3,21 +3,11 @@ var url = require('url');           // https://nodejs.org/api/url.html
 var log = require('electron-log');
 const { exec } = require('child_process');
 const platform = require('os').platform();
-const { ipcMain, app, protocol, BrowserWindow, Menu, Tray } = require('electron');
+const { ipcMain, app, protocol, BrowserWindow, Menu, Tray, nativeImage } = require('electron');
 
 var __windows = {};
 
 var __logSubscribers = {};
-
-var getIcon = (function(){
-    var iconMap = {
-        "darwin": ".icns",
-        "linux": ".png"
-    };
-    return function(){
-        return `/static/img/icon${iconMap[platform] || ".png"}`;
-    };
-})();
 
 
 var ipfs = require('./process_ipfs')({
@@ -106,17 +96,18 @@ var createWindow = function createWindow(config){
 };
 
 var createMainWindow = function createMainWindow(){
-    var settingsWindow, mainWindow;
+    var
+        settingsWindow, mainWindow;
 
     mainWindow = createWindow({
         width: 960,
         height: 540,
         //frame: false,
-        icon: __dirname + getIcon()
+        // too big for mac
+        icon: __dirname + '/static/img/icon.png'
     });
     
-    //    createChildWindow(mainWindow);
-    const tray = new Tray(__dirname + getIcon());
+    const tray = new Tray(__dirname + '/static/img/icon.png');
 
     mainWindow.tray = tray;
 
@@ -132,14 +123,11 @@ var createMainWindow = function createMainWindow(){
         tray.setHighlightMode('never');
     });
 
-    /*mainWindow.loadURL(`file://${__dirname}/src/html/settings.html`);*/
     mainWindow.loadURL(`file://${__dirname}/index.html`);
     
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
     });
-
-    //  mainWindow.openDevTools();
    
     ipcMain.on('createAndShowChildWindow', function(event,url){
         showChildWindow(createChildWindow(mainWindow, url));
@@ -157,6 +145,12 @@ var createMainWindow = function createMainWindow(){
         __windows[id].close();
     });
 };
+
+// macOS
+// https://electronjs.org/docs/api/app#appdockseticonimage-macos
+if (platform === "darwin"){
+    app.dock.setIcon(__dirname + "/static/img/icon.png");
+}
 
 app.on('ready', function(){
     // Custom File Protocol
