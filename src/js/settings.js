@@ -64,5 +64,12 @@ $(document).ready(function() {
 	    var output = "<p><code>" + data.join("</code></p><p><code>") + "</code></p>";
 	    $outputElement.html(output);
 	});
+	
+	ipcRenderer.once('getLog', function(event, data){
+	    var $outputElement = $('#console');
+	    var output = "<p><code>" + data.join("</code></p><p><code>") + "</code></p>";
+	    $outputElement.html(output);
+	});
+	ipcRenderer.send("ipfs:getLog");
 });
 

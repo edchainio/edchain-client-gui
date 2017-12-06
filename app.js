@@ -30,6 +30,7 @@ for(let prop in ipfs){
     }
 }
 
+// Window Factory
 var createWindow = function createWindow(config){
     var 
         __id, browserWindow, 
@@ -94,18 +95,11 @@ var createMainWindow = function createMainWindow(){
     //  mainWindow.openDevTools();
    
     ipcMain.on('createAndShowChildWindow', function(event,url){
-        // Is it really a good idea 
-        // to just spawn windows like this?
-        // Should they be tracked?
         showChildWindow(createChildWindow(mainWindow,url));
     });
 
     ipcMain.on('createChildWindow', function(event,url){
         settingsWindow = createChildWindow(mainWindow,url);
-        settingsWindow.on("show", function(){
-            // hack
-            ipfs.getLog({"sender": settingsWindow.webContents});
-        });
     });
 
     ipcMain.on('showChildWindow', function(){
