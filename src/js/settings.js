@@ -1,8 +1,12 @@
-const { ipcRenderer } = require('electron');
-
+const { ipcRenderer, remote } = require('electron');
+const currentWindow = remote.getCurrentWindow();
 
 var checkOnline = function(){ 
 	ipcRenderer.send("ipfs:isOnline");
+};
+
+var closePage = function(){
+	ipcRenderer.send("closePage", currentWindow.id);
 };
 
 var initPage = function(){
@@ -28,7 +32,7 @@ $(document).ready(function() {
 
 	$("#close-window").on("click", function(event){
 		event.preventDefault();
-		window.close();
+		closePage();
 	});
 
 	ipcRenderer.on("getPeerId", function(event, value){

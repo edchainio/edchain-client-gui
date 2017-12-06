@@ -61,4 +61,5 @@ typings/
 dist/
 ip4/
 
+# MAC
 .DS_Store

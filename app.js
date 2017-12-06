@@ -2,8 +2,8 @@ var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 var log = require('electron-log');
 const { exec } = require('child_process');
-
-const { ipcMain, app, BrowserWindow, Menu, Tray } = require('electron');
+const platform = require('os').platform();
+const { ipcMain, app, protocol, BrowserWindow, Menu, Tray, nativeImage } = require('electron');
 
 var __windows = {};
 
@@ -21,7 +21,7 @@ var ipfs = require('./process_ipfs')({
 });
 
 var registerListeners = function(listeners){
-    for (let prefix of listeners){
+    for (let prefix in listeners){
         for(let prop in listeners[prefix]){
             if(typeof listeners[prefix][prop] === 'function'){
                 ipcMain.on(prefix + ':' + prop, listeners[prefix][prop]);
@@ -96,16 +96,17 @@ var createWindow = function createWindow(config){
 };
 
 var createMainWindow = function createMainWindow(){
-    var settingsWindow, mainWindow;
+    var
+        settingsWindow, mainWindow;
 
     mainWindow = createWindow({
         width: 960,
         height: 540,
         //frame: false,
+        // too big for mac
         icon: __dirname + '/static/img/icon.png'
     });
     
-    //    createChildWindow(mainWindow);
     const tray = new Tray(__dirname + '/static/img/icon.png');
 
     mainWindow.tray = tray;
@@ -122,14 +123,11 @@ var createMainWindow = function createMainWindow(){
         tray.setHighlightMode('never');
     });
 
-    /*mainWindow.loadURL(`file://${__dirname}/src/html/settings.html`);*/
     mainWindow.loadURL(`file://${__dirname}/index.html`);
     
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
     });
-
-    //  mainWindow.openDevTools();
    
     ipcMain.on('createAndShowChildWindow', function(event,url){
         showChildWindow(createChildWindow(mainWindow, url));
@@ -142,9 +140,34 @@ var createMainWindow = function createMainWindow(){
     ipcMain.on('showChildWindow', function(){
         showChildWindow(settingsWindow);
     });
+
+    ipcMain.on("closePage", function(event, id){
+        __windows[id].close();
+    });
 };
 
-app.on('ready', createMainWindow);
+// macOS
+// https://electronjs.org/docs/api/app#appdockseticonimage-macos
+if (platform === "darwin"){
+    app.dock.setIcon(__dirname + "/static/img/icon.png");
+}
+
+app.on('ready', function(){
+    // Custom File Protocol
+    // Confirm if this works on windows
+    // protocol.interceptFileProtocol(
+    //     'file', 
+    //     (request, callback) => {
+    //         const url = request.url.substr(7);    /* all urls start with 'file://' */
+    //         const assetPath = path.normalize(`${__dirname}/${url}`);
+    //         callback({ "path": assetPath });
+    //     }, (err) => {
+    //     if (err) console.error('Failed to register protocol')
+    // });
+
+    createMainWindow();
+
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -160,7 +183,7 @@ app.on('quit', () => {
 });
 
 
-app.on('activate', () => {
+app.on('activate', (event, hasVisibleWindows) => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (!__windows.length) {

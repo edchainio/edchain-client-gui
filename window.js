@@ -1,11 +1,11 @@
-var log = require('electron-log');
-
 const httpURL="http://localhost:8080/ipfs/";
 const edchainNodeURL="http://139.59.66.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
 
+
 const { ipcRenderer, remote } = require('electron');
 const { dialog } = remote.require('electron');
+var log = remote.require('electron-log');
 
 var node = {
     up: false,
