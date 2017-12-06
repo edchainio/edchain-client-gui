@@ -1,9 +1,8 @@
 var log = require('electron-log');
 
-
 const httpURL="http://localhost:8080/ipfs/";
 const edchainNodeURL="http://139.59.66.198:5000/content/addresses/featured";
-const ipfsGetURL=  "http://127.0.0.1:5001/api/v0/object/get?arg="
+const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
 
 const { ipcRenderer, remote } = require('electron');
 const { dialog } = remote.require('electron');
@@ -16,15 +15,10 @@ var node = {
     info: '',
 };
 
-var createAndShowChildWindow = function(url){
-    ipcRenderer.send('createAndShowChildWindow', url);
-};
-
 var openCourseLink = function(event,url){
     event.preventDefault();
-    createAndShowChildWindow(url);
+    ipcRenderer.send('createAndShowChildWindow', url);
 };
-
 
 var createHomePageCard = function(image, title, indexURL){
     $(".loader").hide();
@@ -36,16 +30,12 @@ var createHomePageCard = function(image, title, indexURL){
     $('#rows').append(cardHtml);
 };
 
-var openSettings = function(){
+var showSettings = function(event){
+    event.preventDefault();
     // why is the file directly referenced here?
     let url='file://' + __dirname + '/src/html/settings.html';
     ipcRenderer.send('createChildWindow', url);
     ipcRenderer.send('showChildWindow');
-};
-
-var showSettings = function(event){
-    event.preventDefault();
-    openSettings(); 
 };  
 
 // NOT USED
@@ -121,7 +111,6 @@ var getFeaturedData = function(){
                         createHomePageCard(imageURL, title, indexURL);
                     };
                 }(course)));
-      
             }
         },
         error: function(jqXHR, textStatus, errorThrown){
@@ -136,11 +125,7 @@ var getParentData = function(parentHash, callback){
         url: ipfsGetURL + parentHash + "&encoding=json",
         method:'GET',
         success: function(data){
-        
-            var firstHash = data["Links"][0].Hash;
-            var courseContentURL = ipfsGetURL + firstHash + "&encoding=json";
-            getCourseContents(firstHash, courseContentURL, callback);
-        
+            getCourseContents(data["Links"][0].Hash, callback);
         },
         error: function(error){
             log.info(error);
@@ -148,9 +133,9 @@ var getParentData = function(parentHash, callback){
     });
 };
 
-var getCourseContents = function(contentHash, courseContentURL, callback){
+var getCourseContents = function(contentHash, callback){
     $.ajax({
-        url: courseContentURL,
+        url: ipfsGetURL + contentHash + "&encoding=json";,
         method:'GET',
         success: function(data){
             for(let i = 0; i < data["Links"].length; i++){
@@ -250,7 +235,7 @@ $(document).ready(function() {
 
     $('#stop').on("click", function(){
        
-      ipcRenderer.send("ipfs:getId");
+        ipcRenderer.send("ipfs:getId");
    
     });
     
