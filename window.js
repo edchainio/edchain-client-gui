@@ -20,6 +20,14 @@ var openCourseLink = function(event,url){
     ipcRenderer.send('createAndShowChildWindow', url);
 };
 
+var showSettings = function(event){
+    event.preventDefault();
+    // why is the file directly referenced here?
+    let url='file://' + __dirname + '/src/html/settings.html';
+    ipcRenderer.send('createChildWindow', url);
+    ipcRenderer.send('showChildWindow');
+};  
+
 var createHomePageCard = function(image, title, indexURL){
     $(".loader").hide();
     cardHtml="<div class='card'><img src=" + image +">";
@@ -29,15 +37,6 @@ var createHomePageCard = function(image, title, indexURL){
     cardHtml= cardHtml + "</p></div>";
     $('#rows').append(cardHtml);
 };
-
-var showSettings = function(event){
-    event.preventDefault();
-    // why is the file directly referenced here?
-    let url='file://' + __dirname + '/src/html/settings.html';
-    ipcRenderer.send('createChildWindow', url);
-    ipcRenderer.send('showChildWindow');
-};  
-
 // Feels like there is a course object in here somewhere
 
 var getData = function(url){
@@ -81,9 +80,7 @@ var getFeaturedData = function(){
 };
 
 var getCourseDetails = function(contentsHash, indxHash, callback){
-    var url = ipfsGetURL + contentsHash + "&encoding=json";
-    
-    getData(url).done(function(data){    
+    getData(ipfsGetURL + contentsHash + "&encoding=json").done(function(data){    
         
         data.Links.forEach(function(link){
             if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
@@ -122,11 +119,8 @@ function setIPFSStatusButton(isOnline){
 };
 
 $(document).ready(function() {
-   
     setTimeout(getFeaturedData, 3000);
-    // Avoid setInterval is a bit unwieldy
-    // setInterval(isIPFSOnline,3000);
-    isIPFSOnline()
+    isIPFSOnline();
     
     ipcRenderer.on("start", function(){
         $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
@@ -138,32 +132,6 @@ $(document).ready(function() {
         $('#ipfsStatus').text('IPFS Offline');
     });
 
-    $('#ipfsStatus').on("click", function(){
-         
-        if($('#ipfsStatus').hasClass('btn-outline-danger')){
-            ipcRenderer.send("ipfs:start");
-        }
-
-        else if($('#ipfsStatus').hasClass('btn-outline-success')){
-            ipcRenderer.send("ipfs:stop");
-
-        }
-     
-   
-    });
-
-    $("#ipfs-icon-ref").on("click", showSettings);
-
-    $('#stop').on("click", function(){
-       
-        ipcRenderer.send("ipfs:getId");
-   
-    });
-    
-    $('#version').on("click", function(){
-        ipcRenderer.send("ipfs:checkStatus");
-    });
-
     ipcRenderer.on("checkStatus", function(event, ver){
         $('#version').text("version:" + ver.version);
         setTimeout(function(){
@@ -171,6 +139,23 @@ $(document).ready(function() {
         }, 2000);
     });
 
+    $('#ipfsStatus').on("click", function(){
+        if ($('#ipfsStatus').hasClass('btn-outline-danger')){
+            ipcRenderer.send("ipfs:start");
+        } else if ($('#ipfsStatus').hasClass('btn-outline-success')){
+            ipcRenderer.send("ipfs:stop");
+        }
+    });
+
+    $("#ipfs-icon-ref").on("click", showSettings);
+
+    $('#stop').on("click", function(){
+        ipcRenderer.send("ipfs:getId");
+    });
+    
+    $('#version').on("click", function(){
+        ipcRenderer.send("ipfs:checkStatus");
+    });
 
     $('#refresh').on("click", function(){
     
@@ -178,7 +163,6 @@ $(document).ready(function() {
             getFeaturedData();
         });
     });
-
 
     $('#open').on("click", function(){
         // what is the point of this?
