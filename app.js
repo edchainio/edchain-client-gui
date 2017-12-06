@@ -116,7 +116,7 @@ var createMainWindow = function createMainWindow(){
     });
     
     //    createChildWindow(mainWindow);
-    const tray = new Tray(__dirname + '/static/img/icon.png');
+    const tray = new Tray(__dirname + getIcon());
 
     mainWindow.tray = tray;
 
