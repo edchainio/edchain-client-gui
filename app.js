@@ -5,10 +5,6 @@ const { exec } = require('child_process');
 
 const { ipcMain, app, BrowserWindow, Menu, Tray } = require('electron');
 
-
-
-let mainWindow, addWindow, settingsWindow;
-
 var __windows = {};
 
 var __logSubscribers = {};
@@ -18,17 +14,56 @@ var ipfs = require('./process_ipfs')({
     "afterLogUpdateHook": function(ipfsLog){
         for(let subscriber in __logSubscribers){
             if(typeof subscriber.send === 'function'){
-                subscriber.send("ipfs:logging", ipfsLog);
+                subscriber.send('ipfs:logging', ipfsLog);
             }
         }
     }
 });
 
-for(let prop in ipfs){
-    if(typeof ipfs[prop] === 'function'){
-        ipcMain.on("ipfs:" + prop, ipfs[prop]);
-    }
-}
+var registerListeners = function(listeners){
+    for (let prefix of listeners){
+        for(let prop in listeners[prefix]){
+            if(typeof listeners[prefix][prop] === 'function'){
+                ipcMain.on(prefix + ':' + prop, listeners[prefix][prop]);
+            }
+        }
+    }   
+};
+
+registerListeners({ipfs});
+
+var createAddWindow = function () {
+    var addWindow = createWindow({
+        // width and height are not defined
+        width,
+        height,
+        title: 'Single Course pane'
+    });
+    // Need to make course.html 
+    // What is going on here?
+    addWindow.loadURL(`file://${__dirname}/course.html`);
+    return addWindow;
+};
+
+var createChildWindow = function (mainWindow, url) {
+    
+    var child = createWindow({
+        parent: mainWindow, 
+        modal:true, 
+        show:false,
+        hasIpfsLogging: true
+    });
+    child.loadURL(url);
+    return child;
+
+};
+
+var showChildWindow = function(browserWindow){
+ 
+    browserWindow.show();
+   // browserWindow.openDevTools();
+     // log.info(browserWindow.webContents); 
+};
 
 // Window Factory
 var createWindow = function createWindow(config){
@@ -61,6 +96,8 @@ var createWindow = function createWindow(config){
 };
 
 var createMainWindow = function createMainWindow(){
+    var settingsWindow, mainWindow;
+
     mainWindow = createWindow({
         width: 960,
         height: 540,
@@ -95,7 +132,7 @@ var createMainWindow = function createMainWindow(){
     //  mainWindow.openDevTools();
    
     ipcMain.on('createAndShowChildWindow', function(event,url){
-        showChildWindow(createChildWindow(mainWindow,url));
+        showChildWindow(createChildWindow(mainWindow, url));
     });
 
     ipcMain.on('createChildWindow', function(event, url){
@@ -130,38 +167,3 @@ app.on('activate', () => {
         createMainWindow();
     }
 });
-
-
-function createAddWindow() {
-    addWindow = createWindow({
-        // width and height are not defined
-        width,
-        height,
-        title: 'Single Course pane'
-    });
-    // Need to make course.html 
-    // What is going on here?
-    addWindow.loadURL(`file://${__dirname}/course.html`);
-    return addWindow;
-};
-
-var createChildWindow = function (mainWindow, url) {
-    
-    var child = createWindow({
-        parent: mainWindow, 
-        modal:true, 
-        show:false,
-        hasIpfsLogging: true
-    });
-    child.loadURL(url);
-    return child;
-
-};
-
-var showChildWindow= function(browserWindow){
- 
-    browserWindow.show();
-   // browserWindow.openDevTools();
-     // log.info(browserWindow.webContents); 
-};
-

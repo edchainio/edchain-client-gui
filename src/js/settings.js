@@ -11,11 +11,10 @@ var initPage = function(){
 	ipcRenderer.send("ipfs:getIPFSAPIAddress");
 	ipcRenderer.send("ipfs:getIPFSDatastorePath");
 	ipcRenderer.send("ipfs:getLog");
+	ipcRenderer.send("ipfs:isOnline");
 };
 
 $(document).ready(function() {
-	checkOnline();
-
 
 	$("#ipfs-slider").on("click",function(){
 		
@@ -67,6 +66,7 @@ $(document).ready(function() {
 			$("#ipfs-slider").prop("checked",true);
 		}
 	});
+	
 	initPage();
 });
 
