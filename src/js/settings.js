@@ -1,12 +1,12 @@
-const { ipcRenderer } = require('electron');
-
+const { ipcRenderer, remote } = require('electron');
+const currentWindow = remote.getCurrentWindow();
 
 var checkOnline = function(){ 
 	ipcRenderer.send("ipfs:isOnline");
 };
 
 var closePage = function(){
-	ipcRenderer.send("closePage");
+	ipcRenderer.send("closePage", currentWindow.id);
 };
 
 var initPage = function(){

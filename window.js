@@ -1,6 +1,5 @@
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
-var log = require('electron-log');
 
 
 const httpURL="http://localhost:8080/ipfs/";
@@ -11,6 +10,7 @@ const { exec } = require('child_process');
 const {remote} = require('electron');
 const {BrowserWindow} = remote;
 const {dialog} = remote.require('electron');
+var log = remote.require('electron-log');
 const currentWindow = remote.getCurrentWindow();
 
 var ipcRenderer = require('electron').ipcRenderer;

@@ -3,7 +3,7 @@ var url = require('url');           // https://nodejs.org/api/url.html
 var log = require('electron-log');
 const { exec } = require('child_process');
 
-const { ipcMain, app, BrowserWindow, Menu, Tray } = require('electron');
+const { ipcMain, app, protocol, BrowserWindow, Menu, Tray } = require('electron');
 
 var __windows = {};
 
@@ -21,7 +21,7 @@ var ipfs = require('./process_ipfs')({
 });
 
 var registerListeners = function(listeners){
-    for (let prefix of listeners){
+    for (let prefix in listeners){
         for(let prop in listeners[prefix]){
             if(typeof listeners[prefix][prop] === 'function'){
                 ipcMain.on(prefix + ':' + prop, listeners[prefix][prop]);
@@ -143,12 +143,27 @@ var createMainWindow = function createMainWindow(){
         showChildWindow(settingsWindow);
     });
 
-    ipcMain.on("closePage", function(event, ...args){
-        event.sender.close();
+    ipcMain.on("closePage", function(event, id){
+        __windows[id].close();
     });
 };
 
-app.on('ready', createMainWindow);
+app.on('ready', function(){
+    // Custom File Protocol
+    // Confirm if this works on windows
+    // protocol.interceptFileProtocol(
+    //     'file', 
+    //     (request, callback) => {
+    //         const url = request.url.substr(7);    /* all urls start with 'file://' */
+    //         const assetPath = path.normalize(`${__dirname}/${url}`);
+    //         callback({ "path": assetPath });
+    //     }, (err) => {
+    //     if (err) console.error('Failed to register protocol')
+    // });
+
+    createMainWindow();
+
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
