@@ -1,7 +1,6 @@
 const platform = require('os').platform();
 
 const exec = require('child_process').exec;
-const { ipcMain } = require('electron');
 
 var path = require('path');  
 var ipfsAPI = require('ipfs-api');
@@ -224,13 +223,13 @@ var manager = function(options){
 		
 	};
 
-	self.start = function(){
+	self.start = function(event, ...args){
 		log.info('starting..');
 		logOutput('Starting IPFS...');
 		self.ipfs = startIpfs(logOutput);
 	};
 
-	self.stop = function(){
+	self.stop = function(event, ...args){
 		log.info('stopping..');
 	    self.ipfs = ipfsStop();
 	};
