@@ -2,12 +2,22 @@ var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 var log = require('electron-log');
 const { exec } = require('child_process');
-
+const platform = require('os').platform();
 const { ipcMain, app, protocol, BrowserWindow, Menu, Tray } = require('electron');
 
 var __windows = {};
 
 var __logSubscribers = {};
+
+var getIcon = (function(){
+    var iconMap = {
+        "darwin": ".icns",
+        "linux": ".png"
+    };
+    return function(){
+        return `/static/img/icon${iconMap[platform] || ".png"}`;
+    };
+})();
 
 
 var ipfs = require('./process_ipfs')({
@@ -102,7 +112,7 @@ var createMainWindow = function createMainWindow(){
         width: 960,
         height: 540,
         //frame: false,
-        icon: __dirname + '/static/img/icon.png'
+        icon: __dirname + getIcon()
     });
     
     //    createChildWindow(mainWindow);
