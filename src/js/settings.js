@@ -5,6 +5,10 @@ var checkOnline = function(){
 	ipcRenderer.send("ipfs:isOnline");
 };
 
+var closePage = function(){
+	ipcRenderer.send("closePage");
+};
+
 var initPage = function(){
 	ipcRenderer.send("ipfs:getPeerId");
 	ipcRenderer.send("ipfs:getIPFSGWAddr");
@@ -28,7 +32,7 @@ $(document).ready(function() {
 
 	$("#close-window").on("click", function(event){
 		event.preventDefault();
-		window.close();
+		closePage();
 	});
 
 	ipcRenderer.on("getPeerId", function(event, value){

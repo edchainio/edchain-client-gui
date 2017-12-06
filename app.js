@@ -142,6 +142,10 @@ var createMainWindow = function createMainWindow(){
     ipcMain.on('showChildWindow', function(){
         showChildWindow(settingsWindow);
     });
+
+    ipcMain.on("closePage", function(event, ...args){
+        event.sender.close();
+    });
 };
 
 app.on('ready', createMainWindow);
