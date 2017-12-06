@@ -60,3 +60,5 @@ typings/
 # dist
 dist/
 ip4/
+
+.DS_Store
