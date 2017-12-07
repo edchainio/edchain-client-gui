@@ -10,7 +10,8 @@
     "start": "electron app.js",
     "build": "electron-packager . app --platform linux --arch x64 --out dist/ --overwrite --ignore=electron-packager",
     "rpm64": "electron-installer-redhat --src dist/app-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite",
-    "deb64": "electron-installer-debian --src dist/app-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite"
+    "deb64": "electron-installer-debian --src dist/app-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite",
+    "darwin": "electron-installer-dmg . app --out dist/darwin --debug --overwrite icon=./static/img/icon.icns"
   },
   "devDependencies": {
     "electron": "^1.7.9",
