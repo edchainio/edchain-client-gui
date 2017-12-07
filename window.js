@@ -135,15 +135,11 @@ var __ui = {
     }, 
     createHomePageCard: function(image, title, indexURL){
         $(".loader").hide();
-        var template = [
-            '<div class="card">',
-            '<img src=' + image + '>',
-            '<p class="card-text">',
-            '<a class="course-link" data-url="' + indexURL + '" href="#">' + title + '</a>',
-            '</p></div>'
-        ];
-        
-        $('#course-cards').append(template.join(""));
+        var rendered = Mustache.render(
+            $("#course-card-template").html(), 
+            {image, title, indexURL}
+        );
+        $('#course-cards').append(rendered);
     }
 
 };
