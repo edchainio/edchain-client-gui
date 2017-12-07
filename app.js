@@ -10,6 +10,17 @@ var __windows = {};
 var __logSubscribers = {};
 
 
+var getIcon = (function(){
+    var iconMap = {
+        "darwin": "/static/img/icon.icns",
+        "linux": "/static/img/icon.png"
+    };
+
+    return function(){
+        return iconMap[platform] || "/static/img/icon.png";
+    };
+})();
+
 var ipfs = require('./process_ipfs')({
     "afterLogUpdateHook": function(ipfsLog){
         for(let subscriber in __logSubscribers){
@@ -149,7 +160,8 @@ var createMainWindow = function createMainWindow(){
 // macOS
 // https://electronjs.org/docs/api/app#appdockseticonimage-macos
 if (platform === "darwin"){
-    app.dock.setIcon(__dirname + "/static/img/icon.png");
+    // Seems to hate my .icns
+    // app.dock.setIcon(__dirname + getIcon());
 }
 
 app.on('ready', function(){
