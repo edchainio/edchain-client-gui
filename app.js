@@ -162,6 +162,7 @@ var createMainWindow = function createMainWindow(){
 if (platform === "darwin"){
     // Seems to hate my .icns
     // app.dock.setIcon(__dirname + getIcon());
+    app.dock.setIcon(__dirname + "/static/img/icon.png");
 }
 
 app.on('ready', function(){
