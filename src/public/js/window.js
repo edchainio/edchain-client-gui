@@ -171,6 +171,12 @@ $(document).ready(function() {
         }, 2000);
     });
 
+
+
+    
+
+
+
     $('#ipfsStatus').on("click", function(){
         if ($('#ipfsStatus').hasClass('btn-outline-danger')){
             ipcRenderer.send("ipfs:start");
@@ -213,6 +219,10 @@ $(document).ready(function() {
                 }
             )
         );
+    });
+
+    $('#testButton').on("click", function(){
+        ipcRenderer.send("ipfs:addPin","/ipfs/Qmdk5m9JbnfNbtxQxUmL8WW3D3AJjBfpVGw29AGJxBJ9HB");
     });
     // Why is there a timeout?
     setTimeout(__state.getFeaturedData, 3000);
