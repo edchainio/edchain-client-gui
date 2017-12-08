@@ -15,12 +15,12 @@ var __logSubscribers = {};
 
 var getIcon = (function(){
     var iconMap = {
-        "darwin": "/../static/img/icon.icns",
-        "linux": "/../static/img/icon.png"
+        "darwin": "/public/img/icon.icns",
+        "linux": "/public/img/icon.png"
     };
 
     return function(){
-        return iconMap[platform] || "/../static/img/icon.png";
+        return iconMap[platform] || "/public/img/icon.png";
     };
 })();
 
@@ -117,10 +117,10 @@ var createMainWindow = function createMainWindow(){
         height: 540,
         //frame: false,
         // too big for mac
-        icon: path.resolve(__dirname, "../static/img/icon.png")
+        icon: path.resolve(__dirname, "public/img/icon.png")
     });
     
-    const tray = new Tray(path.resolve(__dirname, "../static/img/icon.png"));
+    const tray = new Tray(path.resolve(__dirname, "public/img/icon.png"));
 
     mainWindow.tray = tray;
 
@@ -164,7 +164,7 @@ var createMainWindow = function createMainWindow(){
 if (platform === "darwin"){
     // Seems to hate my .icns
     // app.dock.setIcon(__dirname + getIcon());
-    app.dock.setIcon(path.resolve(__dirname, "../static/img/icon.png"));
+    app.dock.setIcon(path.resolve(__dirname, "public/img/icon.png"));
 }
 
 app.on('ready', function(){
