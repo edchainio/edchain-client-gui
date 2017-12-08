@@ -224,7 +224,7 @@ $(document).ready(function() {
         );
     });
 
-    $('.pin-coures-link').on("click", function(event){
+    $('#course-cards').on("click", '.pin-course-link', function(event){
         event.preventDefault();
         var hash = $(this).data("hash");
         ipcRenderer.send("ipfs:addPin",`/ipfs/${hash}`);
