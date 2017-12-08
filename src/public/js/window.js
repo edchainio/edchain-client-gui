@@ -22,7 +22,7 @@ var __actions = {
     },
     showSettings: function(){
         // why is the file directly referenced here?
-        let url='file://' + __dirname + '/src/html/settings.html';
+        let url='file://' + __dirname + '/../html/settings.html';
         ipcRenderer.send('createChildWindow', url);
         ipcRenderer.send('showChildWindow');
     },
@@ -68,7 +68,9 @@ var __state = {
         course.META = {
             "hashes": {}
         };
+
         var __hashes = course.META.hashes;
+       
         // failure case
         courseRoot.fail(__state.onFailure);
         

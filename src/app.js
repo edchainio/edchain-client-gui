@@ -3,7 +3,10 @@ var url = require('url');           // https://nodejs.org/api/url.html
 var log = require('electron-log');
 const { exec } = require('child_process');
 const platform = require('os').platform();
-const { ipcMain, app, protocol, BrowserWindow, Menu, Tray, nativeImage } = require('electron');
+const { 
+    ipcMain, app, protocol, BrowserWindow, 
+    Menu, Tray, nativeImage 
+} = require('electron');
 
 var __windows = {};
 
@@ -12,12 +15,12 @@ var __logSubscribers = {};
 
 var getIcon = (function(){
     var iconMap = {
-        "darwin": "/static/img/icon.icns",
-        "linux": "/static/img/icon.png"
+        "darwin": "/../static/img/icon.icns",
+        "linux": "/../static/img/icon.png"
     };
 
     return function(){
-        return iconMap[platform] || "/static/img/icon.png";
+        return iconMap[platform] || "/../static/img/icon.png";
     };
 })();
 
@@ -70,10 +73,9 @@ var createChildWindow = function (mainWindow, url) {
 };
 
 var showChildWindow = function(browserWindow){
- 
     browserWindow.show();
-   // browserWindow.openDevTools();
-     // log.info(browserWindow.webContents); 
+    // browserWindow.openDevTools();
+    // log.info(browserWindow.webContents); 
 };
 
 // Window Factory
@@ -115,10 +117,10 @@ var createMainWindow = function createMainWindow(){
         height: 540,
         //frame: false,
         // too big for mac
-        icon: __dirname + '/static/img/icon.png'
+        icon: __dirname + '/../static/img/icon.png'
     });
     
-    const tray = new Tray(__dirname + '/static/img/icon.png');
+    const tray = new Tray(__dirname + '/../static/img/icon.png');
 
     mainWindow.tray = tray;
 
@@ -134,7 +136,7 @@ var createMainWindow = function createMainWindow(){
         tray.setHighlightMode('never');
     });
 
-    mainWindow.loadURL(`file://${__dirname}/index.html`);
+    mainWindow.loadURL(`file://${__dirname}/public/html/index.html`);
     
     mainWindow.once('ready-to-show', () => {
         mainWindow.show();
@@ -162,7 +164,7 @@ var createMainWindow = function createMainWindow(){
 if (platform === "darwin"){
     // Seems to hate my .icns
     // app.dock.setIcon(__dirname + getIcon());
-    app.dock.setIcon(__dirname + "/static/img/icon.png");
+    app.dock.setIcon(__dirname + "/../static/img/icon.png");
 }
 
 app.on('ready', function(){

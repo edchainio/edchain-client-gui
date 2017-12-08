@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <link rel="icon" href="../../../favicon.ico">
+
+        <title>edChain</title>
+
+        <link href="../../../vendor/js/bootstrap.js" rel="stylesheet">
+        <link href="../../../vendor/css/album.css" rel="stylesheet">
+
+        <script>delete module.exports</script>
+        <script src="../../../vendor/js/jquery-3.1.1.js"></script>
+        <script src="../../../vendor/js/mustache.min.js"></script>
+        <script src="../../../vendor/js/jsoneditor.min.js"></script>
+        <script src="../js/window.js"></script>
+        <link href="../../../vendor/css/bootstrap.css" rel="stylesheet">
+        <script src="../../../vendor/js/popper.min.js"></script>
+        <script src="../../../vendor/js/holder.min.js"></script>
+        <script>
+            // COMMENT: Why does this need to be here?
+            // BUG: This does not work on macOS
+            $(function () {
+                Holder.addTheme("thumb", { background: "#55595c", foreground: "#eceeef", text: "Thumbnail" });
+            });
+            // COMMENT: Why do we need the shell here?
+            var shell = require('electron').shell;
+        </script>
+    </head>
+    <body>
+        <div class="edchain-header" id="navbarHeader">
+            <div class="container">
+               
+                <div class="row">
+                    <div class="col-sm-10 py-4">
+                        <h4 class="text-white"></h4>
+                        <div id="IDs" class="well">
+                            <img src="../../../static/img/header_logo.png">
+                        </div>
+                    </div>
+                    <div class="col-sm-2 py-4">
+                        <h4 class="text-white"></h4>
+                        <div>
+                            <div id="nodeStatus" class="alert">
+                                <a href="#" id="ipfs-icon-ref" class="btn btn-outline-danger ipfs-icon">
+                                    <img id="img-ipfs-icon" alt="offline" width="30px" src="../../../static/img/ipfs-logo-128-white-outline.png"> 
+                                 </a>
+
+                            </div>
+                            <div id="console"></div>
+                                                      
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="jumbotron text-center">
+          
+            <div class="container">
+                <h1 class="jumbotron-heading">
+                    Featured Courses
+                </h1>
+                <p class="lead text-muted">
+                    edChain is a shared repository for educators to publish content onto.  No central servers are needed.
+                </p>
+                <p>
+                    <a href="#" class="btn btn-primary">
+                        Main call to action
+                    </a>
+                    <a href="#" class="btn btn-secondary">
+                        Secondary action
+                    </a>
+                </p>
+            </div>
+        </section>
+        <div class="album text-muted">
+            <div class="container">
+                <div class="loader"></div>
+                <div class="row" id="course-cards">
+                </div>
+            </div>
+        </div>
+    <footer class="text-muted">
+        <div class="container">
+            <p class="float-right">
+                <a href="#">
+                    Back to top
+                </a>
+            </p>
+            <p>
+                &copy; 2017 edChain
+            </p>
+        </div>
+    </footer>
+
+    <script type="text/template" id="course-card-template">
+        <div class="card">
+            <img src="{{image}}">
+            <p class="card-text">
+                <a class="course-link" data-url="{{indexURL}}" href="#">
+                    {{title}}
+                </a>
+           </p>
+        </div>
+    </script>
+
+  </body>
+</html>
