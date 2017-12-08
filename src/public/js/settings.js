@@ -44,6 +44,12 @@ $(document).ready(function() {
 	});
 
 
+	ipcRenderer.on("ipfsAddPin", function(event, value){
+		log.info("addPinVal",value);
+	});
+
+
+
 	ipcRenderer.on("getIPFSAPIAddress", function(event, value){
 		$("#ipfs-api-addr").val(value);
 	});
