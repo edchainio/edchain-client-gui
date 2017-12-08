@@ -5,12 +5,13 @@
   "repository": "edchainio/client-gui",
   "author": "William Mantly <wmantly@gmail.com>",
   "license": "GPL-3.0",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "electron app.js",
-    "build": "electron-packager . app --platform linux --arch x64 --out dist/ --overwrite --ignore=electron-packager",
+    "start": "electron src/app.js",
+    "build": "electron-packager . app --out dist/ --overwrite --ignore=electron-packager",
     "rpm64": "electron-installer-redhat --src dist/app-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite",
-    "deb64": "electron-installer-debian --src dist/app-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite"
+    "deb64": "electron-installer-debian --src dist/app-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite",
+    "darwin": "electron-installer-dmg dist/app-darwin-x64/ app --out dist/installers/ --overwrite icon=./src/public/img/icon.icns"
   },
   "devDependencies": {
     "electron": "^1.7.9",
@@ -21,7 +22,6 @@
   },
   "dependencies": {
     "electron-log": "^2.2.11",
-    "electron-pubsub": "^0.2.2",
     "ipfs": "^0.26.0",
     "ipfs-api": "^15.0.1",
     "mustache": "^2.3.0"

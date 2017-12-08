@@ -60,3 +60,6 @@ typings/
 # dist
 dist/
 ip4/
+
+# MAC
+.DS_Store
