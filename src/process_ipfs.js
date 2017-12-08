@@ -142,6 +142,7 @@ var ipfsId = function(fn){
 
 
 
+
 var getIPFS = function(){
 	let ipfs=null;
 	if(ipfs === null){
@@ -156,6 +157,22 @@ var getIPFS = function(){
 	return ipfs;
 
 }
+var addPins = function(fn,hash){
+	log.info('addPin');
+	
+	
+	getIPFS().pin.add(hash,function (err,pinset) {
+
+		if(err){
+			log.info(err);
+		}
+		fn(pinset);
+		log.info('pinset',pinset);
+
+	});
+	
+}
+
 
 var manager = function(options){
 	var self = {};
@@ -231,6 +248,12 @@ var manager = function(options){
 		log.info('stopping..');
 	    self.ipfs = ipfsStop();
 	};
+
+	self.addPin = function(event, hash){
+		addPins(function(payload){
+			event.sender.send("ipfsAddPin",payload);
+		},hash);
+	}
 
 	self.ipfs = self.start();
 

@@ -44,6 +44,12 @@ $(document).ready(function() {
 	});
 
 
+	ipcRenderer.on("ipfsAddPin", function(event, value){
+		log.info("addPinVal",value);
+	});
+
+
+
 	ipcRenderer.on("getIPFSAPIAddress", function(event, value){
 		$("#ipfs-api-addr").val(value);
 	});
@@ -65,8 +71,7 @@ $(document).ready(function() {
 	});
 	
 	ipcRenderer.on("isOnline", function(event, value){
-		// Is non strict comparison the intent here?
-		if(value == true){
+		if(value === true){
 			$("#ipfs-slider").prop("checked",true);
 		}
 	});

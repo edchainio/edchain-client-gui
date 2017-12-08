@@ -33,6 +33,7 @@ var __actions = {
 
 // Feels like there is a course object in here somewhere
 var __state = {
+    "courses": null,
     buildIpfsUrl: function(hash){
         return ipfsGetURL + hash + "&encoding=json";
     },
@@ -56,6 +57,7 @@ var __state = {
 
         // success case
         featuredData.done(function({courses}){
+            __state.courses = courses;
             courses.forEach(function(course){
                 __state.getCourseDetail(course, callback);
             });        
@@ -108,12 +110,12 @@ var __state = {
 
                             } else if (link.Name.endsWith('index.htm')){
                                 
-                                course.META.indexUrl = httpURL + course.META.contentsDirectoryHash + '/index.htm';
+                                course.META.indexUrl = `${httpURL}${__hashes.courseDirectoryHash}/contents/index.htm`;
                             
                             }
                         });
                         
-                        __ui.createHomePageCard(course.META.imageUrl, course.title, course.META.indexUrl);
+                        __ui.createHomePageCard(course.META.imageUrl, course.title, course.META.indexUrl, __hashes.courseDirectoryHash);
                     });
                 });
             });
@@ -135,11 +137,11 @@ var __ui = {
         }
 
     }, 
-    createHomePageCard: function(image, title, indexURL){
+    createHomePageCard: function(image, title, indexURL, courseHash){
         $(".loader").hide();
         var rendered = Mustache.render(
             $("#course-card-template").html(), 
-            {image, title, indexURL}
+            {image, title, indexURL, courseHash}
         );
         $('#course-cards').append(rendered);
     }
@@ -160,6 +162,7 @@ $(document).ready(function() {
     });
 
     ipcRenderer.on("isOnline", function(event, value){
+        // continually do this
         __ui.setIPFSStatusButton(value);
         setTimeout(__actions.isIPFSOnline, 3000);
     });
@@ -170,6 +173,12 @@ $(document).ready(function() {
             $('#version').text("version:" + "");
         }, 2000);
     });
+
+
+
+    
+
+
 
     $('#ipfsStatus').on("click", function(){
         if ($('#ipfsStatus').hasClass('btn-outline-danger')){
@@ -214,7 +223,17 @@ $(document).ready(function() {
             )
         );
     });
+
+    $('.pin-coures-link').on("click", function(event){
+        event.preventDefault();
+        var hash = $(this).data("hash");
+        ipcRenderer.send("ipfs:addPin",`/ipfs/${hash}`);
+    });
+
+
     // Why is there a timeout?
+    // Dont do this till ipfs is up
     setTimeout(__state.getFeaturedData, 3000);
+    
     __actions.isIPFSOnline();
 });
