@@ -117,10 +117,10 @@ var createMainWindow = function createMainWindow(){
         height: 540,
         //frame: false,
         // too big for mac
-        icon: __dirname + '/../static/img/icon.png'
+        icon: path.resolve(__dirname, "../static/img/icon.png")
     });
     
-    const tray = new Tray(__dirname + '/../static/img/icon.png');
+    const tray = new Tray(path.resolve(__dirname, "../static/img/icon.png"));
 
     mainWindow.tray = tray;
 
@@ -164,7 +164,7 @@ var createMainWindow = function createMainWindow(){
 if (platform === "darwin"){
     // Seems to hate my .icns
     // app.dock.setIcon(__dirname + getIcon());
-    app.dock.setIcon(__dirname + "/../static/img/icon.png");
+    app.dock.setIcon(path.resolve(__dirname, "../static/img/icon.png"));
 }
 
 app.on('ready', function(){
