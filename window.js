@@ -1,5 +1,5 @@
 const httpURL="http://localhost:8080/ipfs/";
-const edchainNodeURL="http://139.59.66.198:5000/content/addresses/featured";
+const edchainNodeURL="http://45.55.235.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
 
 
@@ -63,7 +63,7 @@ var __state = {
     },
     getCourseDetail: function(course){
         // actual course ref
-        var courseRoot = __state.getIpfsData(coures.hash);
+        var courseRoot = __state.getIpfsData(course.hash);
         
         course.META = {
             "hashes": {}
@@ -198,7 +198,7 @@ $(document).ready(function() {
 
     $('#refresh').on("click", function(){
         $(".card").remove(function(){
-            getFeaturedData();
+            __state.getFeaturedData();
         });
     });
 
@@ -213,6 +213,6 @@ $(document).ready(function() {
         );
     });
     // Why is there a timeout?
-    setTimeout(getFeaturedData, 3000);
+    setTimeout(__state.getFeaturedData, 3000);
     __actions.isIPFSOnline();
 });
