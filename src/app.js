@@ -55,6 +55,7 @@ var createChildWindow = function (mainWindow, url) {
         hasIpfsLogging: true
     });
     child.loadURL(url);
+    child.setClosable(true);
     return child;
 
 };
