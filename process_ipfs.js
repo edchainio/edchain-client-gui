@@ -105,6 +105,45 @@ var ipfsLogTail = function(fn){
 
 };
 
+var ipfsSwarmPeers = function(fn){
+	getIPFS().swarm.peers(function(err,peers){
+		if(err){
+			log.info(err);
+		}
+		fn.resolve(peers);
+	});
+
+}
+
+var addPin = function(fn,hash){
+	log.info('addPin');
+	
+	
+	getIPFS().pin.add(hash,function (err,pinset) {
+
+		if(err){
+			log.info(err);
+		}
+		fn.resolve(pinset);
+		log.info('pinset',pinset);
+
+	});
+	
+}
+
+var removePin = function(fn,hash){
+	
+	getIPFS().pin.rm(hash,function (err,pinset) {
+
+		if(err){
+			log.info(err);
+		}
+		fn.resolve(pinset);
+		log.info('pinset',pinset);
+	});
+}
+
+
 var ipfsStatus = function(func){
  
     ipfs.version()
@@ -217,6 +256,20 @@ var manager = function(){
 		ipfsGatewayAddress(fn);
 	
 	}
+	self.getPeers = function(fn){
+		
+		ipfsSwarmPeers(fn);
+	
+	}
+	self.addPins = function(fn,hash){
+		addPin(fn,hash);
+	
+	}
+	self.removeIPFSpin = function(fn,hash){
+		removePin(fn,hash);
+	
+	}
+	
 
 	return self;
 };

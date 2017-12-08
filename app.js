@@ -61,7 +61,7 @@ app.on('ready', () => {
          ipfs.stop();
          process.exit(1);
     });
-  //  mainWindow.openDevTools();
+    mainWindow.openDevTools();
    
     ipcMain.on('createAndShowChildWindow', function(event,url){
         

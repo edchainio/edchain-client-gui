@@ -6,7 +6,7 @@ var log = require('electron-log');
 
 
 const httpURL="http://localhost:8080/ipfs/";
-const edchainNodeURL="http://139.59.66.198:5000/content/addresses/featured";
+const edchainNodeURL="http://45.55.235.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://127.0.0.1:5001/api/v0/object/get?arg="
 
 const { exec } = require('child_process');
@@ -39,6 +39,7 @@ pubsub.subscribe('uiLogging', (event,val) => {
 
 
 
+
 var openSettings = function(){
   
     let url='file://' + __dirname + '/src/html/settings.html';
@@ -50,7 +51,7 @@ var showSettings = function(event){
 
     openSettings();
     event.preventDefault();
-     ipcRenderer.send('showChildWindow');
+    ipcRenderer.send('showChildWindow');
    
 
 }  
@@ -111,26 +112,28 @@ var getID = function($element){
 
 
 var getFeaturedData = function(){
-   
+       
+
     for(var i=0;i<1;i++){
         $.ajax({
             url: edchainNodeURL,
             method: 'GET',
             success: function(edchainData){
-
+                log.info("edchain url up");
                 courseLength=edchainData["courses"].length;
                 
                 for(var n=0;n<courseLength;n++){
                     parentHash=edchainData["courses"][n].hash;
                     
                    
-                    let callback = (function(course){
-                        return function(imageURL, indexURL){
+                    let callback = (function(course,k){
+                      
+                        return function(imageURL, indexURL,j){
                             var title = course.title;
-                          
-                            createHomePageCard(imageURL, title, indexURL);
+                           
+                            createHomePageCard(imageURL, title, indexURL,k);
                         };
-                    }(edchainData["courses"][n]));
+                    }(edchainData["courses"][n],n));
                     
                     getParentData(parentHash, callback);
           
@@ -142,6 +145,7 @@ var getFeaturedData = function(){
             }
         });
     }
+
  
 };
 
@@ -215,14 +219,14 @@ var getCourseDetails = function(contentsHash,jpgHash,indxHash, callback){
                     }
                     else if(arr1[i].Name.endsWith('index.htm')){
 
-                     indxHash = indxHash + '/contents/index.htm';
-                   //   indxHash = contentsHash + '/index.htm';
+                     indxHash = {hash:indxHash, suffix:'/contents/index.htm',prefix:httpURL};
+                 
 
                     }
                                                
                 }
             
-            callback(httpURL + jpgHash, httpURL + indxHash);
+            callback(httpURL + jpgHash, indxHash);
               
         }
     });
@@ -234,17 +238,63 @@ var openCourseLink = function(event,url){
     createAndShowChildWindow(url);
 
 }
+/*
+var switchPin = function(){
 
 
-var createHomePageCard = function(image, title, indexURL){
+
+}*/
+var removePins = function(hash){
+   
+    log.info("removepin");
+     pubsub.publish("ipfs:removeIPFSpin",hash).then(function(val){
+
+        log.info("removePin:",val);
+        $('#pinCourse').removeClass('text-info').addClass('text-muted');
+        $('#pinCourse').text('Pin');
+
+    });
+
+}
+
+var pinCourses = function(event,hash,pinId){
+    event.preventDefault();
+   
+   // let pinText= $("#pinCourseId["+pinId+"]").text();
+    let pinText= document.getElementById("pinCourseId["+pinId+"]").innerHTML;
+    log.info('pinText',pinText);
+    if(pinText === 'Pin'){
+        $('#pinCourseId[' + pinId +']').removeClass('text-muted').addClass('text-info');
+        $('#pinCourse').text('unPin');
+ 
+        pubsub.publish("ipfs:addPins","/ipfs/"+hash).then(function(val){
+
+        log.info("addPin:",val);
+        
+        $('#pinCourse[hash]').removeClass('text-muted').addClass('text-info');
+        $('#pinCourse[hash]').text('unPin');
+    });
+       
+
+    }
+    else{
+
+        removePins(hash);
+    }
+
+}
+
+var createHomePageCard = function(image, title, indexURL,n){
 
      $(".loader").hide();
+
      cardHtml="<div class='card'><img src=" + image +">";
      cardHtml= cardHtml + "<p class='card-text'>";
-     cardHtml= cardHtml + "<a id='courseLink' onclick=openCourseLink(event,'" + indexURL +"') href='#'>"+ title + "</a>";   
-     cardHtml= cardHtml + "</p></div>";
+     cardHtml= cardHtml + "<a id='courseLink' onclick=openCourseLink(event,'" + indexURL.prefix +indexURL.hash+indexURL.suffix +"') href='#'>"+ title + "</a>";   
+     cardHtml=cardHtml + "<div id='pinCourseId["+ n +"]' class='text-muted' onclick=pinCourses(event,'" + indexURL.hash + "','"+ n +"')>Pin</div>" ;
+     cardHtml= cardHtml + "</p></div>" + n;
      $('#rows').append(cardHtml);
- 
+    
 
 
 }
@@ -259,6 +309,13 @@ var isIPFSOnline=function(){
      
     pubsub.publish("ipfs:isOnline").then(function(value){
           setIPFSStatusButton(value);
+          
+          pubsub.publish('ipfs:getPeers').then(function(value){
+         
+             let len=Object.keys(value).length;
+             $('#peerSize').text(len);
+          });
+
     });
 
     
@@ -273,7 +330,6 @@ function setIPFSStatusButton(isOnline){
     }
     else{
          $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
-     //    $('#ipfsStatus').text('IPFS Offline');
     }
 
 }
@@ -335,15 +391,13 @@ $(document).ready(function() {
          getFeaturedData();
       });
    
-  //   getFeaturedData();
-
-      
-   
+  //   getFeaturedData();   
     });
 
 
      $('#open').click(function(){
         console.log(dialog.showOpenDialog({properties: ['openFile', 'openDirectory', 'multiSelections']}));
-
     });
+
+    
 });
