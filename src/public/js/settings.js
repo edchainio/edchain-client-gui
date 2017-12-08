@@ -71,8 +71,7 @@ $(document).ready(function() {
 	});
 	
 	ipcRenderer.on("isOnline", function(event, value){
-		// Is non strict comparison the intent here?
-		if(value == true){
+		if(value === true){
 			$("#ipfs-slider").prop("checked",true);
 		}
 	});

@@ -46,19 +46,6 @@ var registerListeners = function(listeners){
 
 registerListeners({ipfs});
 
-var createAddWindow = function () {
-    var addWindow = createWindow({
-        // width and height are not defined
-        width,
-        height,
-        title: 'Single Course pane'
-    });
-    // Need to make course.html 
-    // What is going on here?
-    addWindow.loadURL(`file://${__dirname}/course.html`);
-    return addWindow;
-};
-
 var createChildWindow = function (mainWindow, url) {
     
     var child = createWindow({
