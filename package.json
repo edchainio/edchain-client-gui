@@ -11,7 +11,7 @@
     "build": "electron-packager . app --out dist/ --overwrite --ignore=electron-packager",
     "rpm64": "electron-installer-redhat --src dist/app-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite",
     "deb64": "electron-installer-debian --src dist/app-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite",
-    "darwin": "electron-installer-dmg dist/app-darwin-x64/ app --out dist/installers/ --overwrite icon=./src/public/img/icon.icns"
+    "darwin": "electron-installer-dmg dist/app-darwin-x64/ app --out dist/installers/ --overwrite --icon=./src/public/img/icon.icns"
   },
   "devDependencies": {
     "electron": "^1.7.9",

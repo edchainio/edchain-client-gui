@@ -12,18 +12,6 @@ var __windows = {};
 
 var __logSubscribers = {};
 
-
-var getIcon = (function(){
-    var iconMap = {
-        "darwin": "/public/img/icon.icns",
-        "linux": "/public/img/icon.png"
-    };
-
-    return function(){
-        return iconMap[platform] || "/public/img/icon.png";
-    };
-})();
-
 var ipfs = require('./process_ipfs')({
     "afterLogUpdateHook": function(ipfsLog){
         for(let subscriber in __logSubscribers){
@@ -47,11 +35,35 @@ var registerListeners = function(listeners){
 registerListeners({ipfs});
 
 
+var getIcon = (function(){
+    var iconMap = {
+        "darwin": "/public/img/icon.icns",
+        "linux": "/public/img/icon.png"
+    };
+
+    return function(){
+        return iconMap[platform] || "/public/img/icon.png";
+    };
+})();
+
 var getTray = (function(){
-    var tray = null;
+    var 
+        tray = null, 
+        imageFolder = path.resolve(__dirname, "public/img/");
+
     return function(__window){
+
         if(!tray){
-            tray = new Tray(path.resolve(__dirname, "public/img/icon.png"));
+            if (platform === 'darwin' || platform === 'linux') {  
+                trayImage = path.resolve(imageFolder, 'icon.png');
+            }
+            else if (platform === 'win32') {  
+                trayImage = path.resolve(imageFolder, 'icon.ico');
+            }
+            tray = new Tray(path.resolve(__dirname, trayImage));
+            if (platform === "darwin") {  
+                tray.setPressedImage(path.resolve(imageFolder, 'icon.png'));
+            }
         }
 
         tray.on('click', () => {
@@ -159,7 +171,7 @@ var createMainWindow = function createMainWindow(){
     ipcMain.on('createChildWindow', function(event, url){
         settingsWindow = createChildWindow(mainWindow,url);
     });
-    
+
     ipcMain.on('showChildWindow', function(){
         showChildWindow(settingsWindow);
     });
