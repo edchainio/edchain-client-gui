@@ -8,10 +8,6 @@ var checkOnline = function(){
 	ipcRenderer.send("ipfs:isOnline");
 };
 
-var closePage = function(){
-	ipcRenderer.send("closePage", currentWindow.id);
-};
-
 var initPage = function(){
 	ipcRenderer.send("ipfs:getPeerId");
 	ipcRenderer.send("ipfs:getIPFSGWAddr");
@@ -31,11 +27,6 @@ $(document).ready(function() {
 		else if($(this).prop("checked")==false){
 			ipcRenderer.send("ipfs:stop");
 		}
-	});
-
-	$("#close-window").on("click", function(event){
-		event.preventDefault();
-		closePage();
 	});
 
 	ipcRenderer.on("getPeerId", function(event, value){
