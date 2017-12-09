@@ -213,7 +213,7 @@ app.on('activate', (event, hasVisibleWindows) => {
     // dock icon is clicked and there are no other windows open.
     if (!Object.keys(__windows).length) {
         createMainWindow();
-    } else {
+    } else if (hasVisibleWindows) {
         event.preventDefault();
     }
 });
