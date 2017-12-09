@@ -21,6 +21,7 @@
     "electron-packager": "^9.1.0"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "electron-log": "^2.2.11",
     "ipfs": "^0.26.0",
     "ipfs-api": "^15.0.1",
