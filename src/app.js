@@ -159,7 +159,7 @@ var createMainWindow = function createMainWindow(){
     ipcMain.on('createChildWindow', function(event, url){
         settingsWindow = createChildWindow(mainWindow,url);
     });
-
+    
     ipcMain.on('showChildWindow', function(){
         showChildWindow(settingsWindow);
     });
