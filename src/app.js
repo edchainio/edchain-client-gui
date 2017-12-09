@@ -46,6 +46,29 @@ var registerListeners = function(listeners){
 
 registerListeners({ipfs});
 
+
+var getTray = (function(){
+    var tray = null;
+    return function(__window){
+        if(!tray){
+            tray = new Tray(path.resolve(__dirname, "public/img/icon.png"));
+        }
+
+        tray.on('click', () => {
+            __window.isVisible() ? __window.hide() : __window.show();
+        });
+
+        __window.on('show', () => {
+            tray.setHighlightMode('always');
+        });
+
+        __window.on('hide', () => {
+            tray.setHighlightMode('never');
+        });
+        return tray;
+    };
+})();
+
 var createChildWindow = function (mainWindow, url) {
     
     var child = createWindow({
@@ -118,25 +141,10 @@ var createMainWindow = function createMainWindow(){
         width: 960,
         height: 540,
         //frame: false,
-        // too big for mac
         icon: path.resolve(__dirname, "public/img/icon.png")
     });
-    
-    const tray = new Tray(path.resolve(__dirname, "public/img/icon.png"));
 
-    mainWindow.tray = tray;
-
-    tray.on('click', () => {
-        mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
-    });
-
-    mainWindow.on('show', () => {
-        tray.setHighlightMode('always');
-    });
-
-    mainWindow.on('hide', () => {
-        tray.setHighlightMode('never');
-    });
+    mainWindow.tray = getTray(mainWindow);
 
     mainWindow.loadURL(`file://${__dirname}/public/html/index.html`);
     
@@ -203,7 +211,9 @@ app.on('quit', () => {
 app.on('activate', (event, hasVisibleWindows) => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (!__windows.length) {
+    if (!Object.keys(__windows).length) {
         createMainWindow();
+    } else {
+        event.preventDefault();
     }
 });
