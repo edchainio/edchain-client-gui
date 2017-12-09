@@ -17,30 +17,29 @@ var startIpfs = function(callback){
 	});
 
 	ipfs.stderr.on('data', function(data){;
-	 	log.info('ipfs error:', data.toString());
+	 	callback('ipfs error:' + data.toString());
 	});
 
 	ipfs.on('exit', function(code){
-		log.info('ipfs exit:', code.toString());
+		callback('ipfs exit:' + code.toString());
 	});
 
 	return ipfs;
 };
 
-var ipfsStop = function(){
+var ipfsStop = function(callback){
 
 	return exec('pkill ipfs', function (err,stdout,stderr){
-		
 		process.stdout.on('data', function(data){
-			log.info('ipfs out:', data.toString());
+			callback('ipfs out:' + data.toString());
 		});
 
 		process.stderr.on('data', function(data){
-		 	log.info('ipfs error:', data.toString());
+		 	callback('ipfs error:' + data.toString());
 		});
 
 		process.on('exit', function(code){
-			log.info('ipfs exit:', code.toString());
+			callback('ipfs exit:' + code.toString());
 		});
 
 	});
@@ -239,14 +238,14 @@ var manager = function(options){
 	};
 
 	self.start = function(event, ...args){
-		log.info('starting..');
+		logOutput('starting..');
 		logOutput('Starting IPFS...');
 		self.ipfs = startIpfs(logOutput);
 	};
 
 	self.stop = function(event, ...args){
-		log.info('stopping..');
-	    self.ipfs = ipfsStop();
+		logOutput('stopping..');
+	    self.ipfs = ipfsStop(logOutput);
 	};
 
 	self.addPin = function(event, hash){

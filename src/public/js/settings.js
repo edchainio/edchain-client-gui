@@ -72,7 +72,7 @@ $(document).ready(function() {
 	
 	ipcRenderer.on("isOnline", function(event, value){
 		if(value === true){
-			$("#ipfs-slider").prop("checked",true);
+			$("#ipfs-slider").prop("checked", true);
 		}
 	});
 	

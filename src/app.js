@@ -51,11 +51,25 @@ var createChildWindow = function (mainWindow, url) {
     var child = createWindow({
         parent: mainWindow, 
         modal:true, 
-        show:false,
+        show:true,
         hasIpfsLogging: true
     });
+
+    if (process.platform === 'darwin') {
+        child.webContents.once("did-navigate", function(event, ...args){
+            child.webContents.once("dom-ready", function(event, ...args){
+                var pageModification = `(function(){
+                    var $nav = $('<nav><button id="close-sheet">Close</button></nav>').prependTo('body');
+                    $nav.on("click", "#close-sheet", function(event){
+                        event.preventDefault();
+                        window.close();
+                    });
+                })();`;
+                event.sender.executeJavaScript(pageModification, null, function(){log.info("here")});
+            });
+        });
+    }
     child.loadURL(url);
-    child.setClosable(true);
     return child;
 
 };
