@@ -1,6 +1,9 @@
 const { ipcRenderer, remote } = require('electron');
 const currentWindow = remote.getCurrentWindow();
 
+
+// TODO: This is roughly how all windows should act
+// manage the ui and send everything else to the main process
 var checkOnline = function(){ 
 	ipcRenderer.send("ipfs:isOnline");
 };

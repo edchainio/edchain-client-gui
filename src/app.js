@@ -22,6 +22,8 @@ var ipfs = require('./process_ipfs')({
     }
 });
 
+// TODO: MOVE
+// mounting process
 var registerListeners = function(listeners){
     for (let prefix in listeners){
         for(let prop in listeners[prefix]){
@@ -34,7 +36,7 @@ var registerListeners = function(listeners){
 
 registerListeners({ipfs});
 
-
+// TODO: MOVE
 var getIcon = (function(){
     var iconMap = {
         "darwin": "/public/img/icon.icns",
@@ -46,6 +48,7 @@ var getIcon = (function(){
     };
 })();
 
+// TODO: MOVE
 var getTray = (function(){
     var 
         tray = null, 
@@ -54,6 +57,7 @@ var getTray = (function(){
     return function(__window){
 
         if(!tray){
+            // http://electron.rocks/proper-tray-icon/
             if (platform === 'darwin' || platform === 'linux') {  
                 trayImage = path.resolve(imageFolder, 'icon.png');
             }
@@ -80,7 +84,7 @@ var getTray = (function(){
         return tray;
     };
 })();
-
+// TODO: MOVE
 var createChildWindow = function (mainWindow, url) {
     
     var child = createWindow({
@@ -93,6 +97,8 @@ var createChildWindow = function (mainWindow, url) {
     if (process.platform === 'darwin') {
         child.webContents.once("did-navigate", function(event, ...args){
             child.webContents.once("dom-ready", function(event, ...args){
+                // TODO: THIS IS GOING TO NEED TO BE MORE EXTENSIVE
+                // need to wrap more than just close. also need to inercept events
                 var pageModification = `(function(){
                     var $nav = $('<nav><button id="close-sheet">Close</button></nav>').prependTo('body');
                     $nav.on("click", "#close-sheet", function(event){
@@ -109,12 +115,15 @@ var createChildWindow = function (mainWindow, url) {
 
 };
 
+
+// TODO: MOVE
 var showChildWindow = function(browserWindow){
     browserWindow.show();
     // browserWindow.openDevTools();
     // log.info(browserWindow.webContents); 
 };
 
+// TODO: MOVE
 // Window Factory
 var createWindow = function createWindow(config){
     var 
@@ -145,6 +154,7 @@ var createWindow = function createWindow(config){
     return browserWindow;
 };
 
+// TODO: MOVE
 var createMainWindow = function createMainWindow(){
     var
         settingsWindow, mainWindow;

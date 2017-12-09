@@ -1,3 +1,4 @@
+// TODO: MOVE
 const httpURL="http://localhost:8080/ipfs/";
 const edchainNodeURL="http://45.55.235.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
@@ -21,6 +22,7 @@ var __actions = {
         ipcRenderer.send('createAndShowChildWindow', url);
     },
     showSettings: function(){
+        // TODO: MOVE
         // why is the file directly referenced here?
         let url='file://' + __dirname + '/../html/settings.html';
         ipcRenderer.send('createChildWindow', url);
@@ -32,6 +34,8 @@ var __actions = {
 };
 
 // Feels like there is a course object in here somewhere
+
+// TODO: MOVE
 var __state = {
     "courses": null,
     buildIpfsUrl: function(hash){
@@ -63,6 +67,7 @@ var __state = {
             });        
         });
     },
+    // TODO: MOVE
     getCourseDetail: function(course){
         // actual course ref
         var courseRoot = __state.getIpfsData(course.hash);
@@ -178,7 +183,7 @@ $(document).ready(function() {
 
     
 
-
+    // TODO: WHICH OF THESE ARE STILL RELEVANT
 
     $('#ipfsStatus').on("click", function(){
         if ($('#ipfsStatus').hasClass('btn-outline-danger')){
@@ -211,17 +216,6 @@ $(document).ready(function() {
         $(".card").remove(function(){
             __state.getFeaturedData();
         });
-    });
-
-    $('#open').on("click", function(){
-        // what is the point of this?
-        console.log(
-            dialog.showOpenDialog(
-                {
-                    properties: ['openFile', 'openDirectory', 'multiSelections']
-                }
-            )
-        );
     });
 
     $('#course-cards').on("click", '.pin-course-link', function(event){
