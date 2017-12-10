@@ -77,7 +77,7 @@ var createChildWindow = function (mainWindow, url) {
                 var defaultNav = `
                     <nav>
                         <button type="button" class="close" id="close-window" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true">&times;</span> Close
                         </button>
                     </nav>
                 `;
