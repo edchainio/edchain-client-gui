@@ -222,9 +222,18 @@ $(document).ready(function() {
     $('#course-cards').on("click", '.pin-course-link', function(event){
         event.preventDefault();
         var hash = $(this).data("hash");
-        ipcRenderer.send("ipfs:addPin",`/ipfs/${hash}`);
+        var pin=  $(this).data("pin");
+        if(pin === "Pinned"){
+            ipcRenderer.send("ipfs:removePin",$(this),hash);
+        }
+        else{
+            ipcRenderer.send("ipfs:addPin",`/ipfs/${hash}`);
+        }
     });
 
+    ipcRenderer.on("ipfsRemovePin",function(event,obj,payload){
+      //TOM: need to change the text for Pinned to Unpinned
+    });
 
     ipcRenderer.on("isPinned",function(event,course,hash){
             
@@ -233,10 +242,6 @@ $(document).ready(function() {
                 course.META.indexUrl, hash, course.isPinned);
 
      })
-
-
-
-
 
 
     // Why is there a timeout?

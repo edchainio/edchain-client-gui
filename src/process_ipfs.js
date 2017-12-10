@@ -158,18 +158,18 @@ var getIPFS = function(){
 }
 
 
-var removePins = function(fn,hash){
+var removePins = function(fn,obj,hash){
 	
 	getIPFS().pin.rm(hash,function (err,pinset) {
 
 		if(err){
 			
 			log.info(err);
-			fn(false);
+			fn(obj,false);
 		
 		}else{
 		
-			fn(true);
+			fn(obj,true);
 		
 		}
 
@@ -294,10 +294,10 @@ var manager = function(options){
 		},hash);
 	}
 
-	self.removePin = function(event, hash){
-		removePin(function(payload){
-			event.sender.send("ipfsRemovePin",payload);
-		},hash);
+	self.removePin = function(event, obj,hash){
+		removePins(function(obj,payload){
+			event.sender.send("ipfsRemovePin",obj,payload);
+		},obj,hash);
 	}
 
 	self.checkPin = function(event, obj,hash){
