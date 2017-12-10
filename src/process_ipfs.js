@@ -158,18 +158,18 @@ var getIPFS = function(){
 }
 
 
-var removePins = function(fn,obj,hash){
+var removePins = function(fn, hash){
 	
-	getIPFS().pin.rm(hash,function (err,pinset) {
+	getIPFS().pin.rm(hash, function (err,pinset) {
 
 		if(err){
 			
 			log.info(err);
-			fn(obj,false);
+			fn(false);
 		
 		}else{
 		
-			fn(obj,true);
+			fn(true);
 		
 		}
 
@@ -177,7 +177,7 @@ var removePins = function(fn,obj,hash){
 	
 }
 
-var addPins = function(fn,hash){
+var addPins = function(fn, hash){
 	log.info('addPin');
 	
 	getIPFS().pin.add(hash,function (err,pinset) {
@@ -188,7 +188,7 @@ var addPins = function(fn,hash){
 			fn(false);
 		
 		}else{
-			log.info("pinned",pinset);
+			log.info("pinned", pinset);
 			fn(true);
 		
 		}
@@ -197,18 +197,18 @@ var addPins = function(fn,hash){
 	
 }
 
-var checkPin = function(fn, obj,hash){
+var checkPin = function(fn, hash){
 
-	getIPFS().pin.ls(hash,function (err,pinset) {
+	getIPFS().pin.ls(hash, function (err, pinset) {
 		
 		if(err){
 			pinset="error"
-			obj.isPinned=false;
+			isPinned=false;
 		}
 		else{
-			obj.isPinned=true
+			isPinned=true
 		}
-		fn(obj,hash);
+		fn(hash, payload);
 
 	});
 }
@@ -290,23 +290,23 @@ var manager = function(options){
 
     self.addPin = function(event, hash){
 		addPins(function(payload){
-			event.sender.send("ipfsAddPin",payload);
-		},hash);
-	}
+			event.sender.send("isPinned", hash, payload);
+			// why just for this one
+		}, `/ipfs/${hash}`);
+	};
 
-	self.removePin = function(event, obj,hash){
-		removePins(function(obj,payload){
-			event.sender.send("ipfsRemovePin",obj,payload);
-		},obj,hash);
-	}
+	self.removePin = function(event, hash){
+		removePins(function(payload){
+			event.sender.send("ipfsRemovePin", hash, payload);
+		}, hash);
+	};
 
-	self.checkPin = function(event, obj,hash){
+	self.checkPin = function(event, hash){
 
-		checkPin(function(payload,hash){
-			event.sender.send("isPinned",payload,hash);
-
-		},obj,hash);
-	}
+		checkPin(function(payload){
+			event.sender.send("isPinned", hash, payload);
+		}, hash);
+	};
 
 	self.ipfs = self.start();
 

@@ -30,6 +30,10 @@ var __actions = {
     },
     isIPFSOnline: function(){
         ipcRenderer.send("ipfs:isOnline");
+    },
+    getIsPinned: function(hash){
+        ipcRenderer.send("ipfs:checkPin", hash);
+ 
     }
 };
 
@@ -68,7 +72,7 @@ var __state = {
         });
     },
     // TODO: MOVE
-    getCourseDetail: function(course){
+    getCourseDetail: function(course, callback){
         // actual course ref
         var courseRoot = __state.getIpfsData(course.hash);
         
@@ -119,8 +123,7 @@ var __state = {
                             
                             }
                         });
-                        __ui.getIsPinned(course,__hashes.courseDirectoryHash);
-                      //  __ui.createHomePageCard(course.META.imageUrl, course.title, course.META.indexUrl, __hashes.courseDirectoryHash);
+                        callback(course);
                     });
                 });
             });
@@ -129,12 +132,6 @@ var __state = {
 };
 
 var __ui = {
-    
-    getIsPinned: function(course,hash){
-    
-        ipcRenderer.send("ipfs:checkPin",course,hash);
- 
-    },
 
     setIPFSStatusButton: function (isOnline){
 
@@ -149,19 +146,13 @@ var __ui = {
         }
 
     }, 
-    createHomePageCard: function(image, title, indexURL, courseHash,isPinned){
+    createHomePageCard: function(image, title, indexURL, courseHash, isPinned){
         $(".loader").hide();
-         if(isPinned === false){
-            isPinned = "Un-Pinned";
-        }
-        else{
-            isPinned="Pinned";
-        }
-        
-       
+        isPinned = (isPinned ? isPinned : "pending...");
+
         var rendered = Mustache.render(
             $("#course-card-template").html(), 
-            {image, title, indexURL, courseHash,isPinned}
+            {image, title, indexURL, courseHash, isPinned}
         );
         $('#course-cards').append(rendered);
     }
@@ -172,8 +163,8 @@ var __ui = {
 $(document).ready(function() {
     
     ipcRenderer.on("isOnline", function(event, value){
-        // continually do this
         __ui.setIPFSStatusButton(value);
+        // wait 3 seconds before checking status again
         setTimeout(__actions.isIPFSOnline, 3000);
     });
 
@@ -182,6 +173,24 @@ $(document).ready(function() {
         setTimeout(function(){
             $('#version').text("version:" + "");
         }, 2000);
+    });
+
+    ipcRenderer.on("ipfsRemovePin",function(event, hash, wasRemoved){
+        // find element with hash
+        if (wasRemoved){
+            // set text/icon to unpinned
+        } else {
+            // notify user
+        }
+    });
+
+    ipcRenderer.on("isPinned",function(event, hash, isPinned){
+        var $courseCard = $(`#${hash}`);
+        if (isPinned){
+            // set text/icon to pinned
+        } else {
+            // set text/icon to unpinned
+        }
     });
 
    // TODO: WHICH OF THESE ARE STILL RELEVANT
@@ -215,7 +224,13 @@ $(document).ready(function() {
 
     $('#refresh').on("click", function(){
         $(".card").remove(function(){
-            __state.getFeaturedData();
+            __state.getFeaturedData(function(course){
+                __ui.createHomePageCard(
+                    course.META.imageUrl, course.title, 
+                    course.META.indexUrl, course.META.hashes.courseDirectoryHash
+                );
+                __actions.isPinned(course.META.hashes.courseDirectoryHash);
+            });
         });
     });
 
@@ -224,29 +239,24 @@ $(document).ready(function() {
         var hash = $(this).data("hash");
         var pin=  $(this).data("pin");
         if(pin === "Pinned"){
-            ipcRenderer.send("ipfs:removePin",$(this),hash);
+            ipcRenderer.send("ipfs:removePin", hash);
         }
-        else{
-            ipcRenderer.send("ipfs:addPin",`/ipfs/${hash}`);
+        else if {
+            ipcRenderer.send("ipfs:addPin", hash);
         }
     });
 
-    ipcRenderer.on("ipfsRemovePin",function(event,obj,payload){
-      //TOM: need to change the text for Pinned to Unpinned
-    });
 
-    ipcRenderer.on("isPinned",function(event,course,hash){
-            
-        //    log.info(course,hash,"Pinned");
-         __ui.createHomePageCard(course.META.imageUrl, course.title, 
-                course.META.indexUrl, hash, course.isPinned);
-
-     })
-
-
-    // Why is there a timeout?
-    // Dont do this till ipfs is up
-    setTimeout(__state.getFeaturedData, 3000);
+    // Waiting for ipfs to fire up
+    setTimeout(function(){
+        __state.getFeaturedData(function(course){
+            __ui.createHomePageCard(
+                course.META.imageUrl, course.title, 
+                course.META.indexUrl, course.META.hashes.courseDirectoryHash
+            );
+            __actions.isPinned(course.META.hashes.courseDirectoryHash);
+        });
+    }, 3000);
     
     __actions.isIPFSOnline();
 });
