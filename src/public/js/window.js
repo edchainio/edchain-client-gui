@@ -119,8 +119,8 @@ var __state = {
                             
                             }
                         });
-                        
-                        __ui.createHomePageCard(course.META.imageUrl, course.title, course.META.indexUrl, __hashes.courseDirectoryHash);
+                        __ui.getIsPinned(course,__hashes.courseDirectoryHash);
+                      //  __ui.createHomePageCard(course.META.imageUrl, course.title, course.META.indexUrl, __hashes.courseDirectoryHash);
                     });
                 });
             });
@@ -129,6 +129,13 @@ var __state = {
 };
 
 var __ui = {
+    
+    getIsPinned: function(course,hash){
+    
+        ipcRenderer.send("ipfs:checkPin",course,hash);
+ 
+    },
+
     setIPFSStatusButton: function (isOnline){
 
         if(isOnline){
@@ -142,11 +149,19 @@ var __ui = {
         }
 
     }, 
-    createHomePageCard: function(image, title, indexURL, courseHash){
+    createHomePageCard: function(image, title, indexURL, courseHash,isPinned){
         $(".loader").hide();
+         if(isPinned === false){
+            isPinned = "Un-Pinned";
+        }
+        else{
+            isPinned="Pinned";
+        }
+        
+       
         var rendered = Mustache.render(
             $("#course-card-template").html(), 
-            {image, title, indexURL, courseHash}
+            {image, title, indexURL, courseHash,isPinned}
         );
         $('#course-cards').append(rendered);
     }
@@ -156,16 +171,6 @@ var __ui = {
 
 $(document).ready(function() {
     
-    ipcRenderer.on("start", function(){
-        $('#ipfsStatus').removeClass('btn-outline-danger').addClass('btn-outline-success');
-        $('#ipfsStatus').text('IPFS Online');
-    });
-
-    ipcRenderer.on("stop", function(){
-        $('#ipfsStatus').removeClass('btn-outline-success').addClass('btn-outline-danger');
-        $('#ipfsStatus').text('IPFS Offline');
-    });
-
     ipcRenderer.on("isOnline", function(event, value){
         // continually do this
         __ui.setIPFSStatusButton(value);
@@ -179,11 +184,7 @@ $(document).ready(function() {
         }, 2000);
     });
 
-
-
-    
-
-    // TODO: WHICH OF THESE ARE STILL RELEVANT
+   // TODO: WHICH OF THESE ARE STILL RELEVANT
 
     $('#ipfsStatus').on("click", function(){
         if ($('#ipfsStatus').hasClass('btn-outline-danger')){
@@ -223,6 +224,19 @@ $(document).ready(function() {
         var hash = $(this).data("hash");
         ipcRenderer.send("ipfs:addPin",`/ipfs/${hash}`);
     });
+
+
+    ipcRenderer.on("isPinned",function(event,course,hash){
+            
+        //    log.info(course,hash,"Pinned");
+         __ui.createHomePageCard(course.META.imageUrl, course.title, 
+                course.META.indexUrl, hash, course.isPinned);
+
+     })
+
+
+
+
 
 
     // Why is there a timeout?

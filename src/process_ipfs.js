@@ -156,22 +156,62 @@ var getIPFS = function(){
 	return ipfs;
 
 }
-var addPins = function(fn,hash){
-	log.info('addPin');
+
+
+var removePins = function(fn,hash){
 	
-	
-	getIPFS().pin.add(hash,function (err,pinset) {
+	getIPFS().pin.rm(hash,function (err,pinset) {
 
 		if(err){
+			
 			log.info(err);
+			fn(false);
+		
+		}else{
+		
+			fn(true);
+		
 		}
-		fn(pinset);
-		log.info('pinset',pinset);
 
 	});
 	
 }
 
+var addPins = function(fn,hash){
+	log.info('addPin');
+	
+	getIPFS().pin.add(hash,function (err,pinset) {
+
+		if(err){
+			
+			log.info(err);
+			fn(false);
+		
+		}else{
+			log.info("pinned",pinset);
+			fn(true);
+		
+		}
+
+	});
+	
+}
+
+var checkPin = function(fn, obj,hash){
+
+	getIPFS().pin.ls(hash,function (err,pinset) {
+		
+		if(err){
+			pinset="error"
+			obj.isPinned=false;
+		}
+		else{
+			obj.isPinned=true
+		}
+		fn(obj,hash);
+
+	});
+}
 
 var manager = function(options){
 	var self = {};
@@ -248,10 +288,24 @@ var manager = function(options){
 	    self.ipfs = ipfsStop(logOutput);
 	};
 
-	self.addPin = function(event, hash){
+    self.addPin = function(event, hash){
 		addPins(function(payload){
 			event.sender.send("ipfsAddPin",payload);
 		},hash);
+	}
+
+	self.removePin = function(event, hash){
+		removePin(function(payload){
+			event.sender.send("ipfsRemovePin",payload);
+		},hash);
+	}
+
+	self.checkPin = function(event, obj,hash){
+
+		checkPin(function(payload,hash){
+			event.sender.send("isPinned",payload,hash);
+
+		},obj,hash);
 	}
 
 	self.ipfs = self.start();
