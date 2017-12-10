@@ -8,10 +8,10 @@
   "main": "src/app.js",
   "scripts": {
     "start": "electron src/app.js",
-    "build": "electron-packager . app --out dist/ --overwrite --ignore=electron-packager",
-    "rpm64": "electron-installer-redhat --src dist/app-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite",
-    "deb64": "electron-installer-debian --src dist/app-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite",
-    "darwin": "electron-installer-dmg dist/app-darwin-x64/ app --out dist/installers/ --overwrite icon=./src/public/img/icon.icns"
+    "build": "electron-packager . edChain --out dist/ --overwrite --ignore=electron-packager --icon=./build/icon.icns",
+    "rpm64": "electron-installer-redhat --src dist/edChain-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite",
+    "deb64": "electron-installer-debian --src dist/edChain-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite",
+    "darwin": "electron-installer-dmg dist/edChain-darwin-x64/ edchain --out dist/installers/ --overwrite --icon=./build/icon.icns"
   },
   "devDependencies": {
     "electron": "^1.7.9",
@@ -21,6 +21,7 @@
     "electron-packager": "^9.1.0"
   },
   "dependencies": {
+    "axios": "^0.17.1",
     "electron-log": "^2.2.11",
     "ipfs": "^0.26.0",
     "ipfs-api": "^15.0.1",

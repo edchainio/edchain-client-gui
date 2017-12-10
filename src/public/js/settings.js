@@ -1,12 +1,11 @@
 const { ipcRenderer, remote } = require('electron');
 const currentWindow = remote.getCurrentWindow();
 
+
+// TODO: This is roughly how all windows should act
+// manage the ui and send everything else to the main process
 var checkOnline = function(){ 
 	ipcRenderer.send("ipfs:isOnline");
-};
-
-var closePage = function(){
-	ipcRenderer.send("closePage", currentWindow.id);
 };
 
 var initPage = function(){
@@ -28,11 +27,6 @@ $(document).ready(function() {
 		else if($(this).prop("checked")==false){
 			ipcRenderer.send("ipfs:stop");
 		}
-	});
-
-	$("#close-window").on("click", function(event){
-		event.preventDefault();
-		closePage();
 	});
 
 	ipcRenderer.on("getPeerId", function(event, value){
