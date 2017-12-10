@@ -31,7 +31,7 @@ var __actions = {
     isIPFSOnline: function(){
         ipcRenderer.send("ipfs:isOnline");
     },
-    getIsPinned: function(hash){
+    isPinned: function(hash){
         ipcRenderer.send("ipfs:checkPin", hash);
  
     }
@@ -146,13 +146,13 @@ var __ui = {
         }
 
     }, 
-    createHomePageCard: function(image, title, indexURL, courseHash, isPinned){
+    createHomePageCard: function(image, title, indexURL, courseHash, action){
         $(".loader").hide();
-        isPinned = (isPinned ? isPinned : "pending...");
+        action = action || "...";
 
         var rendered = Mustache.render(
             $("#course-card-template").html(), 
-            {image, title, indexURL, courseHash, isPinned}
+            {image, title, indexURL, courseHash, action}
         );
         $('#course-cards').append(rendered);
     }
@@ -177,20 +177,40 @@ $(document).ready(function() {
 
     ipcRenderer.on("ipfsRemovePin",function(event, hash, wasRemoved){
         // find element with hash
+        var 
+            $courseCard = $(`#${hash}`),
+            $actionLink = $courseCard.find("a.pin-course-link");
+
         if (wasRemoved){
             // set text/icon to unpinned
+            $actionLink.data("action", "pin");
+            $actionLink.text("pin");
+            $courseCard.find(".pin-status").text("Un-Pinned");
         } else {
             // notify user
         }
     });
 
     ipcRenderer.on("isPinned",function(event, hash, isPinned){
-        var $courseCard = $(`#${hash}`);
+        // find element with hash
+        var 
+            action, status,
+            $courseCard = $(`#${hash}`),
+            $actionLink = $courseCard.find("a.pin-course-link");
+        
         if (isPinned){
-            // set text/icon to pinned
+            // set to pinned state
+            action = "unpin";
+            status = "Pinned";
         } else {
-            // set text/icon to unpinned
+            // set to unpinned state
+            action = "pin";
+            status = "Un-Pinned";
         }
+        
+        $actionLink.data("action", action);
+        $actionLink.text(action);
+        $courseCard.find(".pin-status").text(status);
     });
 
    // TODO: WHICH OF THESE ARE STILL RELEVANT
@@ -237,11 +257,11 @@ $(document).ready(function() {
     $('#course-cards').on("click", '.pin-course-link', function(event){
         event.preventDefault();
         var hash = $(this).data("hash");
-        var pin=  $(this).data("pin");
-        if(pin === "Pinned"){
+        var action =  $(this).data("action");
+        if(action === "unpin"){
             ipcRenderer.send("ipfs:removePin", hash);
         }
-        else if {
+        else {
             ipcRenderer.send("ipfs:addPin", hash);
         }
     });

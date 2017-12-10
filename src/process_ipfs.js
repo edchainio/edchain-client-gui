@@ -180,7 +180,7 @@ var removePins = function(fn, hash){
 var addPins = function(fn, hash){
 	log.info('addPin');
 	
-	getIPFS().pin.add(hash,function (err,pinset) {
+	getIPFS().pin.add(hash, function (err,pinset) {
 
 		if(err){
 			
@@ -208,7 +208,7 @@ var checkPin = function(fn, hash){
 		else{
 			isPinned=true
 		}
-		fn(hash, payload);
+		fn(isPinned);
 
 	});
 }
