@@ -81,37 +81,49 @@
         <div class="album text-muted">
             <div class="container">
                 <div class="loader"></div>
-                <div class="row" id="course-cards">
+                <div class="card-columns" id="course-cards">
                 </div>
             </div>
         </div>
-    <footer class="text-muted">
-        <div class="container">
-            <p class="float-right">
-                <a href="#">
-                    Back to top
-                </a>
-            </p>
-            <p>
-                &copy; 2017 edChain
-            </p>
-        </div>
-    </footer>
+        <footer class="text-muted">
+            <div class="container">
+                <p class="float-right">
+                    <a href="#">
+                        Back to top
+                    </a>
+                </p>
+                <p>
+                    &copy; 2017 edChain
+                </p>
+            </div>
+        </footer>
 
-    <script type="text/template" id="course-card-template">
-        <div class="card">
-            <img src="{{image}}">
-            <p class="card-text">
-                <a class="course-link" data-url="{{indexURL}}" href="#">
-                    {{title}}
-                </a>
+        <script type="text/template" id="course-card-template">
+            <div class="card" id="{{courseHash}}">
+                <img class="card-img-top" src="{{image}}">
+                <div class="card-body">
+                    <a class="card-link course-link" data-url="{{indexURL}}" href="#">
+                        {{title}}
+                    </a>
+                </div>
+                <div class="card-footer text-muted">
+                    <p class="card-text">
+                        <span class="pin-status">
+                            {{#status}} 
+                                {{status}}
+                            {{/status}}
+                            {{^status}}
+                                ...
+                            {{/status}}
+                        </span>
 
-                <a class="pin-course-link" data-hash="{{courseHash}}" href="#">
-                    Pin Course
-                </a>
-           </p>
-        </div>
-    </script>
+                        <a class="btn btn-primary pin-course-link" data-hash="{{courseHash}}" data-action="{{action}}" href="#">
+                            {{action}}
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </script>
 
-  </body>
+    </body>
 </html>
