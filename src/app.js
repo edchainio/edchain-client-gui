@@ -86,6 +86,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('quit', () => {
+    // dispatch action here?
     ipfs.stop();
 });
 
