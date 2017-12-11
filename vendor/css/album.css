@@ -69,3 +69,13 @@ footer p {
     border-width: 2px;
 
 }
+
+.unpinImage {
+  content: url(../../src/public/img/icons8-unpin-50.jpg);
+  width:20px;
+}
+
+.pinImage {
+  content: url(../../src/public/img/icons8-pin-100.jpg);
+  width:20px;
+}

@@ -186,6 +186,8 @@ $(document).ready(function() {
             $actionLink.data("action", "pin");
             $actionLink.text("pin");
             $courseCard.find(".pin-status").text("Un-Pinned");
+            $actionLink.removeClass("pinImage").addClass("unpinImage");
+
         } else {
             // notify user
         }
@@ -202,12 +204,18 @@ $(document).ready(function() {
             // set to pinned state
             action = "unpin";
             status = "Pinned";
+            $actionLink.removeClass("unpinImage").addClass("pinImage");
         } else {
             // set to unpinned state
+            //does not enter here on clicking remove pin.
+            //only enters here on load
+            //needs to be fixed for consistency
             action = "pin";
             status = "Un-Pinned";
+            $actionLink.removeClass("pinImage").addClass("unpinImage");
+           
         }
-        
+         
         $actionLink.data("action", action);
         $actionLink.text(action);
         $courseCard.find(".pin-status").text(status);
