@@ -4,8 +4,6 @@ const { combineReducers } = require('redux');
 // const ipfs = require('./ipfs');
 // const courses = require('./courses');
 
-const job = require('./job');
-
 module.exports = function getRootReducer(scope = 'main') {
 	let reducers = {
 		job

@@ -1,3 +1,7 @@
+// this might be considered an api
+// import this into the actions file for ipfs
+
+
 const platform = require('os').platform();
 
 var path = require('path');  

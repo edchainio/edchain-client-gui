@@ -7,6 +7,7 @@ const thunk = require('redux-thunk');
 
 // const createLogger = require('redux-logger');
 
+// defaults to the file in the folder named index.js
 const getRootReducer = require('../reducers');
 
 const {
@@ -45,12 +46,16 @@ module.exports = function configureStore(initialState, scope) {
 		];
 	}
 
+	// Is this needed?
 	const enhanced = [
 		applyMiddleware(...middleware),
 	];
 
 	const rootReducer = getRootReducer(scope);
+
 	const enhancer = compose(...enhanced);
+
+	// can enhancer just be middleware?
 	const store = createStore(rootReducer, initialState, enhancer);
 
 	if (!process.env.NODE_ENV && module.hot) {

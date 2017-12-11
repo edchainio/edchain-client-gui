@@ -35,7 +35,7 @@ app.on('ready', function(){
     // sucks but thats how you do it.
     // this is probably how all windows should be connected to 
     // the main process.
-    var ipfs = require('./process_ipfs')({
+    var ipfs = require('./api/process_ipfs')({
         "afterLogUpdateHook": function(ipfsLog){
             for(let subscriber in pages.getLogSubscribers()){
                 if(typeof subscriber.send === 'function'){
