@@ -79,3 +79,9 @@ footer p {
   content: url(../../src/public/img/icons8-pin-100.jpg);
   width:20px;
 }
+
+.swarm-info {
+  font-size: small;
+  margin-left: 22px;
+  margin-top: -20px;
+}

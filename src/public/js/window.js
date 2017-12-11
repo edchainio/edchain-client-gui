@@ -34,7 +34,12 @@ var __actions = {
     isPinned: function(hash){
         ipcRenderer.send("ipfs:checkPin", hash);
  
-    }
+    },
+    getPeerCount: function(){
+
+       ipcRenderer.send("ipfs:ipfsSwarmPeers");
+
+    },
 };
 
 // Feels like there is a course object in here somewhere
@@ -155,13 +160,24 @@ var __ui = {
             {image, title, indexURL, courseHash, action}
         );
         $('#course-cards').append(rendered);
+    },
+    showPeerCount: function(peerCount){
+         $('#swarm-count').html(peerCount);
     }
 
 };
 
 
 $(document).ready(function() {
+
+
     
+    ipcRenderer.on("peerInfos",function(event,payload){
+      
+           __ui.showPeerCount(payload.length);
+           setTimeout(__actions.getPeerCount,4000);
+    });
+
     ipcRenderer.on("isOnline", function(event, value){
         __ui.setIPFSStatusButton(value);
         // wait 3 seconds before checking status again
@@ -270,8 +286,10 @@ $(document).ready(function() {
                 course.META.indexUrl, course.META.hashes.courseDirectoryHash
             );
             __actions.isPinned(course.META.hashes.courseDirectoryHash);
-        });
+        });       
     }, 3000);
     
+     setTimeout(__actions.getPeerCount,3000);
     __actions.isIPFSOnline();
 });
+

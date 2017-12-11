@@ -134,7 +134,13 @@ var createWindow = function createWindow(config){
 
         __windows[__id] = null;
     });
-    if (process.env.ENV=='dev') {browserWindow.openDevTools();}
+   
+    if (process.env.ENV=='dev') {
+    
+        browserWindow.openDevTools();
+   
+    }
+   
     return browserWindow;
 };
 
