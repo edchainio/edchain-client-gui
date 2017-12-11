@@ -165,11 +165,11 @@ var removePins = function(fn, hash){
 		if(err){
 			
 			log.info(err);
-			fn(false);
+			fn(true); 
 		
 		}else{
 			log.info("removePin",pinset);
-			fn(true);
+			fn(false); //send false stating that its not pinned anymore.
 		
 		}
 
@@ -297,7 +297,7 @@ var manager = function(options){
 
 	self.removePin = function(event, hash){
 		removePins(function(payload){
-			event.sender.send("ipfsRemovePin", hash, payload);
+			event.sender.send("isPinned", hash, payload);
 		}, hash);
 	};
 

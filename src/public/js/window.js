@@ -175,7 +175,7 @@ $(document).ready(function() {
         }, 2000);
     });
 
-    ipcRenderer.on("ipfsRemovePin",function(event, hash, wasRemoved){
+   /* ipcRenderer.on("ipfsRemovePin",function(event, hash, wasRemoved){
         // find element with hash
         var 
             $courseCard = $(`#${hash}`),
@@ -191,7 +191,7 @@ $(document).ready(function() {
         } else {
             // notify user
         }
-    });
+    });*/
 
     ipcRenderer.on("isPinned",function(event, hash, isPinned){
         // find element with hash
