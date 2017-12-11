@@ -168,7 +168,7 @@ var removePins = function(fn, hash){
 			fn(false);
 		
 		}else{
-		
+			log.info("removePin",pinset);
 			fn(true);
 		
 		}
