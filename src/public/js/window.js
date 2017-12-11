@@ -206,10 +206,7 @@ $(document).ready(function() {
             status = "Pinned";
             $actionLink.removeClass("unpinImage").addClass("pinImage");
         } else {
-            // set to unpinned state
-            //does not enter here on clicking remove pin.
-            //only enters here on load
-            //needs to be fixed for consistency
+          
             action = "pin";
             status = "Un-Pinned";
             $actionLink.removeClass("pinImage").addClass("unpinImage");
