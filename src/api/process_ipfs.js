@@ -82,10 +82,7 @@ var ipfsGatewayAddress = function(fn){
 		fn(config);
 		
 	});
-
 };
-
-
 
 var ipfsAPIAddress = function(fn){
 
@@ -222,6 +219,16 @@ var checkPin = function(fn, hash){
 	});
 };
 
+
+var ipfsSwarmPeers = function (fn){
+	getIPFS().swarm.peers(function(err,peerInfos){
+		if(err){
+			log.info(err);
+		}
+		fn(peerInfos);
+	});
+};
+
 ipfs = startIpfs();
 
 
@@ -238,5 +245,6 @@ module.exports = {
 	ipfsId,
 	removePins,
 	addPins,
-	checkPin
+	checkPin,
+	ipfsSwarmPeers
 };

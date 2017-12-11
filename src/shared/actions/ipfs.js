@@ -108,3 +108,10 @@ var checkPin = function(event, hash){
 		event.sender.send("isPinned", hash, payload);
 	}, hash);
 };
+
+
+var ipfsSwarmPeers = function(event, ...args){
+	ipfsSwarmPeers(function(payload){
+		event.sender.send("peerInfos",payload);
+	});
+};
