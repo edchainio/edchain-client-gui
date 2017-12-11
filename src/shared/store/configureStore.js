@@ -3,7 +3,7 @@
 
 const { createStore, applyMiddleware, compose } = require('redux');
 // import { persistState } = require('redux-devtools');
-const thunk = require('redux-thunk');
+const  thunk = require('redux-thunk').default;
 
 // const createLogger = require('redux-logger');
 
@@ -46,17 +46,8 @@ module.exports = function configureStore(initialState, scope) {
 		];
 	}
 
-	// Is this needed?
-	const enhanced = [
-		applyMiddleware(...middleware),
-	];
-
 	const rootReducer = getRootReducer(scope);
-
-	const enhancer = compose(...enhanced);
-
-	// can enhancer just be middleware?
-	const store = createStore(rootReducer, initialState, enhancer);
+	const store = createStore(rootReducer, initialState, applyMiddleware(...middleware));
 
 	if (!process.env.NODE_ENV && module.hot) {
 		module.hot.accept('../reducers', () => {

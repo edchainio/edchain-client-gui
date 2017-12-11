@@ -13,7 +13,7 @@ const { spawn, exec } = require('child_process');
 
 
 var startIpfs = function(callback){
-	const ipfsPath = path.resolve(__dirname, '../bin', platform, 'ipfs');
+	const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
 	const ipfs = spawn(ipfsPath, ['daemon', '--init']);
 
 	ipfs.stdout.on('data', function(data){

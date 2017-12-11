@@ -9,8 +9,31 @@ const {
     ipcMain, app, protocol 
 } = require('electron');
 
-
 const pages = require('./pages.js');
+
+var ipfs = require('./api/process_ipfs')({
+    "afterLogUpdateHook": function(ipfsLog){
+        for(let subscriber in pages.getLogSubscribers()){
+            if(typeof subscriber.send === 'function'){
+                subscriber.send('ipfs:logging', ipfsLog);
+            }
+        }
+    }
+});
+
+// TODO: MOVE
+// mounting process
+var registerListeners = function(listeners){
+    for (let prefix in listeners){
+        for(let prop in listeners[prefix]){
+            if(typeof listeners[prefix][prop] === 'function'){
+                ipcMain.on(prefix + ':' + prop, listeners[prefix][prop]);
+            }
+        }
+    }   
+};
+
+registerListeners({ipfs});
 
 
 // we have to do this to ease remote-loading of the initial state :(
@@ -35,29 +58,6 @@ app.on('ready', function(){
     // sucks but thats how you do it.
     // this is probably how all windows should be connected to 
     // the main process.
-    var ipfs = require('./api/process_ipfs')({
-        "afterLogUpdateHook": function(ipfsLog){
-            for(let subscriber in pages.getLogSubscribers()){
-                if(typeof subscriber.send === 'function'){
-                    subscriber.send('ipfs:logging', ipfsLog);
-                }
-            }
-        }
-    });
-
-    // TODO: MOVE
-    // mounting process
-    var registerListeners = function(listeners){
-        for (let prefix in listeners){
-            for(let prop in listeners[prefix]){
-                if(typeof listeners[prefix][prop] === 'function'){
-                    ipcMain.on(prefix + ':' + prop, listeners[prefix][prop]);
-                }
-            }
-        }   
-    };
-
-    registerListeners({ipfs});
 
 
     // Custom File Protocol
