@@ -175,7 +175,7 @@ $(document).ready(function() {
         }, 2000);
     });
 
-    ipcRenderer.on("ipfsRemovePin",function(event, hash, wasRemoved){
+   /* ipcRenderer.on("ipfsRemovePin",function(event, hash, wasRemoved){
         // find element with hash
         var 
             $courseCard = $(`#${hash}`),
@@ -186,10 +186,12 @@ $(document).ready(function() {
             $actionLink.data("action", "pin");
             $actionLink.text("pin");
             $courseCard.find(".pin-status").text("Un-Pinned");
+            $actionLink.removeClass("pinImage").addClass("unpinImage");
+
         } else {
             // notify user
         }
-    });
+    });*/
 
     ipcRenderer.on("isPinned",function(event, hash, isPinned){
         // find element with hash
@@ -202,12 +204,15 @@ $(document).ready(function() {
             // set to pinned state
             action = "unpin";
             status = "Pinned";
+            $actionLink.removeClass("unpinImage").addClass("pinImage");
         } else {
-            // set to unpinned state
+          
             action = "pin";
             status = "Un-Pinned";
+            $actionLink.removeClass("pinImage").addClass("unpinImage");
+           
         }
-        
+         
         $actionLink.data("action", action);
         $actionLink.text(action);
         $courseCard.find(".pin-status").text(status);
