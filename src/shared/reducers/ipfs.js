@@ -2,6 +2,14 @@
 
 
 const initialState = {
+	// what is the initail state here?
+	// what do i want to share?
+	peerId: "",
+	dataStorePath: "",
+	gatewayAddress: "",
+	apiAddress: "",
+	log: [],
+	id: ""
 
 };
 

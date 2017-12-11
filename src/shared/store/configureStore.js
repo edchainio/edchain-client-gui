@@ -33,7 +33,6 @@ module.exports = function configureStore(initialState, scope) {
 	if (scope === 'renderer') {
 		middleware = [
 			forwardToMain,
-			router,
 			...middleware,
 		];
 	}

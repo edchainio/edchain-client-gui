@@ -1,6 +1,13 @@
 const { ipcRenderer, remote } = require('electron');
+const configureStore = require('../../shared/store/configureStore');
+
 const currentWindow = remote.getCurrentWindow();
 
+// get the global.state from the main process
+const initialState = remote.getGlobal('state');
+
+// create store
+const store = configureStore(initialState, 'renderer');
 
 // TODO: This is roughly how all windows should act
 // manage the ui and send everything else to the main process

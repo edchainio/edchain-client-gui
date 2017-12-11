@@ -11,10 +11,13 @@ var log = require('electron-log');
 
 const { spawn, exec } = require('child_process');
 
+
+var ipfs = null;
+
 // api
 var startIpfs = function(callback){
 	const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
-	const ipfs = spawn(ipfsPath, ['daemon', '--init']);
+	ipfs = spawn(ipfsPath, ['daemon', '--init']);
 
 	ipfs.stdout.on('data', function(data){
 		callback(data.toString());	
@@ -27,8 +30,6 @@ var startIpfs = function(callback){
 	ipfs.on('exit', function(code){
 		callback('ipfs exit:' + code.toString());
 	});
-
-	return ipfs;
 };
 
 var ipfsStop = function(callback){
@@ -45,13 +46,14 @@ var ipfsStop = function(callback){
 		process.on('exit', function(code){
 			callback('ipfs exit:' + code.toString());
 		});
-
+		ipfs = null
 	});
 };
 
 var ipfsPeerId = function(fn){
 	
 	getIPFS().config.get('Identity.PeerID',(err,config) => {
+		log.info("ipfsPeerId =", config);
 		if(err){
 //			throw err;
 		}
@@ -62,6 +64,7 @@ var ipfsPeerId = function(fn){
 var ipfsDatastorePath = function(fn){
 
 	getIPFS().config.get('Datastore.Path',(err,config) => {
+		log.info("var ipfsDatastorePath", config);
 		if(err){
 	//		throw err;
 		}
@@ -72,6 +75,7 @@ var ipfsDatastorePath = function(fn){
 var ipfsGatewayAddress = function(fn){
 
 	getIPFS().config.get('Addresses.Gateway',(err,config) => {
+		log.info("var ipfsGatewayAddress", config);
 		if(err){
 	//		throw err;
 		}
@@ -86,6 +90,7 @@ var ipfsGatewayAddress = function(fn){
 var ipfsAPIAddress = function(fn){
 
 	getIPFS().config.get('Addresses.API',(err,config) => {
+		log.info("var ipfsAPIAddress", config);
 		if(err){
 		//	throw err;
 		}
@@ -109,7 +114,7 @@ var ipfsLogTail = function(fn){
 var ipfsStatus = function(func){
  
     ipfs.version().then((res) => {
-		// log.info(res);
+		log.info("ipfsStatus", res);
 		func(res);
 	}).catch((err) => {
 		logger.error(err)
@@ -119,7 +124,7 @@ var ipfsStatus = function(func){
 var isOnline = function(fn){
 	let isUp=false;
     ipfsId(function(value){
-	    
+	    log.info("isOnline", value);
 	    if(value!=null && value['addresses']){
 	            isUp=true;
 	     }
@@ -132,6 +137,7 @@ var ipfsId = function(fn){
 	var iID;
 	
 	var funcId = function (err,identity){
+		log.info("ipfsId", identity);
 		if(err){
 			log.info(err);
 		}
@@ -147,10 +153,9 @@ var ipfsId = function(fn){
 
 
 var getIPFS = function(){
-	let ipfs=null;
-	if(ipfs === null){
+	if(!ipfs){
 		try{
-			ipfs= ipfsAPI('localhost','5001',{protocol:'http'});
+			ipfs = ipfsAPI('localhost','5001',{protocol:'http'});
 		}
 		catch(e){
 			log.info("cannot connect to ipfs");
@@ -165,7 +170,7 @@ var getIPFS = function(){
 var removePins = function(fn, hash){
 	
 	getIPFS().pin.rm(hash, function (err,pinset) {
-
+		log.info("removePins", pinset);
 		if(err){
 			
 			log.info(err);
@@ -182,9 +187,9 @@ var removePins = function(fn, hash){
 };
 
 var addPins = function(fn, hash){
-	log.info('addPin');
 	
 	getIPFS().pin.add(hash, function (err,pinset) {
+		log.info('addPins', pinset);
 
 		if(err){
 			
@@ -204,7 +209,7 @@ var addPins = function(fn, hash){
 var checkPin = function(fn, hash){
 
 	getIPFS().pin.ls(hash, function (err, pinset) {
-		
+		log.info("checkPin", pinset);
 		if(err){
 			pinset="error"
 			isPinned=false;
@@ -217,106 +222,21 @@ var checkPin = function(fn, hash){
 	});
 };
 
-// action creators
-var manager = function(options){
-	var self = {};
+ipfs = startIpfs();
 
-	var __log = [];
 
-	var logOutput = function (value){
-        if(value){
-            __log.push(value.toString());
-            cb = options.afterLogUpdateHook || function(){};
-            cb(__log);
-        }
-    };
-
-    self.getLog = function(event, ...args){
-    	event.sender.send("getLog", __log);
-    };
-	
-	self.getId = function(event, ...args){
-		ipfsId(function(payload){
-			event.sender.send("getId", payload);
-		});
-	}
-	
-	self.isOnline = function(event, ...args){
-		isOnline(function(payload){
-			event.sender.send("isOnline", payload);
-		});
-	}
-
-	self.getPeerId = function(event, ...args){
-		ipfsPeerId(function(payload){
-			event.sender.send("getPeerId", payload);
-		});
-	
-	};
-
-	self.getIPFSDatastorePath = function(event, ...args){
-		ipfsDatastorePath(function(payload){
-			event.sender.send("getIPFSDatastorePath", payload);
-		});
-	
-	};
-
-	self.getIPFSAPIAddress = function(event, ...args){
-		ipfsAPIAddress(function(payload){
-			event.sender.send("getIPFSAPIAddress", payload);
-		});
-	
-	};
-
-	self.getIPFSGWAddr = function(event, ...args){
-		ipfsGatewayAddress(function(payload){
-			event.sender.send("getIPFSGWAddr", payload);
-		});
-	};
-	
-	self.checkStatus = function(response){
-		// TODO: Figure out why this is different
-		ipfsStatus(function(response2){
-			response(response2);
-		});
-		
-	};
-
-	self.start = function(event, ...args){
-		logOutput('starting..');
-		logOutput('Starting IPFS...');
-		self.ipfs = startIpfs(logOutput);
-	};
-
-	self.stop = function(event, ...args){
-		logOutput('stopping..');
-	    self.ipfs = ipfsStop(logOutput);
-	};
-
-    self.addPin = function(event, hash){
-		addPins(function(payload){
-			event.sender.send("isPinned", hash, payload);
-			// why just for this one
-		}, `/ipfs/${hash}`);
-	};
-
-	self.removePin = function(event, hash){
-		removePins(function(payload){
-			event.sender.send("ipfsRemovePin", hash, payload);
-		}, hash);
-	};
-
-	self.checkPin = function(event, hash){
-
-		checkPin(function(payload){
-			event.sender.send("isPinned", hash, payload);
-		}, hash);
-	};
-
-	// self.ipfs = self.start();
-
-	return self;
+module.exports = {
+	startIpfs,
+	ipfsStop,
+	ipfsPeerId,
+	ipfsDatastorePath,
+	ipfsGatewayAddress,
+	ipfsAPIAddress,
+	ipfsLogTail,
+	ipfsStatus,
+	isOnline,
+	ipfsId,
+	removePins,
+	addPins,
+	checkPin
 };
-
-
-module.exports = manager;
