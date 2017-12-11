@@ -176,20 +176,10 @@ $(document).ready(function() {
     });
 
     ipcRenderer.on("ipfsRemovePin",function(event, hash, wasRemoved){
-        // find element with hash
-        var 
-            $courseCard = $(`#${hash}`),
-            $actionLink = $courseCard.find("a.pin-course-link");
-
         if (wasRemoved){
-            // set text/icon to unpinned
-            $actionLink.data("action", "pin");
-            $actionLink.text("pin");
-            $courseCard.find(".pin-status").text("Un-Pinned");
-            $actionLink.removeClass("pinImage").addClass("unpinImage");
-
+            __actions.isPinned(hash);
         } else {
-            // notify user
+            // notify user that unpinning failed
         }
     });
 
@@ -207,9 +197,6 @@ $(document).ready(function() {
             $actionLink.removeClass("unpinImage").addClass("pinImage");
         } else {
             // set to unpinned state
-            //does not enter here on clicking remove pin.
-            //only enters here on load
-            //needs to be fixed for consistency
             action = "pin";
             status = "Un-Pinned";
             $actionLink.removeClass("pinImage").addClass("unpinImage");
