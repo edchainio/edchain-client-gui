@@ -74,10 +74,7 @@ var ipfsGatewayAddress = function(fn){
 		fn(config);
 		
 	});
-
 }
-
-
 
 var ipfsAPIAddress = function(fn){
 
@@ -213,6 +210,16 @@ var checkPin = function(fn, hash){
 	});
 }
 
+
+var ipfsSwarmPeers = function (fn){
+	getIPFS().swarm.peers(function(err,peerInfos){
+		if(err){
+			log.info(err);
+		}
+		fn(peerInfos);
+	});
+}
+
 var manager = function(options){
 	var self = {};
 
@@ -224,6 +231,12 @@ var manager = function(options){
             cb = options.afterLogUpdateHook || function(){};
             cb(__log);
         }
+    };
+
+    self.ipfsSwarmPeers = function(event, ...args){
+    	ipfsSwarmPeers(function(payload){
+    		event.sender.send("peerInfos",payload);
+    	});
     };
 
     self.getLog = function(event, ...args){
