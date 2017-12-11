@@ -11,7 +11,7 @@ var log = require('electron-log');
 
 const { spawn, exec } = require('child_process');
 
-
+// api
 var startIpfs = function(callback){
 	const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
 	const ipfs = spawn(ipfsPath, ['daemon', '--init']);
@@ -47,7 +47,7 @@ var ipfsStop = function(callback){
 		});
 
 	});
-}
+};
 
 var ipfsPeerId = function(fn){
 	
@@ -57,7 +57,7 @@ var ipfsPeerId = function(fn){
 		}
 		fn(config);
 	});
-}
+};
 
 var ipfsDatastorePath = function(fn){
 
@@ -67,7 +67,7 @@ var ipfsDatastorePath = function(fn){
 		}
 		fn(config);
 	});
-}
+};
 
 var ipfsGatewayAddress = function(fn){
 
@@ -79,7 +79,7 @@ var ipfsGatewayAddress = function(fn){
 		
 	});
 
-}
+};
 
 
 
@@ -92,7 +92,7 @@ var ipfsAPIAddress = function(fn){
 		fn(config);
 	});
 
-}
+};
 
 var ipfsLogTail = function(fn){
 
@@ -126,7 +126,7 @@ var isOnline = function(fn){
 	    fn(isUp); 
     
     });
-}
+};
 
 var ipfsId = function(fn){
 	var iID;
@@ -141,7 +141,7 @@ var ipfsId = function(fn){
 	
 	getIPFS().id(funcId);
 	
-}
+};
 
 
 
@@ -159,7 +159,7 @@ var getIPFS = function(){
 	}
 	return ipfs;
 
-}
+};
 
 
 var removePins = function(fn, hash){
@@ -179,7 +179,7 @@ var removePins = function(fn, hash){
 
 	});
 	
-}
+};
 
 var addPins = function(fn, hash){
 	log.info('addPin');
@@ -199,7 +199,7 @@ var addPins = function(fn, hash){
 
 	});
 	
-}
+};
 
 var checkPin = function(fn, hash){
 
@@ -215,8 +215,9 @@ var checkPin = function(fn, hash){
 		fn(isPinned);
 
 	});
-}
+};
 
+// action creators
 var manager = function(options){
 	var self = {};
 
@@ -312,7 +313,7 @@ var manager = function(options){
 		}, hash);
 	};
 
-	self.ipfs = self.start();
+	// self.ipfs = self.start();
 
 	return self;
 };
