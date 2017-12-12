@@ -11,31 +11,8 @@ const {
 
 const pages = require('./pages.js');
 
-var ipfs = require('./api/process_ipfs')({
-    "afterLogUpdateHook": function(ipfsLog){
-        for(let subscriber in pages.getLogSubscribers()){
-            if(typeof subscriber.send === 'function'){
-                subscriber.send('ipfs:logging', ipfsLog);
-            }
-        }
-    }
-});
-
-// TODO: MOVE
-// mounting process
-var registerListeners = function(listeners){
-    for (let prefix in listeners){
-        for(let prop in listeners[prefix]){
-            if(typeof listeners[prefix][prop] === 'function'){
-                ipcMain.on(prefix + ':' + prop, listeners[prefix][prop]);
-            }
-        }
-    }   
-};
-
-registerListeners({ipfs});
-
-
+const { ipfsStop } = require("./api/process_ipfs");
+const ipfsActions = require("./shared/actions/ipfs");
 // we have to do this to ease remote-loading of the initial state :(
 global.state = {};
 
@@ -48,6 +25,20 @@ if (platform === "darwin"){
 
 app.on('ready', function(){
     const store = configureStore(global.state, 'main');
+
+    ipcMain.on('redux-action', (event, payload) => {
+        store.dispatch(payload);
+    });
+    store.dispatch(ipfsActions.start());
+
+    store.dispatch(ipfsActions.getPeerId());
+    store.dispatch(ipfsActions.getIPFSGWAddr());
+    store.dispatch(ipfsActions.getIPFSAPIAddress());
+    store.dispatch(ipfsActions.getIPFSDatastorePath());
+    store.dispatch(ipfsActions.getLog());
+    store.dispatch(ipfsActions.isOnline());
+
+
     // pass the store to ipfs here?
     // example does tasks(store) <<< passes the store to the different tasks
     // tasks uses the store to dispatch different actions.
@@ -86,8 +77,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('quit', () => {
-    // dispatch action here?
-    ipfs.stop();
+    ipfsStop();
 });
 
 

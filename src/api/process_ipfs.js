@@ -34,7 +34,7 @@ var startIpfs = function(callback){
 
 var ipfsStop = function(callback){
 
-	return exec('pkill ipfs', function (err,stdout,stderr){
+	return exec('pkill ipfs', function (err, stdout, stderr){
 		process.stdout.on('data', function(data){
 			callback('ipfs out:' + data.toString());
 		});
@@ -86,10 +86,10 @@ var ipfsGatewayAddress = function(fn){
 
 var ipfsAPIAddress = function(fn){
 
-	getIPFS().config.get('Addresses.API',(err,config) => {
+	getIPFS().config.get('Addresses.API',(err, config) => {
 		log.info("var ipfsAPIAddress", config);
 		if(err){
-		//	throw err;
+			//	throw err;
 		}
 		fn(config);
 	});
@@ -105,7 +105,6 @@ var ipfsLogTail = function(fn){
 	
 		fn(value);
 	});
-
 };
 
 var ipfsStatus = function(func){
@@ -126,7 +125,6 @@ var isOnline = function(fn){
 	            isUp=true;
 	     }
 	    fn(isUp); 
-    
     });
 };
 
@@ -160,7 +158,6 @@ var getIPFS = function(){
 	
 	}
 	return ipfs;
-
 };
 
 
@@ -198,7 +195,6 @@ var addPins = function(fn, hash){
 			fn(true);
 		
 		}
-
 	});
 	
 };
@@ -228,8 +224,6 @@ var ipfsSwarmPeers = function (fn){
 		fn(peerInfos);
 	});
 };
-
-ipfs = startIpfs();
 
 
 module.exports = {
