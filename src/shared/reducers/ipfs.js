@@ -10,7 +10,7 @@ const initialState = {
 	apiAddress: "",
 	logs: [],
 	id: "",
-	peers: "",
+	peers: 0,
 	isOnline: false,
 	status: ""
 };

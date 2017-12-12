@@ -1,9 +1,9 @@
 const { ipcRenderer, remote } = require('electron');
-const configureStore = require('../../shared/store/configureStore');
 
 const currentWindow = remote.getCurrentWindow();
 
 const ipfsActions = require("../../shared/actions/ipfs");
+const configureStore = require('../../shared/store/configureStore');
 
 // get the global.state from the main process
 const initialState = remote.getGlobal('state');
@@ -21,7 +21,8 @@ var checkOnline = function(){
 	store.dispatch(ipfsActions.isOnline());
 };
 
-var applyState = function(ipfs){
+var applyState = function(state){
+	var ipfs = state.ipfs;
 	$("#peerId").text(ipfs.peerId);
 	$("#gateway-addr").val(ipfs.gatewayAddress);
 	$("#ipfs-api-addr").val(ipfs.apiAddress);
@@ -47,9 +48,8 @@ $(document).ready(function() {
 
 	store.subscribe(function(){
 		// executed when something could have changed the state
-		applyState(store.getState().ipfs);
+		applyState(store.getState());
 	});
 
-	applyState(store.getState().ipfs);
+	applyState(store.getState());
 });
-

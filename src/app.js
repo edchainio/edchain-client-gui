@@ -18,13 +18,6 @@ const ipfsActions = require("./shared/actions/ipfs");
 global.state = {};
 
 var start = function start(){
-    // macOS
-    // https://electronjs.org/docs/api/app#appdockseticonimage-macos
-    if (platform === "darwin"){
-        // Seems to hate my .icns
-        app.dock.setIcon(path.resolve(__dirname, "public/img/icon.png"));
-    }
-
     const store = configureStore(global.state, 'main');
 
     store.subscribe(() => {
@@ -43,12 +36,15 @@ var start = function start(){
         setTimeout(throttle, wait, callback, wait);
     };
 
+    // this should probably be an action itself 
     var syncIpfs = function(){
         store.dispatch(ipfsActions.isOnline());
         store.dispatch(ipfsActions.getPeerId());
         store.dispatch(ipfsActions.getIPFSGWAddr());
         store.dispatch(ipfsActions.getIPFSAPIAddress());
         store.dispatch(ipfsActions.getIPFSDatastorePath());
+        store.dispatch(ipfsActions.getIPFSDatastorePath());
+        store.dispatch(ipfsActions.ipfsSwarmPeers());
     };
 
     throttle(function(){
@@ -58,6 +54,14 @@ var start = function start(){
             syncIpfs();
         }
     }, 3000);
+
+
+    // macOS
+    // https://electronjs.org/docs/api/app#appdockseticonimage-macos
+    if (platform === "darwin"){
+        // Seems to hate my .icns
+        app.dock.setIcon(path.resolve(__dirname, "public/img/icon.png"));
+    }
 
     // Quit when all windows are closed.
     app.on('window-all-closed', () => {

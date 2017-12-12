@@ -168,11 +168,11 @@ var createMainWindow = function createMainWindow(){
         showChildWindow(createChildWindow(mainWindow, url));
     });
 
-    ipcMain.on('createChildWindow', function(event, url){
-        settingsWindow = createChildWindow(mainWindow,url);
-    });
-
-    ipcMain.on('showChildWindow', function(){
+    ipcMain.on('openSettings', function(event){
+        settingsWindow = createChildWindow(
+            mainWindow,
+            'file://' + __dirname + '/public/html/settings.html'
+        );
         showChildWindow(settingsWindow);
     });
 

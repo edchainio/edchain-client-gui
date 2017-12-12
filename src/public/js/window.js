@@ -8,37 +8,39 @@ const { ipcRenderer, remote } = require('electron');
 const { dialog } = remote.require('electron');
 var log = remote.require('electron-log');
 
-var node = {
-    up: false,
-    status: 'timed out',
-    peerID: null,
-    publisherID: null,
-    info: '',
-};
+const ipfsActions = require("../../shared/actions/ipfs");
+const configureStore = require('../../shared/store/configureStore');
+
+// get the global.state from the main process
+const initialState = remote.getGlobal('state');
+
+// create store
+const store = configureStore(initialState, 'renderer');
+
+ipcRenderer.on('redux-action', (event, payload) => {
+    store.dispatch(payload);
+});
 
 // these open new windows
 var __actions = {
+    // should the store track the windows aswell?
     openCourseLink: function(url){
         ipcRenderer.send('createAndShowChildWindow', url);
     },
     showSettings: function(){
-        // TODO: MOVE
-        // why is the file directly referenced here?
-        let url='file://' + __dirname + '/../html/settings.html';
-        ipcRenderer.send('createChildWindow', url);
-        ipcRenderer.send('showChildWindow');
+        ipcRenderer.send('openSettings');
     },
-    isIPFSOnline: function(){
-        ipcRenderer.send("ipfs:isOnline");
+    start: function(){
+        store.dispatch(ipfsActions.start());
     },
+    stop: function(){
+
+       store.dispatch(ipfsActions.stop());
+
+    },
+    // update
     isPinned: function(hash){
         ipcRenderer.send("ipfs:checkPin", hash);
- 
-    },
-    getPeerCount: function(){
-
-       ipcRenderer.send("ipfs:ipfsSwarmPeers");
-
     },
 };
 
@@ -168,28 +170,23 @@ var __ui = {
 };
 
 
+var applyState = function applyState(state){
+    __ui.setIPFSStatusButton(state.ipfs.isOnline);
+    __ui.showPeerCount(state.ipfs.peers);
+    if (state.ipfs.isOnline && !__state.courses){
+        // Waiting for ipfs to fire up
+        __state.getFeaturedData(function(course){
+            __ui.createHomePageCard(
+                course.META.imageUrl, course.title, 
+                course.META.indexUrl, course.META.hashes.courseDirectoryHash
+            );
+            __actions.isPinned(course.META.hashes.courseDirectoryHash);
+        });
+    }
+};
+
+
 $(document).ready(function() {
-
-
-    
-    ipcRenderer.on("peerInfos",function(event,payload){
-      
-           __ui.showPeerCount(payload.length);
-           setTimeout(__actions.getPeerCount,4000);
-    });
-
-    ipcRenderer.on("isOnline", function(event, value){
-        __ui.setIPFSStatusButton(value);
-        // wait 3 seconds before checking status again
-        setTimeout(__actions.isIPFSOnline, 3000);
-    });
-
-    ipcRenderer.on("checkStatus", function(event, ver){
-        $('#version').text("version:" + ver.version);
-        setTimeout(function(){
-            $('#version').text("version:" + "");
-        }, 2000);
-    });
 
     ipcRenderer.on("ipfsRemovePin",function(event, hash, wasRemoved){
         if (wasRemoved){
@@ -224,16 +221,6 @@ $(document).ready(function() {
         $courseCard.find(".pin-status").text(status);
     });
 
-   // TODO: WHICH OF THESE ARE STILL RELEVANT
-
-    $('#ipfsStatus').on("click", function(){
-        if ($('#ipfsStatus').hasClass('btn-outline-danger')){
-            ipcRenderer.send("ipfs:start");
-        } else if ($('#ipfsStatus').hasClass('btn-outline-success')){
-            ipcRenderer.send("ipfs:stop");
-        }
-    });
-
     $("#ipfs-icon-ref").on("click", function(event){
         event.preventDefault();
         __actions.showSettings();
@@ -243,26 +230,6 @@ $(document).ready(function() {
         event.preventDefault();
         var url = $(this).data("url");
         __actions.openCourseLink(url);
-    });
-
-    $('#stop').on("click", function(){
-        ipcRenderer.send("ipfs:getId");
-    });
-    
-    $('#version').on("click", function(){
-        ipcRenderer.send("ipfs:checkStatus");
-    });
-
-    $('#refresh').on("click", function(){
-        $(".card").remove(function(){
-            __state.getFeaturedData(function(course){
-                __ui.createHomePageCard(
-                    course.META.imageUrl, course.title, 
-                    course.META.indexUrl, course.META.hashes.courseDirectoryHash
-                );
-                __actions.isPinned(course.META.hashes.courseDirectoryHash);
-            });
-        });
     });
 
     $('#course-cards').on("click", '.pin-course-link', function(event){
@@ -277,19 +244,10 @@ $(document).ready(function() {
         }
     });
 
+    store.subscribe(function(){
+        // executed when something could have changed the state
+        applyState(store.getState());
+    });
 
-    // Waiting for ipfs to fire up
-    setTimeout(function(){
-        __state.getFeaturedData(function(course){
-            __ui.createHomePageCard(
-                course.META.imageUrl, course.title, 
-                course.META.indexUrl, course.META.hashes.courseDirectoryHash
-            );
-            __actions.isPinned(course.META.hashes.courseDirectoryHash);
-        });       
-    }, 3000);
-    
-     setTimeout(__actions.getPeerCount,3000);
-    __actions.isIPFSOnline();
+    applyState(store.getState());
 });
-
