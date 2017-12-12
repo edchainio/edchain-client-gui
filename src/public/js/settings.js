@@ -3,7 +3,7 @@ const configureStore = require('../../shared/store/configureStore');
 
 const currentWindow = remote.getCurrentWindow();
 
-const { ipfsActions } = require("../../shared/actions/ipfs");
+const ipfsActions = require("../../shared/actions/ipfs");
 
 // get the global.state from the main process
 const initialState = remote.getGlobal('state');
@@ -26,7 +26,7 @@ var applyState = function(ipfs){
 	$("#gateway-addr").val(ipfs.gatewayAddress);
 	$("#ipfs-api-addr").val(ipfs.apiAddress);
 	$("#ipfs-datastore-path").val(ipfs.dataStorePath);
-	
+	$("#ipfs-slider").prop("checked", (ipfs.isOnline ? "checked" : ""));
 	var $outputElement = $('#console');
 	var output = "<p><code>" + ipfs.log.join("</code></p><p><code>") + "</code></p>";
 	$outputElement.html(output);
@@ -47,6 +47,6 @@ $(document).ready(function() {
 		applyState(store.getState().ipfs);
 	});
 
-
+	applyState(store.getState().ipfs);
 });
 

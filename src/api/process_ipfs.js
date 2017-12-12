@@ -17,17 +17,17 @@ var ipfs = null;
 // api
 var startIpfs = function(callback){
 	const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
-	ipfs = spawn(ipfsPath, ['daemon', '--init']);
+	ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
 
-	ipfs.stdout.on('data', function(data){
+	ipfsProcess.stdout.on('data', function(data){
 		callback(data.toString());	
 	});
 
-	ipfs.stderr.on('data', function(data){;
+	ipfsProcess.stderr.on('data', function(data){;
 	 	callback('ipfs error:' + data.toString());
 	});
 
-	ipfs.on('exit', function(code){
+	ipfsProcess.on('exit', function(code){
 		callback('ipfs exit:' + code.toString());
 	});
 };
@@ -35,6 +35,7 @@ var startIpfs = function(callback){
 var ipfsStop = function(callback){
 
 	return exec('pkill ipfs', function (err, stdout, stderr){
+		// is this correct?
 		process.stdout.on('data', function(data){
 			callback('ipfs out:' + data.toString());
 		});
@@ -139,7 +140,7 @@ var ipfsId = function(fn){
 		
 		fn(identity);
 	};
-	
+	log.info(getIPFS());
 	getIPFS().id(funcId);
 	
 };

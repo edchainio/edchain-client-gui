@@ -11,7 +11,7 @@ const {
 
 const pages = require('./pages.js');
 
-const { ipfsStop } = require("./api/process_ipfs");
+const { ipfsStop, isOnline } = require("./api/process_ipfs");
 const ipfsActions = require("./shared/actions/ipfs");
 // we have to do this to ease remote-loading of the initial state :(
 global.state = {};
@@ -23,6 +23,16 @@ if (platform === "darwin"){
     app.dock.setIcon(path.resolve(__dirname, "public/img/icon.png"));
 }
 
+var ipfsConnection = function(callback){
+    isOnline((value)=>{
+        if(!value){
+            setTimeout(ipfsConnection, 2000, callback);
+        } else {
+            callback();
+        }
+    });
+};
+
 app.on('ready', function(){
     const store = configureStore(global.state, 'main');
 
@@ -30,13 +40,15 @@ app.on('ready', function(){
         store.dispatch(payload);
     });
     store.dispatch(ipfsActions.start());
-
-    store.dispatch(ipfsActions.getPeerId());
-    store.dispatch(ipfsActions.getIPFSGWAddr());
-    store.dispatch(ipfsActions.getIPFSAPIAddress());
-    store.dispatch(ipfsActions.getIPFSDatastorePath());
-    store.dispatch(ipfsActions.getLog());
-    store.dispatch(ipfsActions.isOnline());
+    
+    ipfsConnection(function(){
+        store.dispatch(ipfsActions.getPeerId());
+        store.dispatch(ipfsActions.getIPFSGWAddr());
+        store.dispatch(ipfsActions.getIPFSAPIAddress());
+        store.dispatch(ipfsActions.getIPFSDatastorePath());
+        store.dispatch(ipfsActions.getLog());
+        store.dispatch(ipfsActions.isOnline());
+    });
 
 
     // pass the store to ipfs here?
