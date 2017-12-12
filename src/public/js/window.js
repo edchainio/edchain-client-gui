@@ -22,7 +22,7 @@ ipcRenderer.on('redux-action', (event, payload) => {
 
 // these ping main process
 var __actions = {
-    // should the store track the windows aswell?
+    // should the main.store track the windows aswell?
     openCourseLink: function(url){
         ipcRenderer.send('createAndShowChildWindow', url);
     },
@@ -43,104 +43,9 @@ var __actions = {
     },
 };
 
-// Feels like there is a course object in here somewhere
-
-// TODO: MOVE
-var __state = {
-    "courses": null,
-    buildIpfsUrl: function(hash){
-        return ipfsGetURL + hash + "&encoding=json";
-    },
-    getData: function(url){
-        return $.ajax({
-            url: url,
-            method: 'GET',
-        });
-    },
-    getIpfsData: function(hash){
-        return __state.getData(__state.buildIpfsUrl(hash));
-    },
-    onFailure: function(){
-        log.info(arguments);
-    },
-    getFeaturedData: function(callback){
-        var featuredData = __state.getData(edchainNodeURL);
-
-        // failure case
-        featuredData.fail(__state.onFailure);
-
-        // success case
-        featuredData.done(function({courses}){
-            __state.courses = courses;
-            courses.forEach(function(course){
-                __state.getCourseDetail(course, callback);
-            });        
-        });
-    },
-    // TODO: MOVE
-    getCourseDetail: function(course, callback){
-        // actual course ref
-        var courseRoot = __state.getIpfsData(course.hash);
-        
-        course.META = {
-            "hashes": {}
-        };
-
-        var __hashes = course.META.hashes;
-       
-        // failure case
-        courseRoot.fail(__state.onFailure);
-        
-        // success case
-        courseRoot.done(function(data){
-
-            __hashes.courseDirectoryHash = data["Links"][0].Hash;
-
-            var courseDirectory = __state.getIpfsData(__hashes.courseDirectoryHash);
-            
-            // failure case
-            courseDirectory.fail(__state.onFailure);
-            
-            // success case
-            courseDirectory.done(function(directory){
-                
-                // course contents
-                directory.Links.forEach(function(link){
-                    if(link.Name !== "contents") return;
-                    
-                    __hashes.contentsDirectoryHash = link.Hash;
-                    var contentsDirectory = __state.getIpfsData(__hashes.contentsDirectoryHash);
-                    
-                    // failure case
-                    contentsDirectory.fail(__state.onFailure);
-
-                    // success case
-                    contentsDirectory.done(function(contents){
-
-                        contents.Links.forEach(function(link){
-                            
-                            if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){
-                                
-                                course.META.imageUrl = httpURL + link.Hash;
-
-                            } else if (link.Name.endsWith('index.htm')){
-                                
-                                course.META.indexUrl = `${httpURL}${__hashes.courseDirectoryHash}/contents/index.htm`;
-                            
-                            }
-                        });
-                        callback(course);
-                    });
-                });
-            });
-        });
-    }
-};
-
 var __ui = {
 
     setIPFSStatusButton: function (isOnline){
-
         if(isOnline){
           $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
           $('#img-ipfs-icon').prop("alt",'IPFS Online');

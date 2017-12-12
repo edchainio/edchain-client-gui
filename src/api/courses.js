@@ -56,14 +56,14 @@ var getCourseDetail = function(course, callback){
 
     var __hashes = course.META.hashes;
    
-    // failure case
+    // failure case << action
     courseRoot.fail(onFailure);
     
-    // success case
+    // success case << action
     courseRoot.done(function(data){
 
         __hashes.courseDirectoryHash = data["Links"][0].Hash;
-
+        // new api
         var courseDirectory = getIpfsData(__hashes.courseDirectoryHash);
         
         // failure case
@@ -71,12 +71,14 @@ var getCourseDetail = function(course, callback){
         
         // success case
         courseDirectory.done(function(directory){
-            
+           	
             // course contents
             directory.Links.forEach(function(link){
                 if(link.Name !== "contents") return;
                 
                 __hashes.contentsDirectoryHash = link.Hash;
+
+                // new api
                 var contentsDirectory = getIpfsData(__hashes.contentsDirectoryHash);
                 
                 // failure case
@@ -102,4 +104,23 @@ var getCourseDetail = function(course, callback){
             });
         });
     });
-}
+};
+
+// this might just turn into getting directories by hashes
+
+var getCourseDirectory = function(directoryHash){
+
+};
+
+var getCourseContentsDirectory = function(contentsDirectoryHash){
+
+};
+
+
+
+module.exports = {
+	getFeaturedData,
+	getCourseDetail,
+	getCourseDirectory,
+	getCourseContentsDirectory
+};
