@@ -2,12 +2,32 @@
 
 
 const initialState = {
-	courses: []
+    isFetching: false,
+    didInvalidate: false,
+	items: []
 };
 
 
-module.exports = function courses(state, actions){	
+module.exports = function courses(state, action){	
 	state = state || initialState;
 
-	return state;
+	switch (action.type){
+		case "addCourse":
+			return Object.assign({}, state, {
+				courses: [
+					...state.courses.items,
+					{
+						// course info from action here
+					}
+				]
+			});
+		case "addPin":
+			// return Object.assign({}, state, { "id": action.payload });
+		case "removePin":
+			// return Object.assign({}, state, { "id": action.payload });
+		case "checkPin":
+			// return Object.assign({}, state, { "id": action.payload });
+		default:
+			return state;
+	}
 };

@@ -49,12 +49,6 @@ module.exports = function ipfs(state, action){
 		case "stop":
 			// status
 			// return Object.assign({}, state, { "id": action.payload });
-		case "addPin":
-			// return Object.assign({}, state, { "id": action.payload });
-		case "removePin":
-			// return Object.assign({}, state, { "id": action.payload });
-		case "checkPin":
-			// return Object.assign({}, state, { "id": action.payload });
 		default:
 			// log.info(action);
 			return state;

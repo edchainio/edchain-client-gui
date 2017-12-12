@@ -5,7 +5,6 @@ const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
 
 
 const { ipcRenderer, remote } = require('electron');
-const { dialog } = remote.require('electron');
 var log = remote.require('electron-log');
 
 const ipfsActions = require("../../shared/actions/ipfs");
@@ -21,7 +20,7 @@ ipcRenderer.on('redux-action', (event, payload) => {
     store.dispatch(payload);
 });
 
-// these open new windows
+// these ping main process
 var __actions = {
     // should the store track the windows aswell?
     openCourseLink: function(url){
