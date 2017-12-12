@@ -26,15 +26,17 @@ var applyState = function(ipfs){
 	$("#gateway-addr").val(ipfs.gatewayAddress);
 	$("#ipfs-api-addr").val(ipfs.apiAddress);
 	$("#ipfs-datastore-path").val(ipfs.dataStorePath);
-	$("#ipfs-slider").prop("checked", (ipfs.isOnline ? "checked" : ""));
+	
+	$("#ipfs-slider").prop("checked", ipfs.isOnline);
 	var $outputElement = $('#console');
-	var output = "<p><code>" + ipfs.log.join("</code></p><p><code>") + "</code></p>";
+	var output = "<p><code>" + ipfs.logs.join("</code></p><p><code>") + "</code></p>";
 	$outputElement.html(output);
 };
 
 $(document).ready(function() {
 
-	$("#ipfs-slider").on("click",function(){		
+	$("#ipfs-slider").on("click",function(){
+
 		if($(this).prop("checked")==true){
 			store.dispatch(ipfsActions.start());
 		}
@@ -44,6 +46,7 @@ $(document).ready(function() {
 	});
 
 	store.subscribe(function(){
+		// executed when something could have changed the state
 		applyState(store.getState().ipfs);
 	});
 

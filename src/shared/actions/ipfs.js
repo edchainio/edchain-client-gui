@@ -2,25 +2,13 @@
 const { createAliasedAction } = require("electron-redux");
 const ipfs = require("../../api/process_ipfs");
 
-
 // action creators
-// state should not be kept here
-var __log = [];
 
-var logOutput = createAliasedAction( "getLog", function (value){
+var logOutput = createAliasedAction( "logOutput", function (value){
 	return function(dispatch){
 	    if(value){
-	        dispatch({ "type" : "logOutput", "log" : value.toString() });
+	        dispatch({ "type" : "logOutput", "payload" : value.toString() });
 	    }
-	};
-});
-
-// the payloads should be actions that are created
-// or not.
-
-var getLog = createAliasedAction( "getLog", function(){
-	return function(dispatch){
-		dispatch({ "type" : "getLog", "log" : __log});
 	};
 });
 
@@ -84,14 +72,14 @@ var start = createAliasedAction( "start", function(){
 	return function(dispatch){
 		dispatch(logOutput('starting..'));
 		dispatch(logOutput('Starting IPFS...'));
-		ipfs.startIpfs(logOutput);
+		ipfs.startIpfs((message)=> dispatch(logOutput(message)));
 	};
 });
 
 var stop = createAliasedAction( "stop", function(){
 	return function(dispatch){
 		dispatch(logOutput('stopping..'));
-	    ipfs.ipfsStop(logOutput);
+	    ipfs.ipfsStop((message)=> dispatch(logOutput(message)));
 	};
 });
 
@@ -132,7 +120,7 @@ var ipfsSwarmPeers = createAliasedAction( "ipfsSwarmPeers", function(){
 
 
 module.exports = {
-	getLog,
+	logOutput,
 	getId,
 	isOnline,
 	getPeerId,

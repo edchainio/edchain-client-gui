@@ -54,7 +54,7 @@ var ipfsStop = function(callback){
 var ipfsPeerId = function(fn){
 	
 	getIPFS().config.get('Identity.PeerID',(err,config) => {
-		log.info("ipfsPeerId =", config);
+		// log.info("ipfsPeerId =", config);
 		if(err){
 //			throw err;
 		}
@@ -65,7 +65,7 @@ var ipfsPeerId = function(fn){
 var ipfsDatastorePath = function(fn){
 
 	getIPFS().config.get('Datastore.Path',(err,config) => {
-		log.info("var ipfsDatastorePath", config);
+		// log.info("var ipfsDatastorePath", config);
 		if(err){
 	//		throw err;
 		}
@@ -76,7 +76,7 @@ var ipfsDatastorePath = function(fn){
 var ipfsGatewayAddress = function(fn){
 
 	getIPFS().config.get('Addresses.Gateway',(err,config) => {
-		log.info("var ipfsGatewayAddress", config);
+		// log.info("var ipfsGatewayAddress", config);
 		if(err){
 	//		throw err;
 		}
@@ -88,13 +88,12 @@ var ipfsGatewayAddress = function(fn){
 var ipfsAPIAddress = function(fn){
 
 	getIPFS().config.get('Addresses.API',(err, config) => {
-		log.info("var ipfsAPIAddress", config);
+		// log.info("var ipfsAPIAddress", config);
 		if(err){
 			//	throw err;
 		}
 		fn(config);
 	});
-
 };
 
 var ipfsLogTail = function(fn){
@@ -111,7 +110,7 @@ var ipfsLogTail = function(fn){
 var ipfsStatus = function(func){
  
     ipfs.version().then((res) => {
-		log.info("ipfsStatus", res);
+		// log.info("ipfsStatus", res);
 		func(res);
 	}).catch((err) => {
 		logger.error(err)
@@ -121,7 +120,7 @@ var ipfsStatus = function(func){
 var isOnline = function(fn){
 	let isUp=false;
     ipfsId(function(value){
-	    log.info("isOnline", value);
+	    // log.info("isOnline", value);
 	    if(value!=null && value['addresses']){
 	            isUp=true;
 	     }
@@ -133,14 +132,14 @@ var ipfsId = function(fn){
 	var iID;
 	
 	var funcId = function (err,identity){
-		log.info("ipfsId", identity);
+		// log.info("ipfsId", identity);
 		if(err){
-			log.info(err);
+			// log.info(err);
 		}
 		
 		fn(identity);
 	};
-	log.info(getIPFS());
+	// log.info(getIPFS());
 	getIPFS().id(funcId);
 	
 };
@@ -154,7 +153,7 @@ var getIPFS = function(){
 			ipfs = ipfsAPI('localhost','5001',{protocol:'http'});
 		}
 		catch(e){
-			log.info("cannot connect to ipfs");
+			// log.info("cannot connect to ipfs");
 		}
 	
 	}
@@ -165,14 +164,14 @@ var getIPFS = function(){
 var removePins = function(fn, hash){
 	
 	getIPFS().pin.rm(hash, function (err,pinset) {
-		log.info("removePins", pinset);
+		// log.info("removePins", pinset);
 		if(err){
 			
-			log.info(err);
+			// log.info(err);
 			fn(false);
 		
 		}else{
-			log.info("removePin",pinset);
+			// log.info("removePin",pinset);
 			fn(true);
 		
 		}
@@ -184,15 +183,15 @@ var removePins = function(fn, hash){
 var addPins = function(fn, hash){
 	
 	getIPFS().pin.add(hash, function (err,pinset) {
-		log.info('addPins', pinset);
+		// log.info('addPins', pinset);
 
 		if(err){
 			
-			log.info(err);
+			// log.info(err);
 			fn(false);
 		
 		}else{
-			log.info("pinned", pinset);
+			// log.info("pinned", pinset);
 			fn(true);
 		
 		}
@@ -203,7 +202,7 @@ var addPins = function(fn, hash){
 var checkPin = function(fn, hash){
 
 	getIPFS().pin.ls(hash, function (err, pinset) {
-		log.info("checkPin", pinset);
+		// log.info("checkPin", pinset);
 		if(err){
 			pinset="error"
 			isPinned=false;
@@ -220,7 +219,7 @@ var checkPin = function(fn, hash){
 var ipfsSwarmPeers = function (fn){
 	getIPFS().swarm.peers(function(err,peerInfos){
 		if(err){
-			log.info(err);
+			// log.info(err);
 		}
 		fn(peerInfos);
 	});

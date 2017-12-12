@@ -8,7 +8,7 @@ const initialState = {
 	dataStorePath: "",//config
 	gatewayAddress: "",//config
 	apiAddress: "",
-	log: [],
+	logs: [],
 	id: "",
 	peers: "",
 	isOnline: false,
@@ -24,7 +24,7 @@ module.exports = function ipfs(state, action){
 
 	switch (action.type){
 		case "logOutput":
-			return Object.assign({}, state, { "log": [ ...state.log, state.payload ] });
+			return Object.assign({}, state, { "logs": logs(state.logs, action) });
 		case "getId":
 			return Object.assign({}, state, { "id": action.payload });
 		case "isOnline":
@@ -56,12 +56,11 @@ module.exports = function ipfs(state, action){
 		case "checkPin":
 			// return Object.assign({}, state, { "id": action.payload });
 		default:
-			log.info(action);
+			// log.info(action);
 			return state;
 	}
 
 };
-
 
 // var peerId = function(state, action){
 
@@ -79,9 +78,9 @@ module.exports = function ipfs(state, action){
 
 // };
 
-// var log = function(state, action){
-
-// };
+var logs = function(state, action){
+	return [ ...state, action.payload ];
+};
 
 // var id = function(state, action){
 
