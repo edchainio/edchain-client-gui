@@ -6,14 +6,13 @@ const ipfsActions = require("../../shared/actions/ipfs");
 
 const configureStore = require('../../shared/store/configureStore');
 
-const { registry } = require("electron-redux");
-
 // get the global.state from the main process
 const initialState = remote.getGlobal('state');
 
 // create store
 const store = configureStore(initialState, 'renderer');
 
+// sign up for store updates
 ipcRenderer.on('redux-action', (event, payload) => {
     store.dispatch(payload);
 });
@@ -42,7 +41,6 @@ var __actions = {
 };
 
 var __ui = {
-
     setIPFSStatusButton: function (isOnline){
         if(isOnline){
           $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
@@ -51,7 +49,6 @@ var __ui = {
         }
         else{
             $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
-            // $('#ipfsStatus').text('IPFS Offline');
         }
     }, 
     createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseHash, action){
@@ -68,25 +65,16 @@ var __ui = {
     },
     setPinStatus: function(hash, isPinned){
         var 
-            action, status,
+            action = (isPinned ? "unpin" : "pin"),
             $courseCard = $(`#${hash}`),
             $actionLink = $courseCard.find("a.pin-course-link");
         
-        if (isPinned){
-            // set to pinned state
-            action = "unpin";
-            status = "Pinned";
-            $actionLink.removeClass("unpinImage").addClass("pinImage");
-        } else {
-            // set to unpinned state
-            action = "pin";
-            status = "Un-Pinned";
-            $actionLink.removeClass("pinImage").addClass("unpinImage");
-        }
-        
         $actionLink.data("action", action);
         $actionLink.text(action);
-        $courseCard.find(".pin-status").text(status);
+        
+        $courseCard.find(".pin-status").text((isPinned ? "Pinned" : "Un-Pinned"));
+        $actionLink.removeClass( ( isPinned ? "unpinImage" : "pinImage") );
+        $actionLink.addClass( ( isPinned ? "pinImage" : "unpinImage") );
     }
 
 };
@@ -97,23 +85,27 @@ var applyState = function applyState(state){
     __ui.setIPFSStatusButton(state.ipfs.isOnline);
     __ui.showPeerCount(state.ipfs.peers);
     if (state.ipfs.isOnline){
-        courseKeys = Object.keys(state.courses.items);
-        courseKeys.forEach(function(key){
-            let course = state.courses.items[key];
-            let $courseCard = $(`#${course.hash}`);
-            let meta = course.META;
-            let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
-
-            if(!$courseCard.length && isReady){
-                __ui.createHomePageCard(
-                    meta.urls.image, course.title, meta.urls.index, 
-                    meta.hashes.courseDirectoryHash, course.hash
-                );
-            } else if($courseCard.length) {
-                __ui.setPinStatus(course.hash, course.META.isPinned);
-            }
-        });
+        applyCourses(state.courses.items);
     }
+};
+
+var applyCourses = function(items){
+    courseKeys = Object.keys(items);
+    courseKeys.forEach(function(key){
+        let course = items[key];
+        let $courseCard = $(`#${course.hash}`);
+        let meta = course.META;
+        let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
+
+        if(!$courseCard.length && isReady){
+            __ui.createHomePageCard(
+                meta.urls.image, course.title, meta.urls.index, 
+                meta.hashes.courseDirectoryHash, course.hash
+            );
+        } else if($courseCard.length) {
+            __ui.setPinStatus(course.hash, course.META.isPinned);
+        }
+    });
 };
 
 $(document).ready(function() {
