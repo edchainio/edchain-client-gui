@@ -15,39 +15,40 @@ module.exports = function courses(state, action){
 		case "addCourse":
 			var item = {};
 			item[action.payload.hash] = courseItem(action.payload);
-			state = Object.assign({}, state, {
+			return Object.assign({}, state, {
 				items: Object.assign({}, clone(state.items), item)
 			});
-			break;
 		case "setHash":
 			state.items[action.payload.id];
 			var copy = clone(state.items[action.payload.id]);
 			copy.META.hashes[action.payload.key] = action.payload.value;
 			var item = {};
 			item[action.payload.id] = copy;
-			state = Object.assign({}, state, {
+			return Object.assign({}, state, {
 				"items": Object.assign({}, clone(state.items), item)
 			});
-			break;
 		case "setUrl":
 			var copy = clone(state.items[action.payload.id]);
 			copy.META.urls[action.payload.key] = action.payload.value;
 			var item = {};
 			item[action.payload.id] = copy;
-			state = Object.assign({}, state, {
+			return Object.assign({}, state, {
 				"items": Object.assign({}, clone(state.items), item)
 			});
-			break;
+		// these three require further inspection
 		case "addPin":
-			// state = Object.assign({}, state, { "id": action.payload });
 		case "removePin":
-			// state = Object.assign({}, state, { "id": action.payload });
 		case "checkPin":
-			// state = Object.assign({}, state, { "id": action.payload });
+			var copy = clone(state.items[action.payload.id]);
+			copy.META.isPinned = !!action.payload.value;
+			var item = {};
+			item[action.payload.id] = copy;
+			return Object.assign({}, state, {
+				"items": Object.assign({}, clone(state.items), item)
+			});
 		default:
-			state = state;
+			return state;
 	}
-	return state
 };
 
 var courseItem = function(course){

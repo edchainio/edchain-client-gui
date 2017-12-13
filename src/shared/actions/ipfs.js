@@ -2,6 +2,9 @@
 const { createAliasedAction } = require("electron-redux");
 const ipfs = require("../../api/process_ipfs");
 
+
+
+const log = require('electron-log');
 // action creators
 
 var logOutput = createAliasedAction( "logOutput", function (value){
@@ -83,13 +86,14 @@ var stop = createAliasedAction( "stop", function(){
 	};
 });
 
-var addPin = createAliasedAction( "addPin", function(hash){
+var addPin = createAliasedAction( "addPin", function(id, hash){
 	return function(dispatch){
 		ipfs.addPins(function(payload){
-			dispatch({ "type" : "isPinned", 
+			dispatch({ 
+				"type" : "addPin", 
 				"payload" : {
-					"hash": hash, 
-					"value": value
+					"id": id, 
+					"value": payload
 				}
 			});
 			// why just for this one
@@ -97,26 +101,28 @@ var addPin = createAliasedAction( "addPin", function(hash){
 	};
 });
 
-var removePin = createAliasedAction( "removePin", function(hash){
+var removePin = createAliasedAction( "removePin", function(id, hash){
 	return function(dispatch){
 		ipfs.removePins(function(payload){
-			dispatch({ "type" : "ipfsRemovePin", 
+			dispatch({ 
+				"type" : "removePin", 
 				"payload" : {
-					"hash": hash, 
-					"value": value
+					"id": id, 
+					"value": payload
 				}
 			});
 		}, hash);
 	};
 });
 
-var checkPin = createAliasedAction( "checkPin", function(hash){
+var checkPin = createAliasedAction( "checkPin", function(id, hash){
 	return function(dispatch){
 		ipfs.checkPin(function(payload){
-			dispatch({ "type" : "isPinned", 
+			dispatch({ 
+				"type" : "checkPin", 
 				"payload" : {
-					"hash": hash, 
-					"value": value
+					"id": id, 
+					"value": payload
 				}
 			});
 		}, hash);

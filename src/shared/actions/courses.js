@@ -34,7 +34,8 @@ var getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 					"value": data["Links"][0].Hash
 				}
 			});
-			dispatch(getCourseDirectory(hash, data["Links"][0].Hash))
+			dispatch(getCourseDirectory(hash, data["Links"][0].Hash));
+			dispatch(checkPin(hash, data["Links"][0].Hash));
 		});
 	};
 });
