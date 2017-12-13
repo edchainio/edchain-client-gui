@@ -15,7 +15,6 @@ const store = configureStore(initialState, 'renderer');
 
 ipcRenderer.on('redux-action', (event, payload) => {
     store.dispatch(payload);
-    console.log("STATE", payload);
 });
 
 // these ping main process
@@ -54,13 +53,13 @@ var __ui = {
             // $('#ipfsStatus').text('IPFS Offline');
         }
     }, 
-    createHomePageCard: function(image, title, indexURL, courseHash, action){
+    createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseHash, action){
         $(".loader").hide();
         action = action || "...";
-
+        console.log(arguments);
         var rendered = Mustache.render(
             $("#course-card-template").html(), 
-            {image, title, indexURL, courseHash, action}
+            {image, title, indexURL, courseDirectoryHash, courseHash, action}
         );
         $('#course-cards').append(rendered);
     },
@@ -83,8 +82,8 @@ var applyState = function applyState(state){
                 let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
                 if(!$(`#${course.hash}`).length && isReady){
                     __ui.createHomePageCard(
-                        course.hash, meta.urls.image, course.title, 
-                        meta.urls.index, meta.hashes.courseDirectoryHash
+                        meta.urls.image, course.title, meta.urls.index, 
+                        meta.hashes.courseDirectoryHash, course.hash
                     );
                 }
             });
