@@ -24,7 +24,7 @@ module.exports = function ipfs(state, action){
 
 	switch (action.type){
 		case "logOutput":
-			return Object.assign({}, state, { "logs": logs(state.logs, action) });
+			return Object.assign({}, state, { "logs": [ ...state.logs, action.payload ] });
 		case "getId":
 			return Object.assign({}, state, { "id": action.payload });
 		case "isOnline":
@@ -72,9 +72,9 @@ module.exports = function ipfs(state, action){
 
 // };
 
-var logs = function(state, action){
-	return [ ...state, action.payload ];
-};
+// var logs = function(state, action){
+// 	return [ ...state, action.payload ];
+// };
 
 // var id = function(state, action){
 

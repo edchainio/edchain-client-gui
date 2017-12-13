@@ -86,7 +86,12 @@ var stop = createAliasedAction( "stop", function(){
 var addPin = createAliasedAction( "addPin", function(hash){
 	return function(dispatch){
 		ipfs.addPins(function(payload){
-			dispatch({ "type" : "isPinned", "hash": hash, "payload": payload});
+			dispatch({ "type" : "isPinned", 
+				"payload" : {
+					"hash": hash, 
+					"value": value
+				}
+			});
 			// why just for this one
 		}, `/ipfs/${hash}`);
 	};
@@ -95,7 +100,12 @@ var addPin = createAliasedAction( "addPin", function(hash){
 var removePin = createAliasedAction( "removePin", function(hash){
 	return function(dispatch){
 		ipfs.removePins(function(payload){
-			dispatch({ "type" : "ipfsRemovePin", "hash": hash, "payload": payload});
+			dispatch({ "type" : "ipfsRemovePin", 
+				"payload" : {
+					"hash": hash, 
+					"value": value
+				}
+			});
 		}, hash);
 	};
 });
@@ -103,7 +113,12 @@ var removePin = createAliasedAction( "removePin", function(hash){
 var checkPin = createAliasedAction( "checkPin", function(hash){
 	return function(dispatch){
 		ipfs.checkPin(function(payload){
-			dispatch({ "type" : "isPinned", "hash": hash, "payload": payload});
+			dispatch({ "type" : "isPinned", 
+				"payload" : {
+					"hash": hash, 
+					"value": value
+				}
+			});
 		}, hash);
 	};
 });

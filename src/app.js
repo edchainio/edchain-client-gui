@@ -1,3 +1,5 @@
+"use strict";
+
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 
@@ -9,10 +11,15 @@ const {
     ipcMain, app, protocol 
 } = require('electron');
 
+const { registry } = require('electron-redux');
+
 const pages = require('./pages.js');
 
 const { ipfsStop, isOnline } = require("./api/process_ipfs");
+// all actions that are aliased actions must be imported into the main process
+// probably because of differenses between the alias registry in the renderer vs main process
 const ipfsActions = require("./shared/actions/ipfs");
+const coursesActions = require("./shared/actions/courses");
 
 // we have to do this to ease remote-loading of the initial state :(
 global.state = {};
@@ -45,15 +52,19 @@ var start = function start(){
         store.dispatch(ipfsActions.getIPFSDatastorePath());
         store.dispatch(ipfsActions.getIPFSDatastorePath());
         store.dispatch(ipfsActions.ipfsSwarmPeers());
+        // log.info(store.getState());
     };
 
     throttle(function(){
         if (!store.getState().ipfs.isOnline){
             store.dispatch(ipfsActions.isOnline());
         } else {
+            if (!Object.keys(store.getState().courses.items).length){
+                store.dispatch(coursesActions.getFeatured())
+            }
             syncIpfs();
         }
-    }, 3000);
+    }, 2000);
 
 
     // macOS

@@ -1,21 +1,23 @@
-// make actionCreators here and define action types
 const { createAliasedAction } = require("electron-redux");
 const { addPin, removePin, checkPin } = require("./ipfs");
 const courses = require("../../api/courses");
 
-
 // action creators
-// TODO: More actions to update status
-// TODO: Update code to create actions instead of mutating the course
+// IMPORTANT: Actions must contain only the keys "type","payload","error", and "meta"
+// Actions contain other keys will behave abnormally.
+// for more details on actions refer to: 
+// https://github.com/acdlite/flux-standard-action
 
 var getFeatured = createAliasedAction( "getFeatured", function (){
 	return function(dispatch){
-		courses.getFeatured().then(function(data){
-			dispatch({
-				"type": "addCourse",
-				"course": course
+		courses.getFeatured().then(function({data}){
+			data.courses.forEach(function(course){
+				dispatch({
+					"type": "addCourse",
+					"payload": course
+				});
+				dispatch(getCourseRoot(course.hash));
 			});
-			dispatch(getCourseRoot(course.hash));
 		});
 	};
 });
@@ -23,56 +25,73 @@ var getFeatured = createAliasedAction( "getFeatured", function (){
 
 var getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	return function(dispatch){
-		courses.getCourseRoot(hash).then(function(data){
+		courses.getCourseRoot(hash).then(function({data}){
 			dispatch({
 				"type": "setHash",
-				"id": hash, 
-				"key": "courseDirectoryHash",
-				"value": data["Links"][0].Hash
+				"payload": {
+					"id": hash, 
+					"key": "courseDirectoryHash",
+					"value": data["Links"][0].Hash
+				}
 			});
-			dispatch(getCourseDirectory(data["Links"][0].Hash))
+			dispatch(getCourseDirectory(hash, data["Links"][0].Hash))
 		});
 	};
 });
 
-var getCourseDirectory = createAliasedAction( "getCourseDirectory", function(hash){
+var getCourseDirectory = createAliasedAction( "getCourseDirectory", function(id, hash){
 	return function(dispatch){
-		courses.getCourseDirectory(hash).then(function(directory){
-			directory.Links.forEach(function(link){
+		courses.getCourseDirectory(hash).then(function({data}){
+			data.Links.forEach(function(link){
             	if(link.Name !== "contents") return;
 	            dispatch({
 					"type": "setHash",
-					"id": hash, 
-					"key": "contentsDirectoryHash",
-					"value": link.Hash
+					"payload": {
+						"id": id, 
+						"key": "contentsDirectoryHash",
+						"value": link.Hash
+					}
 				});
-            	dispatch(getCourseContentsDirectroy(link.Hash, hash));
+            	dispatch(getCourseContentsDirectroy(id, link.Hash, hash));
             });
 		});
 	};
 } );
 
 
-var getCourseContentsDirectroy = createAliasedAction( "getCourseContentsDirectroy", function(hash, courseDirectoryHash){
+var getCourseContentsDirectroy = createAliasedAction( "getCourseContentsDirectroy", function(id, hash, courseDirectoryHash){
 	return function(dispatch){
-		courses.getCourseContentsDirectroy(hash).then(function(contents){
-			contents.Links.forEach(function(link){
+		courses.getCourseDirectory(hash).then(function({data}){
+			data.Links.forEach(function(link){
             	if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){    
                    	dispatch({
 						"type": "setUrl",
-						"id": hash, 
-						"key": "image",
-						"value": courses.buildImageUrl(link.Hash)
+						"payload": {
+							"id": id, 
+							"key": "image",
+							"value": courses.buildImageUrl(link.Hash)
+						}
 					});
                 } else if (link.Name.endsWith('index.htm')){
                     dispatch({
 						"type": "setUrl",
-						"id": hash, 
-						"key": "index",
-						"value": courses.buildIndexUrl(courseDirectoryHash)
+						"payload" : {
+							"id": id, 
+							"key": "index",
+							"value": courses.buildIndexUrl(courseDirectoryHash)
+						}
 					});
                 }
             });
 		});
 	};
 } );
+
+
+
+module.exports = {
+	getFeatured,
+	getCourseRoot,
+	getCourseDirectory,
+	getCourseContentsDirectroy
+};

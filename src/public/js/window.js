@@ -1,15 +1,11 @@
-// TODO: MOVE
-const httpURL="http://localhost:8080/ipfs/";
-const edchainNodeURL="http://45.55.235.198:5000/content/addresses/featured";
-const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
-
 
 const { ipcRenderer, remote } = require('electron');
-var log = remote.require('electron-log');
 
 const coursesActions = require("../../shared/actions/courses");
 const ipfsActions = require("../../shared/actions/ipfs");
 const configureStore = require('../../shared/store/configureStore');
+
+const { registry } = require("electron-redux");
 
 // get the global.state from the main process
 const initialState = remote.getGlobal('state');
@@ -19,6 +15,7 @@ const store = configureStore(initialState, 'renderer');
 
 ipcRenderer.on('redux-action', (event, payload) => {
     store.dispatch(payload);
+    console.log("STATE", payload);
 });
 
 // these ping main process
@@ -78,13 +75,10 @@ var applyState = function applyState(state){
     __ui.setIPFSStatusButton(state.ipfs.isOnline);
     __ui.showPeerCount(state.ipfs.peers);
     if (state.ipfs.isOnline){
-        if (!state.courses.items){
-        
-            store.dispatch(coursesActions.getFeaturedData());
-        
-        } else {
-            Object.keys(state.courses.items).forEach(function(id){
-                let course = state.courses.items[id];
+        courseKeys = Object.keys(state.courses.items);
+        if (courseKeys.length){
+            courseKeys.forEach(function(key){
+                let course = state.courses.items[key];
                 let meta = course.META;
                 let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
                 if(!$(`#${course.hash}`).length && isReady){
@@ -98,7 +92,6 @@ var applyState = function applyState(state){
     }
     // __actions.isPinned(course.META.hashes.courseDirectoryHash);
 };
-
 
 $(document).ready(function() {
 
@@ -162,6 +155,6 @@ $(document).ready(function() {
         // executed when something could have changed the state
         applyState(store.getState());
     });
-
+    // maybe setTimeout?
     applyState(store.getState());
 });

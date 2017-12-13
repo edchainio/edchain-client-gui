@@ -45,15 +45,10 @@ var getCourseDirectory = function(directoryHash){
     return getIpfsData(directoryHash);
 };
 
-var getCourseContentsDirectory = function(contentsDirectoryHash){
-	return getIpfsData(contentsDirectoryHash);
-};
-
 module.exports = {
 	getFeatured,
 	getCourseRoot,
 	getCourseDirectory,
-	getCourseContentsDirectory,
 	buildIndexUrl,
 	buildImageUrl
 };
