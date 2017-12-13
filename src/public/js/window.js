@@ -120,17 +120,8 @@ $(document).ready(function() {
 
     $('#course-cards').on("click", '.pin-course-link', function(event){
         event.preventDefault();
-        var 
-            hash = $(this).data("hash"),
-            id = $(this).data("id"),
-            action =  $(this).data("action");
-
-        if(action === "unpin"){
-            __actions.removePin(id, hash);
-        }
-        else {
-            __actions.addPin(id, hash);
-        }
+        var { action, id, hash } = $(this).data();
+        __actions[(action === "unpin" ? "removePin" : "addPin")](id, hash);
     });
 
     $("#ipfs-icon-ref").on("click", function(event){
@@ -146,7 +137,7 @@ $(document).ready(function() {
 
 
     applyState(store.getState());
-    
+
     store.subscribe(function(){
         // executed when something could have changed the state
         applyState(store.getState());
