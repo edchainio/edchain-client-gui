@@ -54,5 +54,6 @@ module.exports = {
 	getCourseRoot,
 	getCourseDirectory,
 	getCourseContentsDirectory,
-	buildIndexUrl
+	buildIndexUrl,
+	buildImageUrl
 };

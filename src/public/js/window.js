@@ -7,6 +7,7 @@ const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
 const { ipcRenderer, remote } = require('electron');
 var log = remote.require('electron-log');
 
+const coursesActions = require("../../shared/actions/courses");
 const ipfsActions = require("../../shared/actions/ipfs");
 const configureStore = require('../../shared/store/configureStore');
 
@@ -55,7 +56,6 @@ var __ui = {
             $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
             // $('#ipfsStatus').text('IPFS Offline');
         }
-
     }, 
     createHomePageCard: function(image, title, indexURL, courseHash, action){
         $(".loader").hide();
@@ -77,16 +77,26 @@ var __ui = {
 var applyState = function applyState(state){
     __ui.setIPFSStatusButton(state.ipfs.isOnline);
     __ui.showPeerCount(state.ipfs.peers);
-    if (state.ipfs.isOnline && !__state.courses){
-        // Waiting for ipfs to fire up
-        __state.getFeaturedData(function(course){
-            __ui.createHomePageCard(
-                course.META.imageUrl, course.title, 
-                course.META.indexUrl, course.META.hashes.courseDirectoryHash
-            );
-            __actions.isPinned(course.META.hashes.courseDirectoryHash);
-        });
+    if (state.ipfs.isOnline){
+        if (!state.courses.items){
+        
+            store.dispatch(coursesActions.getFeaturedData());
+        
+        } else {
+            Object.keys(state.courses.items).forEach(function(id){
+                let course = state.courses.items[id];
+                let meta = course.META;
+                let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
+                if(!$(`#${course.hash}`).length && isReady){
+                    __ui.createHomePageCard(
+                        course.hash, meta.urls.image, course.title, 
+                        meta.urls.index, meta.hashes.courseDirectoryHash
+                    );
+                }
+            });
+        } 
     }
+    // __actions.isPinned(course.META.hashes.courseDirectoryHash);
 };
 
 
