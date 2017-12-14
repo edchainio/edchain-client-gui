@@ -16,10 +16,8 @@ const { registry } = require('electron-redux');
 const pages = require('./pages.js');
 
 const { ipfsStop, isOnline } = require("./api/process_ipfs");
-// all actions that are aliased actions must be imported into the main process
-// probably because of differenses between the alias registry in the renderer vs main process
-const ipfsActions = require("./shared/actions/ipfs");
-const coursesActions = require("./shared/actions/courses");
+
+const actions = require("./shared/actions");
 
 // we have to do this to ease remote-loading of the initial state :(
 global.state = {};
@@ -32,7 +30,7 @@ var start = function start(){
         global.state = store.getState();
     });
 
-    store.dispatch(ipfsActions.start());
+    store.dispatch(actions.ipfs.start());
 
     var throttle = function(callback, wait){
         callback();
@@ -41,22 +39,21 @@ var start = function start(){
 
     // this should probably be an action itself 
     var syncIpfs = function(){
-        store.dispatch(ipfsActions.isOnline());
-        store.dispatch(ipfsActions.getPeerId());
-        store.dispatch(ipfsActions.getIPFSGWAddr());
-        store.dispatch(ipfsActions.getIPFSAPIAddress());
-        store.dispatch(ipfsActions.getIPFSDatastorePath());
-        store.dispatch(ipfsActions.getIPFSDatastorePath());
-        store.dispatch(ipfsActions.ipfsSwarmPeers());
-        // log.info(store.getState());
+        store.dispatch(actions.ipfs.isOnline());
+        store.dispatch(actions.ipfs.getPeerId());
+        store.dispatch(actions.ipfs.getIPFSGWAddr());
+        store.dispatch(actions.ipfs.getIPFSAPIAddress());
+        store.dispatch(actions.ipfs.getIPFSDatastorePath());
+        store.dispatch(actions.ipfs.getIPFSDatastorePath());
+        store.dispatch(actions.ipfs.ipfsSwarmPeers());
     };
 
     throttle(function(){
         if (!store.getState().ipfs.isOnline){
-            store.dispatch(ipfsActions.isOnline());
+            store.dispatch(actions.ipfs.isOnline());
         } else {
             if (!Object.keys(store.getState().courses.items).length){
-                store.dispatch(coursesActions.getFeatured())
+                store.dispatch(actions.courses.getFeatured())
             }
             syncIpfs();
         }
