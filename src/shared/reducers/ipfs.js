@@ -57,35 +57,3 @@ module.exports = createReducer(initialState, {
 		// return Object.assign({}, state, { "id": action.payload });
 	}
 });
-
-// var peerId = function(state, action){
-
-// };
-
-// var dataStorePath = function(state, action){
-
-// };
-
-// var gatewayAddress = function(state, action){
-
-// };
-
-// var apiAddress = function(state, action){
-
-// };
-
-// var logs = function(state, action){
-// 	return [ ...state, action.payload ];
-// };
-
-// var id = function(state, action){
-
-// };
-
-// var peers = function(state, action){
-
-// };
-
-// var isOnline = function(state, action){
-
-// };
