@@ -8,7 +8,7 @@ const courses = require("../../api/courses");
 // for more details on actions refer to: 
 // https://github.com/acdlite/flux-standard-action
 
-var getFeatured = createAliasedAction( "getFeatured", function (){
+var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", function (){
 	return function(dispatch){
 		courses.getFeatured().then(function({data}){
 			data.courses.forEach(function(course){
@@ -23,7 +23,7 @@ var getFeatured = createAliasedAction( "getFeatured", function (){
 });
 
 
-var getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
+var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	return function(dispatch){
 		courses.getCourseRoot(hash).then(function({data}){
 			dispatch({
@@ -40,7 +40,7 @@ var getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	};
 });
 
-var getCourseDirectory = createAliasedAction( "getCourseDirectory", function(id, hash){
+var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getCourseDirectory", function(id, hash){
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
 			data.Links.forEach(function(link){
@@ -60,7 +60,7 @@ var getCourseDirectory = createAliasedAction( "getCourseDirectory", function(id,
 } );
 
 
-var getCourseContentsDirectroy = createAliasedAction( "getCourseContentsDirectroy", function(id, hash, courseDirectoryHash){
+var getCourseContentsDirectroy = exports.getCourseContentsDirectroy = createAliasedAction( "getCourseContentsDirectroy", function(id, hash, courseDirectoryHash){
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
 			data.Links.forEach(function(link){
@@ -87,12 +87,3 @@ var getCourseContentsDirectroy = createAliasedAction( "getCourseContentsDirectro
 		});
 	};
 } );
-
-
-
-module.exports = {
-	getFeatured,
-	getCourseRoot,
-	getCourseDirectory,
-	getCourseContentsDirectroy
-};

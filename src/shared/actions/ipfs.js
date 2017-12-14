@@ -7,7 +7,7 @@ const ipfs = require("../../api/process_ipfs");
 const log = require('electron-log');
 // action creators
 
-var logOutput = createAliasedAction( "logOutput", function (value){
+var logOutput = exports.logOutput = createAliasedAction( "logOutput", function (value){
 	return function(dispatch){
 	    if(value){
 	        dispatch({ "type" : "logOutput", "payload" : value.toString() });
@@ -15,7 +15,7 @@ var logOutput = createAliasedAction( "logOutput", function (value){
 	};
 });
 
-var getId = createAliasedAction( "getId", function(){
+var getId = exports.getId = createAliasedAction( "getId", function(){
 	return function(dispatch){
 		ipfs.ipfsId(function(payload){
 			dispatch({ "type" : "getId", "payload" : payload });
@@ -23,7 +23,7 @@ var getId = createAliasedAction( "getId", function(){
 	};
 });
 
-var isOnline = createAliasedAction( "isOnline", function(){
+var isOnline = exports.isOnline = createAliasedAction( "isOnline", function(){
 	return function(dispatch){
 		ipfs.isOnline(function(payload){
 			dispatch({ "type" : "isOnline", "payload" : payload });
@@ -31,7 +31,7 @@ var isOnline = createAliasedAction( "isOnline", function(){
 	};
 });
 
-var getPeerId = createAliasedAction( "getPeerId", function(){
+var getPeerId = exports.getPeerId = createAliasedAction( "getPeerId", function(){
 	return function(dispatch){
 		ipfs.ipfsPeerId(function(payload){
 			dispatch({ "type" : "getPeerId", "payload" : payload });
@@ -39,7 +39,7 @@ var getPeerId = createAliasedAction( "getPeerId", function(){
 	};
 });
 
-var getIPFSDatastorePath = createAliasedAction( "getIPFSDatastorePath", function(){
+var getIPFSDatastorePath = exports.getIPFSDatastorePath = createAliasedAction( "getIPFSDatastorePath", function(){
 	return function(dispatch){
 		ipfs.ipfsDatastorePath(function(payload){
 			dispatch({ "type" : "getIPFSDatastorePath", "payload" : payload });
@@ -47,7 +47,7 @@ var getIPFSDatastorePath = createAliasedAction( "getIPFSDatastorePath", function
 	};
 });
 
-var getIPFSAPIAddress = createAliasedAction( "getIPFSAPIAddress", function(){
+var getIPFSAPIAddress = exports.getIPFSAPIAddress = createAliasedAction( "getIPFSAPIAddress", function(){
 	return function(dispatch){
 		ipfs.ipfsAPIAddress(function(payload){
 			dispatch({ "type" : "getIPFSAPIAddress", "payload" : payload });
@@ -55,7 +55,7 @@ var getIPFSAPIAddress = createAliasedAction( "getIPFSAPIAddress", function(){
 	};
 });
 
-var getIPFSGWAddr = createAliasedAction( "getIPFSGWAddr", function(){
+var getIPFSGWAddr = exports.getIPFSGWAddr = createAliasedAction( "getIPFSGWAddr", function(){
 	return function(dispatch){
 		ipfs.ipfsGatewayAddress(function(payload){
 			dispatch({ "type" : "getIPFSGWAddr", "payload" : payload });
@@ -63,7 +63,7 @@ var getIPFSGWAddr = createAliasedAction( "getIPFSGWAddr", function(){
 	};
 });
 
-var checkStatus = createAliasedAction( "checkStatus", function(){
+var checkStatus = exports.checkStatus = createAliasedAction( "checkStatus", function(){
 	return function(dispatch){
 		ipfs.ipfsStatus(function(payload){
 			dispatch({ "type" : "checkStatus", "payload" : payload });
@@ -71,7 +71,7 @@ var checkStatus = createAliasedAction( "checkStatus", function(){
 	};
 });
 
-var start = createAliasedAction( "start", function(){
+var start = exports.start = createAliasedAction( "start", function(){
 	return function(dispatch){
 		dispatch(logOutput('starting..'));
 		dispatch(logOutput('Starting IPFS...'));
@@ -79,14 +79,14 @@ var start = createAliasedAction( "start", function(){
 	};
 });
 
-var stop = createAliasedAction( "stop", function(){
+var stop = exports.stop = createAliasedAction( "stop", function(){
 	return function(dispatch){
 		dispatch(logOutput('stopping..'));
 	    ipfs.ipfsStop((message)=> dispatch(logOutput(message)));
 	};
 });
 
-var addPin = createAliasedAction( "addPin", function(id, hash){
+var addPin = exports.addPin = createAliasedAction( "addPin", function(id, hash){
 	return function(dispatch){
 		ipfs.addPins(function(payload){
 			dispatch(checkPin(id, hash));
@@ -95,7 +95,7 @@ var addPin = createAliasedAction( "addPin", function(id, hash){
 	};
 });
 
-var removePin = createAliasedAction( "removePin", function(id, hash){
+var removePin = exports.removePin = createAliasedAction( "removePin", function(id, hash){
 	return function(dispatch){
 		ipfs.removePins(function(payload){
 			dispatch(checkPin(id, hash));
@@ -103,7 +103,7 @@ var removePin = createAliasedAction( "removePin", function(id, hash){
 	};
 });
 
-var checkPin = createAliasedAction( "checkPin", function(id, hash){
+var checkPin = exports.checkPin = createAliasedAction( "checkPin", function(id, hash){
 	return function(dispatch){
 		ipfs.checkPin(function(payload){
 			dispatch({ 
@@ -118,7 +118,7 @@ var checkPin = createAliasedAction( "checkPin", function(id, hash){
 });
 
 
-var ipfsSwarmPeers = createAliasedAction( "ipfsSwarmPeers", function(){
+var ipfsSwarmPeers = exports.ipfsSwarmPeers = createAliasedAction( "ipfsSwarmPeers", function(){
 	return function(dispatch){
 		ipfs.ipfsSwarmPeers(function(payload){
 			dispatch({ "type" : "peerInfos", "payload" : payload });
@@ -126,7 +126,7 @@ var ipfsSwarmPeers = createAliasedAction( "ipfsSwarmPeers", function(){
 	};
 });
 
-var syncIpfs = createAliasedAction( "syncIpfs", function(){
+var syncIpfs = exports.syncIpfs = createAliasedAction( "syncIpfs", function(){
 	return function(dispatch){
 		dispatch(isOnline());
         dispatch(getPeerId());
@@ -137,22 +137,3 @@ var syncIpfs = createAliasedAction( "syncIpfs", function(){
         dispatch(ipfsSwarmPeers());
 	};
 });
-
-module.exports = {
-	logOutput,
-	getId,
-	isOnline,
-	getPeerId,
-	getIPFSDatastorePath,
-	getIPFSAPIAddress,
-	getIPFSGWAddr,
-	checkStatus,
-	start,
-	stop,
-	addPin,
-	removePin,
-	checkPin,
-	ipfsSwarmPeers,
-	syncIpfs
-};
-
