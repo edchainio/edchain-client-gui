@@ -22,6 +22,7 @@ var setIsPinned = function(state, action){
 
 var courseItem = function(course){
 	return Object.assign({}, course, {
+		"id": course.hash,
 	    "META": {
 	        "hashes": {
 	        	"courseRootHash": course.hash

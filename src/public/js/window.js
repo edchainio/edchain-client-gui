@@ -46,28 +46,28 @@ var __ui = {
             $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
         }
     }, 
-    createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseHash, action){
+    createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseId, action){
         $(".loader").hide();
         action = action || "...";
         var rendered = Mustache.render(
-            $("#course-card-template").html(), 
-            {image, title, indexURL, courseDirectoryHash, courseHash, action}
+            $("#course-card-template").html(),
+            { image, title, indexURL, courseDirectoryHash, courseId, action }
         );
         $('#course-cards').append(rendered);
     },
     showPeerCount: function(peerCount){
          $('#swarm-count').html(peerCount);
     },
-    setPinStatus: function(hash, isPinned){
+    setPinStatus: function(id, isPinned){
         var 
             action = (isPinned ? "unpin" : "pin"),
-            $courseCard = $(`#${hash}`),
+            $courseCard = $(`#${id}`),
             $actionLink = $courseCard.find("a.pin-course-link");
         
         $actionLink.data("action", action);
         $actionLink.text(action);
         
-        $courseCard.find(".pin-status").text((isPinned ? "Pinned" : "Un-Pinned"));
+        $courseCard.find(".pin-status").text( ( isPinned ? "Pinned" : "Un-Pinned" ) );
         $actionLink.removeClass( ( isPinned ? "unpinImage" : "pinImage") );
         $actionLink.addClass( ( isPinned ? "pinImage" : "unpinImage") );
     }
@@ -88,17 +88,17 @@ var applyCourses = function(items){
     courseKeys = Object.keys(items);
     courseKeys.forEach(function(key){
         let course = items[key];
-        let $courseCard = $(`#${course.hash}`);
+        let $courseCard = $(`#${course.id}`);
         let meta = course.META;
         let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
 
         if(!$courseCard.length && isReady){
             __ui.createHomePageCard(
                 meta.urls.image, course.title, meta.urls.index, 
-                meta.hashes.courseDirectoryHash, course.hash
+                meta.hashes.courseDirectoryHash, course.id
             );
         } else if($courseCard.length) {
-            __ui.setPinStatus(course.hash, course.META.isPinned);
+            __ui.setPinStatus(course.id, course.META.isPinned);
         }
     });
 };
