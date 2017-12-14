@@ -20,7 +20,7 @@ function asyncProgressMiddleware({ dispatch, getState }) {
 			payload
 		} = action;
 
-		shouldCallAPI = shouldCallAPI || () => true;
+		shouldCallAPI = shouldCallAPI || function(){ return true };
 		payload = payload || {};
 		
 		if (!types) {
@@ -91,7 +91,6 @@ function createReducer(initialState, handlers) {
 		}
 	};
 };
-
 
 module.exports = {
 	asyncProgressMiddleware,

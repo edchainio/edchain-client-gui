@@ -167,7 +167,7 @@ var removePins = function(fn, hash){
 		// log.info("removePins", pinset);
 		if(err){
 			
-			// log.info(err);
+			log.info(err);
 			fn(false);
 		
 		}else{
@@ -205,10 +205,10 @@ var checkPin = function(fn, hash){
 		// log.info("checkPin", pinset);
 		if(err){
 			pinset="error"
-			isPinned=false;
+			isPinned = false;
 		}
 		else{
-			isPinned=true
+			isPinned = true;
 		}
 		fn(isPinned);
 
@@ -219,7 +219,7 @@ var checkPin = function(fn, hash){
 var ipfsSwarmPeers = function (fn){
 	getIPFS().swarm.peers(function(err,peerInfos){
 		if(err){
-			// log.info(err);
+			log.info("ipfsSwarmPeers", err);
 		}
 		fn(peerInfos);
 	});

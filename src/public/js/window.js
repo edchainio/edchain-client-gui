@@ -12,11 +12,6 @@ const initialState = remote.getGlobal('state');
 // create store
 const store = configureStore(initialState, 'renderer');
 
-// sign up for store updates
-ipcRenderer.on('redux-action', (event, payload) => {
-    store.dispatch(payload);
-});
-
 // these ping main process
 var __actions = {
     // should the main.store track the windows aswell?

@@ -32,10 +32,6 @@ var start = function start(){
         global.state = store.getState();
     });
 
-    ipcMain.on('redux-action', (event, payload) => {
-        store.dispatch(payload);
-    });
-
     store.dispatch(ipfsActions.start());
 
     var throttle = function(callback, wait){

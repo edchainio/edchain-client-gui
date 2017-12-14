@@ -89,13 +89,7 @@ var stop = createAliasedAction( "stop", function(){
 var addPin = createAliasedAction( "addPin", function(id, hash){
 	return function(dispatch){
 		ipfs.addPins(function(payload){
-			dispatch({ 
-				"type" : "addPin", 
-				"payload" : {
-					"id": id, 
-					"value": payload
-				}
-			});
+			dispatch(checkPin(id, hash));
 			// why just for this one
 		}, `/ipfs/${hash}`);
 	};
@@ -104,13 +98,7 @@ var addPin = createAliasedAction( "addPin", function(id, hash){
 var removePin = createAliasedAction( "removePin", function(id, hash){
 	return function(dispatch){
 		ipfs.removePins(function(payload){
-			dispatch({ 
-				"type" : "removePin", 
-				"payload" : {
-					"id": id, 
-					"value": payload
-				}
-			});
+			dispatch(checkPin(id, hash));
 		}, hash);
 	};
 });
@@ -119,7 +107,7 @@ var checkPin = createAliasedAction( "checkPin", function(id, hash){
 	return function(dispatch){
 		ipfs.checkPin(function(payload){
 			dispatch({ 
-				"type" : "checkPin", 
+				"type" : "setIsPinned", 
 				"payload" : {
 					"id": id, 
 					"value": payload
