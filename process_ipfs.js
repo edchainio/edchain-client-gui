@@ -9,8 +9,22 @@ var startIpfs = function(){
 	
 	// const ipfsPath = path.resolve(__dirname,'./','bin','linux','ipfs daemon');
 	// ipfs daemon = ./
+	console.log(path.resolve())
+	
 	const ipfsPath = path.resolve(__dirname,'./','bin','darwin','ipfs daemon');
-	process.stdout.write("terminal");
+
+	if (platform == 'darwin'){
+		console.log('running macOS')
+	
+
+	// console.log(platform)
+	// var op_sys = platform.platform();
+	// console.log(op_sys)
+	// process.stdout.write(op_sys);
+	// process.stdout.write(platform);
+
+		const ipfsPath = path.resolve(__dirname,'./','bin','darwin','ipfs daemon');
+	}	
 
 	return exec(ipfsPath, function (err,stdout,stderr){
 	
