@@ -126,7 +126,17 @@ var ipfsSwarmPeers = createAliasedAction( "ipfsSwarmPeers", function(){
 	};
 });
 
-
+var syncIpfs = createAliasedAction( "syncIpfs", function(){
+	return function(dispatch){
+		dispatch(isOnline());
+        dispatch(getPeerId());
+        dispatch(getIPFSGWAddr());
+        dispatch(getIPFSAPIAddress());
+        dispatch(getIPFSDatastorePath());
+        dispatch(getIPFSDatastorePath());
+        dispatch(ipfsSwarmPeers());
+	};
+});
 
 module.exports = {
 	logOutput,
@@ -142,6 +152,7 @@ module.exports = {
 	addPin,
 	removePin,
 	checkPin,
-	ipfsSwarmPeers
+	ipfsSwarmPeers,
+	syncIpfs
 };
 

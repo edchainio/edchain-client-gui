@@ -39,13 +39,7 @@ var start = function start(){
 
     // this should probably be an action itself 
     var syncIpfs = function(){
-        store.dispatch(actions.ipfs.isOnline());
-        store.dispatch(actions.ipfs.getPeerId());
-        store.dispatch(actions.ipfs.getIPFSGWAddr());
-        store.dispatch(actions.ipfs.getIPFSAPIAddress());
-        store.dispatch(actions.ipfs.getIPFSDatastorePath());
-        store.dispatch(actions.ipfs.getIPFSDatastorePath());
-        store.dispatch(actions.ipfs.ipfsSwarmPeers());
+        store.dispatch(actions.ipfs.syncIpfs());
     };
 
     throttle(function(){
