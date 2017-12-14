@@ -4,11 +4,9 @@ const log = require('electron-log');
 const { createReducer } = require('../helpers/index.js');
 
 const initialState = {
-	// what is the initail state here?
-	// what do i want to share?
-	peerId: "",//config
-	dataStorePath: "",//config
-	gatewayAddress: "",//config
+	peerId: "",
+	dataStorePath: "",
+	gatewayAddress: "",
 	apiAddress: "",
 	logs: [],
 	id: "",
@@ -45,15 +43,12 @@ module.exports = createReducer(initialState, {
 	"ipfsSwarmPeers": function(state, action){
 		return Object.assign({}, state, { "peers": action.payload });
 	},
-	"getLog": function(state, action){
-		// fall through?
-	},
 	"start": function(state, action){
 		// status
-		// return Object.assign({}, state, { "id": action.payload });
+		// return Object.assign({}, state, { "status": action.payload });
 	},
 	"stop": function(state, action){
 		// status
-		// return Object.assign({}, state, { "id": action.payload });
+		// return Object.assign({}, state, { "status": action.payload });
 	}
 });
