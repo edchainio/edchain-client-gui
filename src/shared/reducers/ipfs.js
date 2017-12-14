@@ -17,7 +17,7 @@ const initialState = {
 
 module.exports = createReducer(initialState, {
 	"logOutput": function(state, action){
-		return Object.assign({}, state, { "logs": [ ...state.logs, action.payload ] });
+		return Object.assign({}, state, { "logs": [ action.payload, ...state.logs ] });
 	},
 	"getId": function(state, action){
 		return Object.assign({}, state, { "id": action.payload });
