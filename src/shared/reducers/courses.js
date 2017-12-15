@@ -9,17 +9,6 @@ const initialState = {
 	items: {}
 };
 
-
-var setIsPinned = function(state, action){
-	var copy = clone(state.items[action.payload.id]);
-	copy.META.isPinned = !!action.payload.value;
-	var item = {};
-	item[action.payload.id] = copy;
-	return Object.assign({}, state, {
-		"items": Object.assign({}, clone(state.items), item)
-	});
-};
-
 var courseItem = function(course){
 	return Object.assign({}, course, {
 		"id": course.hash,
@@ -32,8 +21,27 @@ var courseItem = function(course){
     });
 };
 
+var updateCourseItem = function(state, action, update){
+	var item = {};
+	item[action.payload.id] = clone(state.items[action.payload.id]);
+	
+	update(item[action.payload.id], action);
+	
+	return Object.assign({}, state, {
+		"items": Object.assign({}, state.items, item)
+	});
+};
+
+var setCoursesIsFetching = function(state, value){
+	return Object.assign({}, state, {
+		courses : Object.assign({}, state, {
+			isFetching: value
+		})
+	});
+};
+
 var clone = function(obj){
-	// issue with this
+	// use this sparingly
 	return JSON.parse(JSON.stringify(obj));
 };
 
@@ -46,22 +54,18 @@ module.exports = createReducer(initialState, {
 		});
 	},
 	"setHash": function(state, action){
-		var copy = clone(state.items[action.payload.id]);
-		copy.META.hashes[action.payload.key] = action.payload.value;
-		var item = {};
-		item[action.payload.id] = copy;
-		return Object.assign({}, state, {
-			"items": Object.assign({}, clone(state.items), item)
+		return updateCourseItem(state, action, function(copy, action){
+			copy.META.hashes[action.payload.key] = action.payload.value;
 		});
 	},
 	"setUrl": function(state, action){
-		var copy = clone(state.items[action.payload.id]);
-		copy.META.urls[action.payload.key] = action.payload.value;
-		var item = {};
-		item[action.payload.id] = copy;
-		return Object.assign({}, state, {
-			"items": Object.assign({}, clone(state.items), item)
+		return updateCourseItem(state, action, function(copy, action){
+			copy.META.urls[action.payload.key] = action.payload.value;
 		});
 	},
-	"setIsPinned": setIsPinned
+	"setIsPinned": function(state, action){
+		return updateCourseItem(state, action, function(copy, action){
+			copy.META.isPinned = !!action.payload.value;
+		});
+	}
 });
