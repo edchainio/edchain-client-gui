@@ -1,14 +1,12 @@
 var fs = require('fs');
 var path = require('path'); 
 
+// importing all files in this directory
 
-var _exports = {};
+var currentFile = path.basename(__filename);
 
 fs.readdirSync(__dirname).forEach(file => {
-	if(file.endsWith("js")){
-		_exports[file.slice(0, -3)] = require(path.resolve(__dirname, file));
+	if(currentFile !== file && file.endsWith("js")){
+		exports[path.basename(file, '.js')] = require(path.resolve(__dirname, file));
 	}
 });
-
-
-module.exports = _exports;
