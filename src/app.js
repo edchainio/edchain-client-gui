@@ -1,88 +1,97 @@
+"use strict";
+
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
 
+const configureStore = require('./shared/store/configureStore');
+const log = require('electron-log');
 const platform = require('os').platform();
 
 const { 
     ipcMain, app, protocol 
 } = require('electron');
 
+const { registry } = require('electron-redux');
 
 const pages = require('./pages.js');
 
-// this is actually to ping the different windows
-// sucks but thats how you do it.
-// this is probably how all windows should be connected to 
-// the main process.
-var ipfs = require('./process_ipfs')({
-    "afterLogUpdateHook": function(ipfsLog){
-        for(let subscriber in pages.getLogSubscribers()){
-            if(typeof subscriber.send === 'function'){
-                subscriber.send('ipfs:logging', ipfsLog);
+const { ipfsStop, isOnline } = require("./api/process_ipfs");
+
+const actions = require("./shared/actions");
+
+// we have to do this to ease remote-loading of the initial state :(
+global.state = {};
+
+var start = function start(){
+    const store = configureStore(global.state, 'main');
+
+    store.subscribe(() => {
+        // updates global state to current state
+        global.state = store.getState();
+    });
+
+    store.dispatch(actions.ipfs.start());
+
+    var throttle = function(callback, wait){
+        callback();
+        setTimeout(throttle, wait, callback, wait);
+    };
+
+    // this should probably be an action itself 
+    var syncIpfs = function(){
+        store.dispatch(actions.ipfs.syncIpfs());
+    };
+
+    throttle(function(){
+        if (!store.getState().ipfs.isOnline){
+            store.dispatch(actions.ipfs.isOnline());
+        } else {
+            if (!Object.keys(store.getState().courses.items).length){
+                store.dispatch(actions.courses.getFeatured())
             }
+            syncIpfs();
         }
+    }, 2000);
+
+
+    // macOS
+    // https://electronjs.org/docs/api/app#appdockseticonimage-macos
+    if (platform === "darwin"){
+        // Seems to hate my .icns
+        app.dock.setIcon(path.resolve(__dirname, "public/img/icon.png"));
     }
-});
 
-// TODO: MOVE
-// mounting process
-var registerListeners = function(listeners){
-    for (let prefix in listeners){
-        for(let prop in listeners[prefix]){
-            if(typeof listeners[prefix][prop] === 'function'){
-                ipcMain.on(prefix + ':' + prop, listeners[prefix][prop]);
-            }
+    // Quit when all windows are closed.
+    app.on('window-all-closed', () => {
+        // On macOS it is common for applications and their menu bar
+        // to stay active until the user quits explicitly with Cmd + Q
+        if (process.platform !== 'darwin') {
+            app.quit();
         }
-    }   
-};
+    });
 
-registerListeners({ipfs});
+    app.on('quit', () => {
+        // make this a dispatch?
+        ipfsStop();
+    });
 
-// macOS
-// https://electronjs.org/docs/api/app#appdockseticonimage-macos
-if (platform === "darwin"){
-    // Seems to hate my .icns
-    app.dock.setIcon(path.resolve(__dirname, "public/img/icon.png"));
-}
 
-app.on('ready', function(){
-    // Custom File Protocol
-    // Confirm if this works on windows
-    // protocol.interceptFileProtocol(
-    //     'file', 
-    //     (request, callback) => {
-    //         const url = request.url.substr(7);    /* all urls start with 'file://' */
-    //         const assetPath = path.normalize(`${__dirname}/${url}`);
-    //         callback({ "path": assetPath });
-    //     }, (err) => {
-    //     if (err) console.error('Failed to register protocol')
-    // });
+    app.on('activate', (event, hasVisibleWindows) => {
+        // On macOS it's common to re-create a window in the app when the
+        // dock icon is clicked and there are no other windows open.
+        // move
+        if (!pages.hasWindows()) {
+            pages.createMainWindow();
+        } else if (hasVisibleWindows) {
+            event.preventDefault();
+        }
+    });
 
     pages.createMainWindow();
+};
 
-});
+app.on('ready', function(){
+    
+    start();
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-    // On macOS it is common for applications and their menu bar
-    // to stay active until the user quits explicitly with Cmd + Q
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
-
-app.on('quit', () => {
-    ipfs.stop();
-});
-
-
-app.on('activate', (event, hasVisibleWindows) => {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    // move
-    if (!pages.hasWindows()) {
-        pages.createMainWindow();
-    } else if (hasVisibleWindows) {
-        event.preventDefault();
-    }
 });

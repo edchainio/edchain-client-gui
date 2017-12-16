@@ -92,7 +92,7 @@
         </footer>
 
         <script type="text/template" id="course-card-template">
-            <div class="card" id="{{courseHash}}">
+            <div class="card" id="{{courseId}}">
                 <img class="card-img-top" src="{{image}}">
                 <div class="card-body">
                     <a class="card-link course-link" data-url="{{indexURL}}" href="#">
@@ -110,7 +110,7 @@
                             {{/status}}
                         </span>
 
-                        <a class="pin-course-link" data-hash="{{courseHash}}" data-action="{{action}}" href="#"></a>
+                        <a class="pin-course-link" data-id="{{courseId}}" data-hash="{{courseDirectoryHash}}" data-action="{{action}}" href="#"></a>
                     </p>
                 </div>
             </div>
