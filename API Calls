@@ -1,1 +1,9 @@
+Request to Attribution Engine
+POST - /courses/{count}
 
+Response from Attribution Engine:
+
+JSON { 
+IPFSHash: {hash}, 
+title: {title} 
+}
