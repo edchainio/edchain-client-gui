@@ -6,7 +6,5 @@ Response from Attribution Engine:
 JSON { 
 "IPFSHash": {hash}, 
 "title": {title},
-"author":{author},
-"date":{date},
 
 }
