@@ -4,6 +4,9 @@ POST - /courses/{count}
 Response from Attribution Engine:
 
 JSON { 
-IPFSHash: {hash}, 
-title: {title} 
+"IPFSHash": {hash}, 
+"title": {title},
+"author":{author},
+"date":{date},
+
 }
