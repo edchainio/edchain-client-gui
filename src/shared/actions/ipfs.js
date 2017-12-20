@@ -81,7 +81,7 @@ var start = exports.start = createAliasedAction( "start", function(){
 
 var stop = exports.stop = createAliasedAction( "stop", function(){
 	return function(dispatch){
-		dispatch(logOutput('stopping..'));
+		dispatch(logOutput('stopping...'));
 	    ipfs.ipfsStop((message)=> dispatch(logOutput(message)));
 	};
 });
