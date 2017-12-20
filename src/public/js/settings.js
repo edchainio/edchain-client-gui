@@ -11,10 +11,6 @@ const initialState = remote.getGlobal('state');
 // create store
 const store = configureStore(initialState, 'renderer');
 
-ipcRenderer.on('redux-action', (event, payload) => {
-	store.dispatch(payload);
-});
-
 // TODO: This is roughly how all windows should act
 // manage the ui and send everything else to the main process
 var checkOnline = function(){
