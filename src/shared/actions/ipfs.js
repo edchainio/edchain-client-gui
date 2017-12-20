@@ -118,10 +118,14 @@ var checkPin = exports.checkPin = createAliasedAction( "checkPin", function(id, 
 });
 
 
-var ipfsSwarmPeers = exports.ipfsSwarmPeers = createAliasedAction( "ipfsSwarmPeers", function(){
+var ipfsPeerCount = exports.ipfsPeerCount = createAliasedAction( "ipfsPeerCount", function(){
 	return function(dispatch){
 		ipfs.ipfsSwarmPeers(function(payload){
-			dispatch({ "type" : "peerInfos", "payload" : payload });
+			let peerCount=0;
+			if (payload){
+				peerCount=payload.length;
+			}
+			dispatch({ "type" : "ipfsPeerCount", "payload" : peerCount });
 		});
 	};
 });
@@ -133,7 +137,6 @@ var syncIpfs = exports.syncIpfs = createAliasedAction( "syncIpfs", function(){
         dispatch(getIPFSGWAddr());
         dispatch(getIPFSAPIAddress());
         dispatch(getIPFSDatastorePath());
-        dispatch(getIPFSDatastorePath());
-        dispatch(ipfsSwarmPeers());
+        dispatch(ipfsPeerCount());
 	};
 });
