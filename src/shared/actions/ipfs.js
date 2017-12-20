@@ -121,7 +121,11 @@ var checkPin = exports.checkPin = createAliasedAction( "checkPin", function(id, 
 var ipfsPeerCount = exports.ipfsPeerCount = createAliasedAction( "ipfsPeerCount", function(){
 	return function(dispatch){
 		ipfs.ipfsSwarmPeers(function(payload){
-			dispatch({ "type" : "ipfsPeerCount", "payload" : payload.length });
+			let peerCount=0;
+			if (payload){
+				peerCount=payload.length;
+			}
+			dispatch({ "type" : "ipfsPeerCount", "payload" : peerCount });
 		});
 	};
 });
