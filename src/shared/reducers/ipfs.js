@@ -40,7 +40,7 @@ module.exports = createReducer(initialState, {
 	"checkStatus": function(state, action){
 		return Object.assign({}, state, { "status": action.payload });
 	},
-	"ipfsSwarmPeers": function(state, action){
+	"ipfsPeerCount": function(state, action){
 		return Object.assign({}, state, { "peers": action.payload });
 	},
 	"start": function(state, action){
