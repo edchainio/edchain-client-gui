@@ -217,12 +217,13 @@ var checkPin = function(fn, hash){
 
 
 var ipfsSwarmPeers = function (fn){
-	getIPFS().swarm.peers(function(err,peerInfos){
+	getIPFS().swarm.peers(function(err,peers){
 		if(err){
 			log.info("ipfsSwarmPeers", err);
 		}
-		fn(peerInfos);
-	});
+		
+		fn(peers);
+	}); 
 };
 
 
