@@ -33,6 +33,7 @@ var __actions = {
     removePin: function(id, hash){
         store.dispatch(ipfsActions.removePin(id, hash));
     },
+
 };
 
 var __ui = {
@@ -70,6 +71,10 @@ var __ui = {
         $courseCard.find(".pin-status").text( ( isPinned ? "Pinned" : "Un-Pinned" ) );
         $actionLink.removeClass( ( isPinned ? "unpinImage" : "pinImage") );
         $actionLink.addClass( ( isPinned ? "pinImage" : "unpinImage") );
+    },
+    search: function(...terms){
+        console.log("calling search");
+        store.dispatch(coursesActions.getSearchData()); 
     }
 
 };
@@ -88,11 +93,13 @@ var applyCourses = function(items){
     courseKeys = Object.keys(items);
     courseKeys.forEach(function(key){
         let course = items[key];
+        console.log("createcard",course);
         let $courseCard = $(`#${course.id}`);
         let meta = course.META;
         let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
 
         if(!$courseCard.length && isReady){
+            console.log("createcard");
             __ui.createHomePageCard(
                 meta.urls.image, course.title, meta.urls.index, 
                 meta.hashes.courseDirectoryHash, course.id
@@ -114,6 +121,11 @@ $(document).ready(function() {
     $("#ipfs-icon-ref").on("click", function(event){
         event.preventDefault();
         __actions.showSettings();
+    });
+
+    $("#search-btn").on("click",function(event){
+        event.preventDefault();
+        __ui.search();
     });
 
     $('#course-cards').on("click", ".card a.course-link", function(event){

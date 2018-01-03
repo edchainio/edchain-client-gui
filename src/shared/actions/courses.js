@@ -8,9 +8,27 @@ const courses = require("../../api/courses");
 // for more details on actions refer to: 
 // https://github.com/acdlite/flux-standard-action
 
+
+var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (){
+	return function(dispatch){
+		courses.getSearchData().then(function({data}){
+		//	console.log("search",data);
+			data.forEach(function(course){
+				dispatch({
+					"type": "addCourse2",
+					"payload": course
+				});
+		//		console.log("beforeCR",course);
+				dispatch(getCourseRoot(course.content_address));
+			});
+		});
+	};
+});
+
 var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", function (){
 	return function(dispatch){
 		courses.getFeatured().then(function({data}){
+		//	console.log("featured",data);
 			data.courses.forEach(function(course){
 				dispatch({
 					"type": "addCourse",
@@ -25,7 +43,9 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 
 var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	return function(dispatch){
+	//	console.log("hash",hash);
 		courses.getCourseRoot(hash).then(function({data}){
+		//	console.log("data1",data);
 			dispatch({
 				"type": "setHash",
 				"payload": {

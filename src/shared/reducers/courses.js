@@ -10,11 +10,26 @@ const initialState = {
 };
 
 var courseItem = function(course){
+//	console.log(course,"course");
 	return Object.assign({}, course, {
 		"id": course.hash,
 	    "META": {
 	        "hashes": {
 	        	"courseRootHash": course.hash
+	        },
+	        "urls": {}
+	    }
+    });
+};
+
+
+var courseItem2 = function(course){
+//	console.log(course,"course");
+	return Object.assign({}, course, {
+		"id": course.content_address,
+	    "META": {
+	        "hashes": {
+	        	"courseRootHash": course.content_address
 	        },
 	        "urls": {}
 	    }
@@ -49,6 +64,15 @@ module.exports = createReducer(initialState, {
 	"addCourse": function(state, action){
 		var item = {};
 		item[action.payload.hash] = courseItem(action.payload);
+		return Object.assign({}, state, {
+			items: Object.assign({}, clone(state.items), item)
+		});
+	},
+	"addCourse2": function(state, action){
+		var item = {};
+	//	console.log("item",action);
+		item[action.payload.hash] = courseItem2(action.payload);
+		
 		return Object.assign({}, state, {
 			items: Object.assign({}, clone(state.items), item)
 		});
