@@ -55,6 +55,10 @@ var __ui = {
             { image, title, indexURL, courseDirectoryHash, courseId, action }
         );
         $('#course-cards').append(rendered);
+         initialState.isSearch=false;
+    },
+    clearCard: function(){
+          $('#course-cards').empty();
     },
     showPeerCount: function(peerCount){
          $('#swarm-count').html(peerCount);
@@ -73,8 +77,10 @@ var __ui = {
         $actionLink.addClass( ( isPinned ? "pinImage" : "unpinImage") );
     },
     search: function(...terms){
-        console.log("calling search");
+        initialState.isSearch = true;
+        __ui.clearCard();
         store.dispatch(coursesActions.getSearchData()); 
+
     }
 
 };
@@ -82,32 +88,45 @@ var __ui = {
 // this function updates page based on state
 // this can be broken into several functions triggered by applyState
 var applyState = function applyState(state){
-    __ui.setIPFSStatusButton(state.ipfs.isOnline);
-    __ui.showPeerCount(state.ipfs.peers);
-    if (state.ipfs.isOnline){
+ /*   __ui.setIPFSStatusButton(state.ipfs.isOnline);
+    __ui.showPeerCount(state.ipfs.peers);*/
+     console.log("applystate",state);
+
+     applyCourses(state.courses.items);
+
+   /* if (state.ipfs.isOnline){
+        console.log("applycourses",state.courses.items);
         applyCourses(state.courses.items);
-    }
+    }*/
 };
 
 var applyCourses = function(items){
     courseKeys = Object.keys(items);
+    console.log("coursekeys",courseKeys);
     courseKeys.forEach(function(key){
         let course = items[key];
-        console.log("createcard",course);
+        console.log("isSearch",initialState.courses.isSearch);
         let $courseCard = $(`#${course.id}`);
         let meta = course.META;
+        console.log("courseHomePage",course);
+        console.log("META",course.META);
         let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
 
-        if(!$courseCard.length && isReady){
+      //  if((!$courseCard.length && isReady)){
             console.log("createcard");
+            console.log(initialState.courses.isFetching);
+           
+            console.log("createhomepagecard",meta.urls);
+           
             __ui.createHomePageCard(
-                meta.urls.image, course.title, meta.urls.index, 
+                meta.urls.image, course.course_title, meta.urls.index, 
                 meta.hashes.courseDirectoryHash, course.id
             );
-        } else if($courseCard.length) {
-            __ui.setPinStatus(course.id, course.META.isPinned);
-        }
+      //  } else if($courseCard.length) {
+         //   __ui.setPinStatus(course.id, course.META.isPinned);
+       // }
     });
+
 };
 
 $(document).ready(function() {
@@ -134,9 +153,8 @@ $(document).ready(function() {
         __actions.openCourseLink(url);
     });
 
-
     applyState(store.getState());
-
+ 
     store.subscribe(function(){
         // executed when something could have changed the state
         applyState(store.getState());

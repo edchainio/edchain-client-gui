@@ -4,7 +4,7 @@ const axios = require("axios");
 const httpURL = "http://localhost:8080/ipfs/";
 const edchainNodeURL = "http://45.55.235.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
-const edchainNodeURL2 = "http://45.55.235.198:5001/edchain/courses/";
+const edchainNodeURL2 = "http://45.55.235.198:9000/edchain/courses/";
 
 
 
@@ -36,13 +36,11 @@ var getPostData = function(url){
         data: 
         {
             "copyright_holder":"MIT", 
-            "response_size":"100"
+            "response_size":"1"
         }
     });
 }
 
-//curl -H "Content-Type: application/json" -X POST -d '{"copyright_holder":"MIT", 
-//"response_size":"100"}' "http://45.55.235.198:5001/edchain/courses/"
 
 var getIpfsData = function(hash){
     return getData(buildIpfsUrl(hash));

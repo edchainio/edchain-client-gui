@@ -12,13 +12,14 @@ const courses = require("../../api/courses");
 var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (){
 	return function(dispatch){
 		courses.getSearchData().then(function({data}){
-		//	console.log("search",data);
+			console.log("getsearchdata",data);
 			data.forEach(function(course){
 				dispatch({
 					"type": "addCourse2",
 					"payload": course
 				});
-		//		console.log("beforeCR",course);
+				console.log("beforeCourseRoot",course);
+
 				dispatch(getCourseRoot(course.content_address));
 			});
 		});
@@ -43,9 +44,9 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 
 var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	return function(dispatch){
-	//	console.log("hash",hash);
+//		console.log("hash",hash);
 		courses.getCourseRoot(hash).then(function({data}){
-		//	console.log("data1",data);
+			console.log("getcourseroot",data);
 			dispatch({
 				"type": "setHash",
 				"payload": {
@@ -63,7 +64,9 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getCourseDirectory", function(id, hash){
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
+			console.log("getcoursedir",data);
 			data.Links.forEach(function(link){
+			console.log("loink",link);
             	if(link.Name !== "contents") return;
 	            dispatch({
 					"type": "setHash",
@@ -81,9 +84,12 @@ var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getC
 
 
 var getCourseContentsDirectroy = exports.getCourseContentsDirectroy = createAliasedAction( "getCourseContentsDirectroy", function(id, hash, courseDirectoryHash){
+	console.log("_____________________",id,hash,courseDirectoryHash);
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
+			console.log("ccc",data);
 			data.Links.forEach(function(link){
+				console.log("links",link);
             	if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){    
                    	dispatch({
 						"type": "setUrl",
