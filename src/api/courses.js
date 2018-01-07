@@ -11,6 +11,7 @@ const edchainNodeURL2 = "http://45.55.235.198:9000/edchain/courses/";
 // UTILS
 
 var buildIpfsUrl = function(hash){
+    console.log("buildipfsurl");
     return `${ipfsGetURL}${hash}&encoding=json`;
 };
 
@@ -23,6 +24,7 @@ var buildImageUrl = function(hash){
 };
 
 var getData = function(url){
+    console.log(url);
     return axios({
         url: url,
         method: 'GET',
@@ -43,6 +45,7 @@ var getPostData = function(url){
 
 
 var getIpfsData = function(hash){
+    console.log("getipfsdata",hash);
     return getData(buildIpfsUrl(hash));
 };
 
@@ -57,7 +60,7 @@ var getSearchData = function(){
 
 var getCourseRoot = function(courseRootHash){
     // actual course ref
-    return getIpfsData(courseRootHash);
+  return getIpfsData(courseRootHash);
 };
 
 var getCourseDirectory = function(directoryHash){

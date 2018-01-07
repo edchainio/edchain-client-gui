@@ -44,7 +44,7 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 
 var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	return function(dispatch){
-//		console.log("hash",hash);
+		console.log("hash",hash);
 		courses.getCourseRoot(hash).then(function({data}){
 			console.log("getcourseroot",data);
 			dispatch({
