@@ -24,7 +24,7 @@ var buildImageUrl = function(hash){
 };
 
 var getData = function(url){
-    console.log(url);
+    console.log("url",url);
     return axios({
         url: url,
         method: 'GET',

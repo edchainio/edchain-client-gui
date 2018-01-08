@@ -18,7 +18,7 @@ var ipfs = null;
 var startIpfs = function(callback){
 	const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
 	ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
-
+	
 	ipfsProcess.stdout.on('data', function(data){
 		callback(data.toString());	
 	});
