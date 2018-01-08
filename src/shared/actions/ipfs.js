@@ -31,6 +31,7 @@ var isOnline = exports.isOnline = createAliasedAction( "isOnline", function(){
 	};
 });
 
+
 var getPeerId = exports.getPeerId = createAliasedAction( "getPeerId", function(){
 	return function(dispatch){
 		ipfs.ipfsPeerId(function(payload){

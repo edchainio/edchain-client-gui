@@ -80,9 +80,7 @@ var __ui = {
         store.dispatch(
             {
             type:'setSearch', 
-            payload: {
-                        "isSearch":true
-                    }
+            payload: true
         });
         __ui.clearCard();
         store.dispatch(coursesActions.getSearchData()); 
@@ -100,38 +98,45 @@ var applyState = function applyState(state){
 
      applyCourses(state.courses.items);
 
-   /* if (state.ipfs.isOnline){
+    if (state.ipfs.isOnline){
         console.log("applycourses",state.courses.items);
-        applyCourses(state.courses.items);
-    }*/
+        applyCourses(state.courses.items,state);
+    }
 };
 
-var applyCourses = function(items){
+var applyCourses = function(items,state){
     courseKeys = Object.keys(items);
-    console.log("coursekeys",courseKeys);
+  //  console.log("coursekeys",courseKeys);
     courseKeys.forEach(function(key){
         let course = items[key];
       
         let $courseCard = $(`#${course.id}`);
         let meta = course.META;
-        console.log("courseHomePage",course);
-        console.log("META",course.META);
-        let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.title;
-
-      //  if((!$courseCard.length && isReady)){
+   //     console.log("courseHomePage",course);
+  //      console.log("META",course.META);
+        let isReady = meta.urls.image && meta.urls.index && course.META.hashes.courseDirectoryHash && course.title;
+        let isSearch = state.isSearch;
+        console.log("isSearch",isSearch);
+        if((!$courseCard.length && isReady)){
             console.log("createcard");
-            console.log(initialState.courses.isFetching);
-           
+            console.log("isSearch2",state.isSearch);
             console.log("createhomepagecard",meta.urls);
            
             __ui.createHomePageCard(
                 meta.urls.image, course.course_title, meta.urls.index, 
                 meta.hashes.courseDirectoryHash, course.id
             );
-      //  } else if($courseCard.length) {
-         //   __ui.setPinStatus(course.id, course.META.isPinned);
-       // }
+        } else if($courseCard.length) {
+         __ui.setPinStatus(course.id, course.META.isPinned);
+       }
     });
+     store.dispatch(
+            {
+            type:'setSearch', 
+            payload: false
+            
+        });
+    ipfsActions
 
 };
 
