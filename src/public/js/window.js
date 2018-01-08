@@ -55,7 +55,7 @@ var __ui = {
             { image, title, indexURL, courseDirectoryHash, courseId, action }
         );
         $('#course-cards').append(rendered);
-         initialState.isSearch=false;
+        
     },
     clearCard: function(){
           $('#course-cards').empty();
@@ -77,7 +77,13 @@ var __ui = {
         $actionLink.addClass( ( isPinned ? "pinImage" : "unpinImage") );
     },
     search: function(...terms){
-        initialState.isSearch = true;
+        store.dispatch(
+            {
+            type:'setSearch', 
+            payload: {
+                        "isSearch":true
+                    }
+        });
         __ui.clearCard();
         store.dispatch(coursesActions.getSearchData()); 
 
@@ -88,8 +94,8 @@ var __ui = {
 // this function updates page based on state
 // this can be broken into several functions triggered by applyState
 var applyState = function applyState(state){
- /*   __ui.setIPFSStatusButton(state.ipfs.isOnline);
-    __ui.showPeerCount(state.ipfs.peers);*/
+    __ui.setIPFSStatusButton(state.ipfs.isOnline);
+    __ui.showPeerCount(state.ipfs.peers);
      console.log("applystate",state);
 
      applyCourses(state.courses.items);
@@ -105,7 +111,7 @@ var applyCourses = function(items){
     console.log("coursekeys",courseKeys);
     courseKeys.forEach(function(key){
         let course = items[key];
-        console.log("isSearch",initialState.courses.isSearch);
+      
         let $courseCard = $(`#${course.id}`);
         let meta = course.META;
         console.log("courseHomePage",course);

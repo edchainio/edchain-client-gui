@@ -130,10 +130,16 @@ var ipfsPeerCount = exports.ipfsPeerCount = createAliasedAction( "ipfsPeerCount"
 	};
 });
 
-/*var ipfsFilesGet (hash,function(err,files){
-	files.
-})
+/*
+var ipfsGetData = exports.ipfsGetData = createAliasedAction( "ipfsGetData", function(){
+	return function(dispatch){
+		ipfs.ipfsGetData(function(payload){
+			dispatch({ "type" : "ipfsGetData", "payload" : payload });
+		});
+	};
+});
 */
+
 var syncIpfs = exports.syncIpfs = createAliasedAction( "syncIpfs", function(){
 	return function(dispatch){
 		dispatch(isOnline());

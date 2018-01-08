@@ -12,7 +12,8 @@ const initialState = {
 	id: "",
 	peers: 0,
 	isOnline: false,
-	status: ""
+	status: "",
+	isSearch:false
 };
 
 module.exports = createReducer(initialState, {
@@ -37,6 +38,13 @@ module.exports = createReducer(initialState, {
 	"getIPFSGWAddr": function(state, action){
 		return Object.assign({}, state, { "gatewayAddress": action.payload });
 	},
+	"setSearch": function(state, action){
+		return Object.assign({}, state, { "isSearch": action.payload });
+	},
+/*	"ipfsGetData": function(state, action){
+		console.log("ipfsgetdata",state,actions);
+		return Object.assign({}, state, { "ipfsGetData": action.payload });
+	},*/
 	"checkStatus": function(state, action){
 		return Object.assign({}, state, { "status": action.payload });
 	},

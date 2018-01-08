@@ -6,8 +6,8 @@ const { createReducer } = require('../helpers/index.js');
 const initialState = {
     isFetching: false,
     didInvalidate: false,
-	items: {},
-	isSearch:false
+	items: {}
+	
 };
 
 var courseItem = function(course){

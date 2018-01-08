@@ -18,7 +18,7 @@ var ipfs = null;
 var startIpfs = function(callback){
 	const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
 	ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
-	
+
 	ipfsProcess.stdout.on('data', function(data){
 		callback(data.toString());	
 	});
@@ -227,6 +227,17 @@ var ipfsSwarmPeers = function (fn){
 };
 
 
+var ipfsGetData = function (hash,fn){
+	getIPFS().object.get(hash,function(err,node){
+		if(err){
+			log.info("ipfsGetData", err);
+		}
+		console.log("getipfsdata",node);
+		fn(node);
+	}); 
+};
+
+
 module.exports = {
 	startIpfs,
 	ipfsStop,
@@ -241,5 +252,6 @@ module.exports = {
 	removePins,
 	addPins,
 	checkPin,
-	ipfsSwarmPeers
+	ipfsSwarmPeers,
+	ipfsGetData
 };
