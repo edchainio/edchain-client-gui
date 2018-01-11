@@ -139,10 +139,11 @@ var setIsDisplayed= function (id,value){
 var applyCourses = function(items){
     courseKeys = Object.keys(items);
     console.log("coursekeys",courseKeys);
-    let itemProcessed=0;
+    
     let cLen = store.getState().courses.resultCount;
     let displayedCourses = [];
-
+    let itemProcessed=0;
+    
     courseKeys.forEach(function(key){
        
         let course = items[key];
@@ -158,7 +159,7 @@ var applyCourses = function(items){
         console.log("isSearch",isSearch,"isReady",isReady);
        
       
-        if(isReady){
+        if(isReady && !(itemProcessed === cLen) && displayedCourses.indexOf(course.id) < 0 ){
             console.log("len",itemProcessed,courseKeys.length,cLen);
             itemProcessed = itemProcessed+1;
             console.log("createcard");
