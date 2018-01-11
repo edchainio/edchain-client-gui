@@ -20,7 +20,7 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 					"type": "addCourse2",
 					"payload": course
 				});
-				console.log("beforeCourseRoot",course);
+	//			console.log("beforeCourseRoot",course);
 
 				dispatch(getCourseRoot(course.content_address));
 			});
@@ -50,7 +50,7 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 				dispatch(getCourseRoot(course.hash));
 			});
 		}).catch(function(error){
-			console.log("getFeatured",error);
+			console.log("getFeatured","Failed");
 		});
 	};
 });
@@ -58,9 +58,9 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 
 var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	return function(dispatch){
-		console.log("hash",hash);
+	//	console.log("hash",hash);
 		courses.getCourseRoot(hash).then(function({data}){
-			console.log("getcourseroot",data);
+//			console.log("getcourseroot",data);
 			dispatch({
 				"type": "setHash",
 				"payload": {
@@ -72,7 +72,7 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 			dispatch(getCourseDirectory(hash, data["Links"][0].Hash));
 			dispatch(checkPin(hash, data["Links"][0].Hash));
 		}).catch(function(error){
-			console.log("getCourseRoot",error);
+			console.log("getCourseRoot","Failed");
 		});
 	};
 });
@@ -80,9 +80,9 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getCourseDirectory", function(id, hash){
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
-			console.log("getcoursedir",data);
+//			console.log("getcoursedir",data);
 			data.Links.forEach(function(link){
-			console.log("loink",link);
+	//		console.log("loink",link);
             	if(link.Name !== "contents") return;
 	            dispatch({
 					"type": "setHash",
@@ -95,19 +95,19 @@ var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getC
             	dispatch(getCourseContentsDirectroy(id, link.Hash, hash));
             });
 		}).catch(function(error){
-			console.log("getCourseDirectory",error);
+			console.log("getCourseDirectory","Failed");
 		});
 	};
 } );
 
 
 var getCourseContentsDirectroy = exports.getCourseContentsDirectroy = createAliasedAction( "getCourseContentsDirectroy", function(id, hash, courseDirectoryHash){
-	console.log("_____________________",id,hash,courseDirectoryHash);
+//	console.log("_____________________",id,hash,courseDirectoryHash);
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
-			console.log("ccc",data);
+	//		console.log("ccc",data);
 			data.Links.forEach(function(link){
-				console.log("links",link);
+//				console.log("links",link);
             	if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){    
                    	console.log("image****************************",link.Name);
                    	dispatch({
@@ -130,7 +130,7 @@ var getCourseContentsDirectroy = exports.getCourseContentsDirectroy = createAlia
                 }
             });
 		}).catch(function(error){
-			console.log("getCourseDirectory",error);
+			console.log("getCourseDirectory","Failed");
 		});
 	};
 } );

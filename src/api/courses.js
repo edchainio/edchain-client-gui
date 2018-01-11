@@ -38,7 +38,7 @@ var getPostData = function(url){
         data: 
         {
             "copyright_holder":"MIT", 
-            "response_size":"10"
+            "response_size":"50"
         }
     });
 }

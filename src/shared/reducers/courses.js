@@ -24,7 +24,7 @@ var courseItem = function(course){
 };
 
 var courseItem2 = function(course){
-	console.log("courseItem2",course);
+//	console.log("courseItem2",course);
 	return Object.assign({}, course, {
 		"id": course.content_address,
 	    "META": {
@@ -40,12 +40,12 @@ var courseItem2 = function(course){
 var updateCourseItem = function(state, action, update){
 	var item = {};
 //	console.log("action",action);
-	console.log("state.items",state.items[action.payload.id]);
+//	console.log("state.items",state.items[action.payload.id]);
 
 	item[action.payload.id] = clone(state.items[action.payload.id]);
 	
 	update(item[action.payload.id], action);
-	console.log("copy",item[action.payload.id],"action",action);
+//	console.log("copy",item[action.payload.id],"action",action);
 	return Object.assign({}, state, {
 		"items": Object.assign({}, state.items, item)
 	});
@@ -73,12 +73,12 @@ module.exports = createReducer(initialState, {
 		});
 	},
 	"setResultCount": function(state,action){
-	console.log("state----------------",state,action);
+//	console.log("state----------------",state,action);
 	return Object.assign({}, state, { "resultCount": action.payload });
 },
 	"addCourse2": function(state, action){
 		var item = {};
-		console.log("addCourse2Action",action);
+//		console.log("addCourse2Action",action);
 		item[action.payload.content_address] = courseItem2(action.payload);
 		console.log("addcourse2State",state);
 		return Object.assign({}, state, {
@@ -86,18 +86,18 @@ module.exports = createReducer(initialState, {
 		});
 	},
 	"setHash": function(state, action){
-		console.log("sethash");
+	//	console.log("sethash");
 		//console.log(state,action);
 		return updateCourseItem(state, action, function(copy, action){
 			copy.META.hashes[action.payload.key] = action.payload.value;
 		});
 	},
 	"setUrl": function(state, action){
-		console.log("setURL",state,action);
+	//	console.log("setURL",state,action);
 		return updateCourseItem(state, action, function(copy, action){
-			console.log("updateCourseItem",copy,"action",action);
+	//		console.log("updateCourseItem",copy,"action",action);
 			copy.META.urls[action.payload.key] = action.payload.value;
-			console.log("updateCourseItem2",copy,"action",action);
+	//		console.log("updateCourseItem2",copy,"action",action);
 
 		});
 	},

@@ -100,12 +100,12 @@ var applyState = function applyState(state){
 
     // applyCourses(state.courses.items);
    
-  
+//  console.log("currentState",state);
  //       console.log("applycourses",state.courses.items);
     console.log("count1",Object.keys(state.courses.items).length );
 
     if(Object.keys(state.courses.items).length === store.getState().courses.resultCount){
-     console.log("applystate",state.courses.items);
+ //    console.log("applystate",state.courses.items);
      applyCourses(state.courses.items);
     }
    
@@ -138,12 +138,12 @@ var setIsDisplayed= function (id,value){
 
 var applyCourses = function(items){
     courseKeys = Object.keys(items);
-    console.log("coursekeys",courseKeys);
+ //   console.log("coursekeys",courseKeys);
     
     let cLen = store.getState().courses.resultCount;
     let displayedCourses = [];
     let itemProcessed=0;
-    
+
     courseKeys.forEach(function(key){
        
         let course = items[key];
@@ -151,7 +151,7 @@ var applyCourses = function(items){
         let $courseCard = $(`#${course.id}`);
         let meta = course.META;
 
-        console.log("courseHomePage",meta);
+ //       console.log("courseHomePage",course);
   //      console.log("META",course.META);
         let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.course_title;
       //  let isSearch = store.getState().isSearch;
@@ -159,14 +159,14 @@ var applyCourses = function(items){
         console.log("isSearch",isSearch,"isReady",isReady);
        
       
-        if(isReady && !(itemProcessed === cLen) && displayedCourses.indexOf(course.id) < 0 ){
+        if(isReady){
             console.log("len",itemProcessed,courseKeys.length,cLen);
             itemProcessed = itemProcessed+1;
             console.log("createcard");
 
       //      console.log("isSearch2",isSearch);
-            console.log("createhomepagecard",meta.urls);
-           if(!course.isDisplayed){
+ //           console.log("createhomepagecard",meta.urls);
+           if(!course.isDisplayed && !$courseCard.length){
              setIsDisplayed(course.id,true);
              displayedCourses.push(course.id);
                console.log("displayedCourses", displayedCourses);
