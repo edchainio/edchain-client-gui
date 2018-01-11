@@ -12,7 +12,9 @@ const courses = require("../../api/courses");
 var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (){
 	return function(dispatch){
 		courses.getSearchData().then(function({data}){
-			console.log("getsearchdata",data);
+					
+			setResultCount(dispatch,data);
+
 			data.forEach(function(course){
 				dispatch({
 					"type": "addCourse2",
@@ -22,9 +24,19 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 
 				dispatch(getCourseRoot(course.content_address));
 			});
+		}).catch(function(error){
+			console.log("getSearchData",error);
 		});
 	};
 });
+
+var setResultCount = function(dispatch,data){
+			dispatch({
+					"type": "setResultCount",
+					"payload": data.length
+				});
+
+}
 
 var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", function (){
 	return function(dispatch){
@@ -37,6 +49,8 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 				});
 				dispatch(getCourseRoot(course.hash));
 			});
+		}).catch(function(error){
+			console.log("getFeatured",error);
 		});
 	};
 });
@@ -57,6 +71,8 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 			});
 			dispatch(getCourseDirectory(hash, data["Links"][0].Hash));
 			dispatch(checkPin(hash, data["Links"][0].Hash));
+		}).catch(function(error){
+			console.log("getCourseRoot",error);
 		});
 	};
 });
@@ -78,6 +94,8 @@ var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getC
 				});
             	dispatch(getCourseContentsDirectroy(id, link.Hash, hash));
             });
+		}).catch(function(error){
+			console.log("getCourseDirectory",error);
 		});
 	};
 } );
@@ -91,6 +109,7 @@ var getCourseContentsDirectroy = exports.getCourseContentsDirectroy = createAlia
 			data.Links.forEach(function(link){
 				console.log("links",link);
             	if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){    
+                   	console.log("image****************************",link.Name);
                    	dispatch({
 						"type": "setUrl",
 						"payload": {
@@ -110,6 +129,8 @@ var getCourseContentsDirectroy = exports.getCourseContentsDirectroy = createAlia
 					});
                 }
             });
+		}).catch(function(error){
+			console.log("getCourseDirectory",error);
 		});
 	};
 } );

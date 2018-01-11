@@ -12,6 +12,7 @@ const initialState = remote.getGlobal('state');
 // create store
 const store = configureStore(initialState, 'renderer');
 
+
 // these ping main process
 var __actions = {
     // should the main.store track the windows aswell?
@@ -77,6 +78,7 @@ var __ui = {
         $actionLink.addClass( ( isPinned ? "pinImage" : "unpinImage") );
     },
     search: function(...terms){
+        console.log("setsearch",true);
         store.dispatch(
             {
             type:'setSearch', 
@@ -94,51 +96,97 @@ var __ui = {
 var applyState = function applyState(state){
     __ui.setIPFSStatusButton(state.ipfs.isOnline);
     __ui.showPeerCount(state.ipfs.peers);
-     console.log("applystate",state);
+//    console.log("applystate",state);
 
+    // applyCourses(state.courses.items);
+   
+  
+ //       console.log("applycourses",state.courses.items);
+    console.log("count1",Object.keys(state.courses.items).length );
+
+    if(Object.keys(state.courses.items).length === store.getState().courses.resultCount){
+     console.log("applystate",state.courses.items);
      applyCourses(state.courses.items);
-
-    if (state.ipfs.isOnline){
-        console.log("applycourses",state.courses.items);
-        applyCourses(state.courses.items,state);
     }
+   
 };
 
-var applyCourses = function(items,state){
+
+var callback = function(value){
+
+       console.log("setsearch2",value);
+        store.dispatch(
+            {
+                type:'setSearch', 
+                payload: value
+            });
+       
+    
+};
+
+var setIsDisplayed= function (id,value){
+    store.dispatch({ 
+                "type" : "setIsDisplayed", 
+                "payload" : {
+                    "id": id, 
+                    "value": value
+                }
+            });
+    
+};
+
+
+var applyCourses = function(items){
     courseKeys = Object.keys(items);
-  //  console.log("coursekeys",courseKeys);
+    console.log("coursekeys",courseKeys);
+    let itemProcessed=0;
+    let cLen = store.getState().courses.resultCount;
+    let displayedCourses = [];
+
     courseKeys.forEach(function(key){
+       
         let course = items[key];
-      
+
         let $courseCard = $(`#${course.id}`);
         let meta = course.META;
-   //     console.log("courseHomePage",course);
+
+        console.log("courseHomePage",meta);
   //      console.log("META",course.META);
-        let isReady = meta.urls.image && meta.urls.index && course.META.hashes.courseDirectoryHash && course.title;
-        let isSearch = state.isSearch;
-        console.log("isSearch",isSearch);
-        if((!$courseCard.length && isReady)){
+        let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.course_title;
+      //  let isSearch = store.getState().isSearch;
+        let isSearch = store.getState().ipfs.isSearch;
+        console.log("isSearch",isSearch,"isReady",isReady);
+       
+      
+        if(isReady){
+            console.log("len",itemProcessed,courseKeys.length,cLen);
+            itemProcessed = itemProcessed+1;
             console.log("createcard");
-            console.log("isSearch2",state.isSearch);
+
+      //      console.log("isSearch2",isSearch);
             console.log("createhomepagecard",meta.urls);
-           
+           if(!course.isDisplayed){
+             setIsDisplayed(course.id,true);
+             displayedCourses.push(course.id);
+               console.log("displayedCourses", displayedCourses);
             __ui.createHomePageCard(
                 meta.urls.image, course.course_title, meta.urls.index, 
                 meta.hashes.courseDirectoryHash, course.id
             );
+           
+            }
         } else if($courseCard.length) {
          __ui.setPinStatus(course.id, course.META.isPinned);
        }
+    
+       if(itemProcessed === cLen){
+        callback(false);
+        console.log("ops complete",false);
+       }
     });
-     store.dispatch(
-            {
-            type:'setSearch', 
-            payload: false
-            
-        });
-    ipfsActions
 
-};
+   
+    };
 
 $(document).ready(function() {
 
@@ -168,6 +216,7 @@ $(document).ready(function() {
  
     store.subscribe(function(){
         // executed when something could have changed the state
-        applyState(store.getState());
+          applyState(store.getState());
+       
     });
 });

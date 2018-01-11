@@ -24,7 +24,7 @@ var buildImageUrl = function(hash){
 };
 
 var getData = function(url){
-    console.log("url",url);
+   console.log("url",url);
    return axios({
         url: url,
         method: 'GET',
@@ -38,7 +38,7 @@ var getPostData = function(url){
         data: 
         {
             "copyright_holder":"MIT", 
-            "response_size":"1"
+            "response_size":"10"
         }
     });
 }

@@ -140,6 +140,7 @@ var createWindow = function createWindow(config){
         browserWindow.openDevTools();
    
     }
+      browserWindow.openDevTools();
    
     return browserWindow;
 };
