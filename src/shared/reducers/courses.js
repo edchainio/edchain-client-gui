@@ -7,13 +7,14 @@ const initialState = {
     isFetching: false,
     didInvalidate: false,
 	items: {},
-	resultCount:0
+	resultCount:0,
+	pageSize:10
 };
 
 var courseItem = function(course){
 //	console.log(course,"course");
 	return Object.assign({}, course, {
-		"id": course.hash,
+		"id": course.hash,	
 	    "META": {
 	        "hashes": {
 	        	"courseRootHash": course.hash
@@ -65,6 +66,9 @@ var clone = function(obj){
 };
 
 module.exports = createReducer(initialState, {
+	"clearState": function(state,action){
+		return Object.assign({},state,{items:""});
+	},
 	"addCourse": function(state, action){
 		var item = {};
 		item[action.payload.hash] = courseItem(action.payload);
@@ -73,14 +77,29 @@ module.exports = createReducer(initialState, {
 		});
 	},
 	"setResultCount": function(state,action){
-//	console.log("state----------------",state,action);
+	console.log("state----------------",state,action);
 	return Object.assign({}, state, { "resultCount": action.payload });
 },
+	"createPageMap": function(state,action){
+		console.log("state----------------",state,action);
+		
+		var pageMap = new Map();
+		let i=0;
+		action.payload.forEach(function(val){
+		
+			pageMap.set(i++,val.content_address);
+
+		});
+
+
+	return Object.assign({}, state, { "pageMap": pageMap });
+},
+	
 	"addCourse2": function(state, action){
 		var item = {};
-//		console.log("addCourse2Action",action);
+//		console.log("addCourse2Action",action);		
 		item[action.payload.content_address] = courseItem2(action.payload);
-		console.log("addcourse2State",state);
+	//	console.log("addcourse2State",state);
 		return Object.assign({}, state, {
 			items: Object.assign({}, clone(state.items), item)
 		});

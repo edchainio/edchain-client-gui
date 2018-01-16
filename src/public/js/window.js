@@ -12,6 +12,8 @@ const initialState = remote.getGlobal('state');
 // create store
 const store = configureStore(initialState, 'renderer');
 
+var currentPage = 1;
+ 
 
 // these ping main process
 var __actions = {
@@ -34,7 +36,6 @@ var __actions = {
     removePin: function(id, hash){
         store.dispatch(ipfsActions.removePin(id, hash));
     },
-
 };
 
 var __ui = {
@@ -42,7 +43,6 @@ var __ui = {
         if(isOnline){
           $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
           $('#img-ipfs-icon').prop("alt",'IPFS Online');
-      
         }
         else{
             $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
@@ -77,15 +77,83 @@ var __ui = {
         $actionLink.removeClass( ( isPinned ? "unpinImage" : "pinImage") );
         $actionLink.addClass( ( isPinned ? "pinImage" : "unpinImage") );
     },
+    nextResult: function(){
+         __ui.clearCard();
+        let data=store.getState().courses.pageMap;
+        let i=0;
+        let pSize = store.getState().courses.pageSize;
+        let startPointer = pSize*currentPage+1;
+        currentPage=currentPage+1;
+
+        data.forEach(function(val){
+         
+           if(i<pSize){
+                console.log("next-startP",startPointer);
+                store.dispatch(coursesActions.dispatchCourseRoot(data.get(startPointer)));
+                i++;
+                startPointer++;
+            }
+            
+        })
+    },
+     prevResult: function(){
+        __ui.clearCard();
+        let data=store.getState().courses.pageMap;
+        let i=0;
+        let pSize = store.getState().courses.pageSize;
+        currentPage=currentPage-1;
+        let startPointer=1;
+      
+        if(currentPage!=1){
+            startPointer = pSize*(currentPage-1)+1;
+        }
+        
+       data.forEach(function(val){
+         
+           if(i<pSize){
+                console.log("prev-startP",startPointer);
+                store.dispatch(coursesActions.dispatchCourseRoot(data.get(startPointer)));
+                i++;
+                startPointer++;
+            }
+            
+        })
+    },
     search: function(...terms){
         console.log("setsearch",true);
+        currentPage=1;
+    
         store.dispatch(
-            {
-            type:'setSearch', 
-            payload: true
+        {
+                type:'setSearch', 
+                payload: true
         });
+
         __ui.clearCard();
+        
+        store.dispatch({
+            type:"clearState",
+            payload:store.getState()
+        });
+
         store.dispatch(coursesActions.getSearchData()); 
+      
+        setTimeout(function(){
+         
+            let data= store.getState().courses.items;
+            console.log("search state",store.getState());
+            let i=0;
+            let p=store.getState().courses.pageSize;
+           
+            Object.keys(data).forEach(function(val){
+
+                if(i<p){
+                    store.dispatch(coursesActions.dispatchCourseRoot(val));
+                    i++;
+                }
+            });
+
+        },3000);
 
     }
 
@@ -105,8 +173,8 @@ var applyState = function applyState(state){
     console.log("count1",Object.keys(state.courses.items).length );
 
     if(Object.keys(state.courses.items).length === store.getState().courses.resultCount){
- //    console.log("applystate",state.courses.items);
-     applyCourses(state.courses.items);
+        console.log("applystate",state.courses.items);
+        applyCourses(state.courses.items);
     }
    
 };
@@ -143,33 +211,33 @@ var applyCourses = function(items){
     let cLen = store.getState().courses.resultCount;
     let displayedCourses = [];
     let itemProcessed=0;
+    var displayCount =0;
+    if(cLen <= store.getState().courses.pageSize){
+        $('#nxt-btn').hide();
+    }
+    else{
+         $('#nxt-btn').show();
+    }
 
     courseKeys.forEach(function(key){
-       
+        
         let course = items[key];
 
         let $courseCard = $(`#${course.id}`);
         let meta = course.META;
 
- //       console.log("courseHomePage",course);
-  //      console.log("META",course.META);
         let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.course_title;
-      //  let isSearch = store.getState().isSearch;
-        let isSearch = store.getState().ipfs.isSearch;
-        console.log("isSearch",isSearch,"isReady",isReady);
-       
-      
-        if(isReady){
-            console.log("len",itemProcessed,courseKeys.length,cLen);
-            itemProcessed = itemProcessed+1;
-            console.log("createcard");
 
-      //      console.log("isSearch2",isSearch);
- //           console.log("createhomepagecard",meta.urls);
+        if(isReady){
+
+            itemProcessed = itemProcessed+1;
+            
            if(!course.isDisplayed && !$courseCard.length){
              setIsDisplayed(course.id,true);
+       
+             displayCount++;
              displayedCourses.push(course.id);
-               console.log("displayedCourses", displayedCourses);
+          
             __ui.createHomePageCard(
                 meta.urls.image, course.course_title, meta.urls.index, 
                 meta.hashes.courseDirectoryHash, course.id
@@ -177,7 +245,9 @@ var applyCourses = function(items){
            
             }
         } else if($courseCard.length) {
+
          __ui.setPinStatus(course.id, course.META.isPinned);
+       
        }
     
        if(itemProcessed === cLen){
@@ -213,6 +283,20 @@ $(document).ready(function() {
         __actions.openCourseLink(url);
     });
 
+    $('#nxt-btn').on("click",function(event){
+        $(".loader").show();
+        event.preventDefault();
+        __ui.nextResult();
+
+    })
+  
+    $('#prev-btn').on("click",function(event){
+        $(".loader").show();
+        event.preventDefault();
+        __ui.prevResult();
+
+    })
+    
     applyState(store.getState());
  
     store.subscribe(function(){

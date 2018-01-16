@@ -8,13 +8,55 @@ const courses = require("../../api/courses");
 // for more details on actions refer to: 
 // https://github.com/acdlite/flux-standard-action
 
+var addCourse2 = function(data,dispatch){
+
+		data.forEach(function(course){
+			dispatch({
+				"type": "addCourse2",
+				"payload": course
+			});
+
+			console.log("beforeCourseRoot",course);
+		});
+}
+
 
 var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (){
 	return function(dispatch){
-		courses.getSearchData().then(function({data}){
+
+		courses.getSearchData(34).then(function({data}){
+			let count =0;		
+			setResultCount(dispatch,data);
+			createPageMap(dispatch,data);
+			data.forEach(function(course){
+				course.paginationId = count+1;
+				count++;
+				
+				dispatch({
+					"type": "addCourse2",
+					"payload": course
+				});
+	//			console.log("beforeCourseRoot",course);
+
+		//		dispatch(getCourseRoot(course.content_address));
+		});
+			
+		}).catch(function(error){
+			console.log("getSearchData",error);
+		});
+	};
+
+		
+});
+
+
+var getFeaturedData = exports.getFeaturedData = createAliasedAction( "getFeaturedData", function (){
+	return function(dispatch){
+
+		courses.getSearchData(10).then(function({data}){
 					
 			setResultCount(dispatch,data);
-
+			
 			data.forEach(function(course){
 				dispatch({
 					"type": "addCourse2",
@@ -23,17 +65,43 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 	//			console.log("beforeCourseRoot",course);
 
 				dispatch(getCourseRoot(course.content_address));
-			});
+		});
+			
 		}).catch(function(error){
-			console.log("getSearchData",error);
+			console.log("getFeaturedData",error);
 		});
 	};
+
+		
 });
+
+
+
+
+ var dispatchCourseRoot = exports.dispatchCourseRoot = createAliasedAction("dispatchCourseRoot", function(course){
+
+ 	return function(dispatch){
+
+			console.log("dispatchCourseRoot",course);
+			dispatch(getCourseRoot(course));
+
+ 	}
+	}
+
+ );
+
 
 var setResultCount = function(dispatch,data){
 			dispatch({
 					"type": "setResultCount",
 					"payload": data.length
+				});
+}
+
+var createPageMap = function(dispatch,data){
+		dispatch({
+					"type": "createPageMap",
+					"payload": data
 				});
 
 }
@@ -58,7 +126,7 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 
 var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	return function(dispatch){
-	//	console.log("hash",hash);
+		console.log("hashroot",hash);
 		courses.getCourseRoot(hash).then(function({data}){
 //			console.log("getcourseroot",data);
 			dispatch({
@@ -72,7 +140,9 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 			dispatch(getCourseDirectory(hash, data["Links"][0].Hash));
 			dispatch(checkPin(hash, data["Links"][0].Hash));
 		}).catch(function(error){
-			console.log("getCourseRoot","Failed");
+			console.log("getCourseRoot","Failed",hash);
+			courses.getCourseRoot(hash);
+			console.log("getCourseRoot","retry",hash);
 		});
 	};
 });

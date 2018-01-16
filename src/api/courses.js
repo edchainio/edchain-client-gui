@@ -11,7 +11,7 @@ const edchainNodeURL2 = "http://45.55.235.198:9000/edchain/courses/";
 // UTILS
 
 var buildIpfsUrl = function(hash){
-    console.log("buildipfsurl");
+//   console.log("buildipfsurl");
     return `${ipfsGetURL}${hash}&encoding=json`;
 };
 
@@ -24,28 +24,28 @@ var buildImageUrl = function(hash){
 };
 
 var getData = function(url){
-   console.log("url",url);
+//   console.log("url",url);
    return axios({
         url: url,
         method: 'GET',
     });
 };
 
-var getPostData = function(url){
+var getPostData = function(url,fetchSize){
     return axios({
         url: url,
         method: 'POST',
         data: 
         {
             "copyright_holder":"MIT", 
-            "response_size":"50"
+            "response_size":fetchSize
         }
     });
 }
 
 
 var getIpfsData = function(hash){
-    console.log("getipfsdata",hash);
+ //   console.log("getipfsdata",hash);
     return getData(buildIpfsUrl(hash));
 };
 
@@ -54,8 +54,8 @@ var getFeatured = function(){
     return getData(edchainNodeURL);
 };
 
-var getSearchData = function(){
-    return getPostData(edchainNodeURL2);
+var getSearchData = function(fetchSize){
+    return getPostData(edchainNodeURL2,fetchSize);
 };
 
 var getCourseRoot = function(courseRootHash){
