@@ -24,25 +24,29 @@ var addCourse2 = function(data,dispatch){
 var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (){
 	return function(dispatch){
 
-		courses.getSearchData(34).then(function({data}){
+		courses.getSearchData(100).then(function({data}){
 			let count =0;		
+			
 			setResultCount(dispatch,data);
+
 			createPageMap(dispatch,data);
+
 			data.forEach(function(course){
+				
 				course.paginationId = count+1;
 				count++;
-				
+
 				dispatch({
 					"type": "addCourse2",
 					"payload": course
-				});
-	//			console.log("beforeCourseRoot",course);
-
-		//		dispatch(getCourseRoot(course.content_address));
+			});
+	
 		});
 			
 		}).catch(function(error){
+		
 			console.log("getSearchData",error);
+		
 		});
 	};
 
@@ -61,14 +65,16 @@ var getFeaturedData = exports.getFeaturedData = createAliasedAction( "getFeature
 				dispatch({
 					"type": "addCourse2",
 					"payload": course
-				});
-	//			console.log("beforeCourseRoot",course);
+			});
 
-				dispatch(getCourseRoot(course.content_address));
+			dispatch(getCourseRoot(course.content_address));
+
 		});
 			
 		}).catch(function(error){
+
 			console.log("getFeaturedData",error);
+		
 		});
 	};
 
@@ -82,43 +88,51 @@ var getFeaturedData = exports.getFeaturedData = createAliasedAction( "getFeature
 
  	return function(dispatch){
 
-			console.log("dispatchCourseRoot",course);
-			dispatch(getCourseRoot(course));
+		console.log("dispatchCourseRoot",course);
+		
+		dispatch(getCourseRoot(course));
 
  	}
+
 	}
 
  );
 
 
 var setResultCount = function(dispatch,data){
-			dispatch({
-					"type": "setResultCount",
-					"payload": data.length
-				});
+	dispatch({
+			"type": "setResultCount",
+			"payload": data.length
+	});
+
 }
 
 var createPageMap = function(dispatch,data){
-		dispatch({
-					"type": "createPageMap",
-					"payload": data
-				});
+	dispatch({
+			"type": "createPageMap",
+			"payload": data
+	});
 
 }
 
 var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", function (){
 	return function(dispatch){
 		courses.getFeatured().then(function({data}){
-		//	console.log("featured",data);
+
 			data.courses.forEach(function(course){
+
 				dispatch({
 					"type": "addCourse",
 					"payload": course
 				});
+
 				dispatch(getCourseRoot(course.hash));
+
 			});
 		}).catch(function(error){
+
 			console.log("getFeatured","Failed");
+		
 		});
 	};
 });
@@ -126,9 +140,9 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 
 var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot", function (hash){
 	return function(dispatch){
-		console.log("hashroot",hash);
+	
 		courses.getCourseRoot(hash).then(function({data}){
-//			console.log("getcourseroot",data);
+
 			dispatch({
 				"type": "setHash",
 				"payload": {
@@ -137,12 +151,15 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 					"value": data["Links"][0].Hash
 				}
 			});
+
 			dispatch(getCourseDirectory(hash, data["Links"][0].Hash));
+
 			dispatch(checkPin(hash, data["Links"][0].Hash));
+
 		}).catch(function(error){
-			console.log("getCourseRoot","Failed",hash);
+		
 			courses.getCourseRoot(hash);
-			console.log("getCourseRoot","retry",hash);
+		
 		});
 	};
 });
@@ -150,9 +167,9 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getCourseDirectory", function(id, hash){
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
-//			console.log("getcoursedir",data);
+
 			data.Links.forEach(function(link){
-	//		console.log("loink",link);
+
             	if(link.Name !== "contents") return;
 	            dispatch({
 					"type": "setHash",
@@ -172,14 +189,14 @@ var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getC
 
 
 var getCourseContentsDirectroy = exports.getCourseContentsDirectroy = createAliasedAction( "getCourseContentsDirectroy", function(id, hash, courseDirectoryHash){
-//	console.log("_____________________",id,hash,courseDirectoryHash);
+
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
-	//		console.log("ccc",data);
+	
 			data.Links.forEach(function(link){
-//				console.log("links",link);
+
             	if (link.Name.endsWith('jpg')  && !link.Name.endsWith('th.jpg')){    
-                   	console.log("image****************************",link.Name);
+                  
                    	dispatch({
 						"type": "setUrl",
 						"payload": {

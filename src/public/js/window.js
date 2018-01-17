@@ -119,7 +119,7 @@ var __ui = {
             
         })
     },
-    search: function(...terms){
+    search: function(callback){
         console.log("setsearch",true);
         currentPage=1;
     
@@ -152,9 +152,9 @@ var __ui = {
                     i++;
                 }
             });
-
+             callback();
         },3000);
-
+       
     }
 
 };
@@ -164,12 +164,7 @@ var __ui = {
 var applyState = function applyState(state){
     __ui.setIPFSStatusButton(state.ipfs.isOnline);
     __ui.showPeerCount(state.ipfs.peers);
-//    console.log("applystate",state);
 
-    // applyCourses(state.courses.items);
-   
-//  console.log("currentState",state);
- //       console.log("applycourses",state.courses.items);
     console.log("count1",Object.keys(state.courses.items).length );
 
     if(Object.keys(state.courses.items).length === store.getState().courses.resultCount){
@@ -184,29 +179,30 @@ var callback = function(value){
 
        console.log("setsearch2",value);
         store.dispatch(
-            {
-                type:'setSearch', 
-                payload: value
-            });
+        {
+            type:'setSearch', 
+            payload: value
+        });
        
     
 };
 
 var setIsDisplayed= function (id,value){
     store.dispatch({ 
-                "type" : "setIsDisplayed", 
-                "payload" : {
-                    "id": id, 
-                    "value": value
-                }
-            });
-    
+        
+        "type" : "setIsDisplayed", 
+        "payload" : {
+            "id": id, 
+            "value": value
+        }
+    });
+
 };
 
 
 var applyCourses = function(items){
     courseKeys = Object.keys(items);
- //   console.log("coursekeys",courseKeys);
+
     
     let cLen = store.getState().courses.resultCount;
     let displayedCourses = [];
@@ -233,31 +229,30 @@ var applyCourses = function(items){
             itemProcessed = itemProcessed+1;
             
            if(!course.isDisplayed && !$courseCard.length){
-             setIsDisplayed(course.id,true);
-       
-             displayCount++;
-             displayedCourses.push(course.id);
-          
-            __ui.createHomePageCard(
-                meta.urls.image, course.course_title, meta.urls.index, 
-                meta.hashes.courseDirectoryHash, course.id
-            );
+                setIsDisplayed(course.id,true);
+
+                displayCount++;
+                displayedCourses.push(course.id);
+
+                __ui.createHomePageCard(
+                    meta.urls.image, course.course_title, meta.urls.index, 
+                    meta.hashes.courseDirectoryHash, course.id
+                );
            
             }
         } else if($courseCard.length) {
 
-         __ui.setPinStatus(course.id, course.META.isPinned);
+            __ui.setPinStatus(course.id, course.META.isPinned);
        
-       }
+        }
     
        if(itemProcessed === cLen){
-        callback(false);
-        console.log("ops complete",false);
+            callback(false);
        }
+
     });
 
-   
-    };
+};
 
 $(document).ready(function() {
 
@@ -274,7 +269,9 @@ $(document).ready(function() {
 
     $("#search-btn").on("click",function(event){
         event.preventDefault();
-        __ui.search();
+        __ui.search(function(){
+            $('#search-count').text("Result Count" + store.getState().courses.resultCount);
+        });
     });
 
     $('#course-cards').on("click", ".card a.course-link", function(event){
