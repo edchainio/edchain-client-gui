@@ -9,7 +9,7 @@ body {
 .jumbotron {
   padding-top: 6rem;
   padding-bottom: 6rem;
-  margin-bottom: 0;
+  margin-bottom: 0rem;
   background-color: #fff;
 }
 
@@ -23,6 +23,11 @@ body {
 
 .jumbotron .container {
   max-width: 40rem;
+}
+
+.bottom-margin-zero {
+  margin-bottom: 0rem;
+
 }
 
 .album {
@@ -52,6 +57,22 @@ footer p {
     z-index: 1;
     margin-top: 10%;
     position: absolute;
+}
+.card-img-top {
+  
+  
+  height: 253px;
+
+}
+
+.card {
+  
+  width: 250px;
+ 
+}
+
+.card-body{
+  height:5em;
 }
 
 @keyframes spin {

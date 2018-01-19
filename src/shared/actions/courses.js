@@ -21,10 +21,10 @@ var addCourse2 = function(data,dispatch){
 }
 
 
-var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (){
+var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (searchObj){
 	return function(dispatch){
 
-		courses.getSearchData(100).then(function({data}){
+		courses.getSearchData(searchObj,100).then(function({data}){
 			let count =0;		
 			
 			setResultCount(dispatch,data);
@@ -57,7 +57,7 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 var getFeaturedData = exports.getFeaturedData = createAliasedAction( "getFeaturedData", function (){
 	return function(dispatch){
 
-		courses.getSearchData(10).then(function({data}){
+		courses.getSearchData({search_type:"",search_term:""},10).then(function({data}){
 					
 			setResultCount(dispatch,data);
 			

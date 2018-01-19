@@ -72,13 +72,19 @@
             </div>
         </div>
 
-        <section class="jumbotron text-center">
+        <section class="jumbotron text-center bottom-margin-zero">
           
             <div class="container">
                 <h1 class="jumbotron-heading">
                     Featured Courses
                 </h1>
-                <input type="text" id="search-input"><input type="button" id="search-btn">
+                    <select id="search-types">
+                        <option value="course_title">Course Title</option>
+                        <option value="subject_matter">Subject Matter</option>
+                        <option value="instructor_name">Instructor Name</option>
+                       
+                    </select>
+                    <input type="text" id="search-input"><input type="button" id="search-btn" value="search">
                 <p class="lead text-muted">
                     edChain is a shared repository for educators to publish content onto.  No central servers are needed.
                 </p>

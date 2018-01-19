@@ -88,7 +88,7 @@ var __ui = {
         data.forEach(function(val){
          
            if(i<pSize){
-                console.log("next-startP",startPointer);
+          
                 store.dispatch(coursesActions.dispatchCourseRoot(data.get(startPointer)));
                 i++;
                 startPointer++;
@@ -119,7 +119,7 @@ var __ui = {
             
         })
     },
-    search: function(callback){
+    search: function(searchParam, callback){
         console.log("setsearch",true);
         currentPage=1;
     
@@ -135,8 +135,8 @@ var __ui = {
             type:"clearState",
             payload:store.getState()
         });
-
-        store.dispatch(coursesActions.getSearchData()); 
+        console.log("searchParam",searchParam);
+        store.dispatch(coursesActions.getSearchData(searchParam)); 
       
         setTimeout(function(){
          
@@ -223,17 +223,17 @@ var applyCourses = function(items){
         let meta = course.META;
 
         let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.course_title;
-
+   
         if(isReady){
 
-            itemProcessed = itemProcessed+1;
-            
+            itemProcessed = itemProcessed+1;    
+             
            if(!course.isDisplayed && !$courseCard.length){
                 setIsDisplayed(course.id,true);
 
                 displayCount++;
                 displayedCourses.push(course.id);
-
+          
                 __ui.createHomePageCard(
                     meta.urls.image, course.course_title, meta.urls.index, 
                     meta.hashes.courseDirectoryHash, course.id
@@ -241,7 +241,7 @@ var applyCourses = function(items){
            
             }
         } else if($courseCard.length) {
-
+            
             __ui.setPinStatus(course.id, course.META.isPinned);
        
         }
@@ -269,9 +269,16 @@ $(document).ready(function() {
 
     $("#search-btn").on("click",function(event){
         event.preventDefault();
-        __ui.search(function(){
+        
+      
+        var searchObj = {
+                        "search_type":$("#search-types option:selected").val(),
+                        "search_term":$("#search-input").val()
+                        }
+        __ui.search(searchObj,function(){
             $('#search-count').text("Result Count" + store.getState().courses.resultCount);
         });
+
     });
 
     $('#course-cards').on("click", ".card a.course-link", function(event){

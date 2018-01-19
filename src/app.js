@@ -47,9 +47,7 @@ var start = function start(){
             store.dispatch(actions.ipfs.isOnline());
         } else {
             if (!Object.keys(store.getState().courses.items).length){
-
                 store.dispatch(actions.courses.getFeaturedData()); 
-      
             }
             syncIpfs();
         }
