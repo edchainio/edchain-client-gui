@@ -41,17 +41,16 @@ var start = function start(){
     var syncIpfs = function(){
         store.dispatch(actions.ipfs.syncIpfs());
     };
-
+    
     throttle(function(){
         if (!store.getState().ipfs.isOnline){
             store.dispatch(actions.ipfs.isOnline());
         } else {
-            if (!Object.keys(store.getState().courses.items).length){
-                store.dispatch(actions.courses.getFeatured())
-            }
             syncIpfs();
         }
     }, 2000);
+
+
 
 
     // macOS

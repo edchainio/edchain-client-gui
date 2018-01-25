@@ -9,7 +9,7 @@ body {
 .jumbotron {
   padding-top: 6rem;
   padding-bottom: 6rem;
-  margin-bottom: 0;
+  margin-bottom: 0rem;
   background-color: #fff;
 }
 
@@ -23,6 +23,15 @@ body {
 
 .jumbotron .container {
   max-width: 40rem;
+}
+
+.bottom-margin-zero {
+  margin-bottom: 0rem;
+
+}
+
+.form-control-attr {
+  width:20%;
 }
 
 .album {
@@ -52,6 +61,27 @@ footer p {
     z-index: 1;
     margin-top: 10%;
     position: absolute;
+}
+#search-count {
+  margin-bottom:2em;
+  font-size: large;
+  font-weight: bolder;
+}
+.card-img-top {
+  
+  
+  height: 253px;
+
+}
+
+.card {
+  
+  width: 250px;
+ 
+}
+
+.card-body{
+  height:5em;
 }
 
 @keyframes spin {
@@ -84,4 +114,25 @@ footer p {
   font-size: small;
   margin-left: 22px;
   margin-top: -20px;
+}
+
+ul, li{
+  list-style: none;
+}
+#wrapper{
+  width: 900px;
+  margin: 20px auto;
+}
+#pagination-data-container{
+  margin-top: 5px;
+}
+#pagination-data-container ul{
+  padding: 0;
+  margin: 0;
+}
+#pagination-data-container li{
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  background: #eee;
+  color: #666;
 }

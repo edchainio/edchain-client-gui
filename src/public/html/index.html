@@ -15,12 +15,15 @@
 
         <script>delete module.exports</script>
         <script src="../../../vendor/js/jquery-3.1.1.js"></script>
+       
         <script src="../../../vendor/js/mustache.min.js"></script>
         <script src="../../../vendor/js/jsoneditor.min.js"></script>
         <script src="../js/window.js"></script>
         <link href="../../../vendor/css/bootstrap.css" rel="stylesheet">
         <script src="../../../vendor/js/popper.min.js"></script>
         <script src="../../../vendor/js/holder.min.js"></script>
+        <script src="../../../vendor/js/pagination.min.js"></script>
+        
         <script>
             // COMMENT: Why does this need to be here?
             // BUG: This does not work on macOS
@@ -29,7 +32,10 @@
             });
             // COMMENT: Why do we need the shell here?
             var shell = require('electron').shell;
+        
+
         </script>
+
     </head>
     <body>
         <div class="edchain-header" id="navbarHeader">
@@ -52,6 +58,8 @@
                             </div>
                             <p class="swarm-info">Peers: <span id="swarm-count"></span></p>
                             <div id="console"></div>
+                           <div id="data-container"></div>
+                       
                                                       
                         </div>                        
                     </div>
@@ -59,24 +67,49 @@
             </div>
         </div>
 
-        <section class="jumbotron text-center">
+        <section class="jumbotron text-center bottom-margin-zero">
           
             <div class="container">
                 <h1 class="jumbotron-heading">
                     Featured Courses
                 </h1>
+                <div class="row form-group">
+                  
+                    <select class="col form-control" id="search-types">
+                        <option value="course_title">Course Title</option>
+                        <option value="subject_matter">Subject Matter</option>
+                        <option value="instructor_name">Instructor Name</option>
+                    </select>
+                   
+                   
+                        <input type="text" class="col form-control" id="search-input">
+                    <input type="button" id="search-btn" class="btn btn-default" value="search">
+                    
+                 </div>      
                 <p class="lead text-muted">
                     edChain is a shared repository for educators to publish content onto.  No central servers are needed.
                 </p>
-               
+                  <div id="wrapper">
+                    <section>
+                        <div id="pagination-data-container"></div>
+                        <div id="pagination-bar"></div>
+                    </section>
+                  </div>
+              
             </div>
         </section>
         <div class="album text-muted">
+            
             <div class="container">
+                <div id="search-count"></div>
                 <div class="loader"></div>
                 <div class="card-columns" id="course-cards">
                 </div>
+              <input type="button" id="nxt-btn" class="btn btn-default" value="Next">
             </div>
+        <!--     <input type="button" id="prev-btn" value="Previous"> -->
+          
+             
         </div>
         <footer class="text-muted">
             <div class="container">

@@ -102,8 +102,7 @@ var createChildWindow = function (mainWindow, url) {
 
 var showChildWindow = function(browserWindow){
     browserWindow.show();
-    // browserWindow.openDevTools();
-    // log.info(browserWindow.webContents); 
+  
 };
 
 

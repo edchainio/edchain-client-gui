@@ -183,15 +183,10 @@ var removePins = function(fn, hash){
 var addPins = function(fn, hash){
 	
 	getIPFS().pin.add(hash, function (err,pinset) {
-		// log.info('addPins', pinset);
-
 		if(err){
-			
-			// log.info(err);
 			fn(false);
 		
 		}else{
-			// log.info("pinned", pinset);
 			fn(true);
 		
 		}
@@ -202,7 +197,7 @@ var addPins = function(fn, hash){
 var checkPin = function(fn, hash){
 
 	getIPFS().pin.ls(hash, function (err, pinset) {
-		// log.info("checkPin", pinset);
+//		console.log("pinset", hash,pinset);
 		if(err){
 			pinset="error"
 			isPinned = false;
@@ -210,6 +205,7 @@ var checkPin = function(fn, hash){
 		else{
 			isPinned = true;
 		}
+//		console.log("isPinned",isPinned);
 		fn(isPinned);
 
 	});
@@ -223,6 +219,17 @@ var ipfsSwarmPeers = function (fn){
 		}
 		
 		fn(peers);
+	}); 
+};
+
+
+var ipfsGetData = function (hash,fn){
+	getIPFS().object.get(hash,function(err,node){
+		if(err){
+			log.info("ipfsGetData", err);
+		}
+//		console.log("getipfsdata",node);
+		fn(node);
 	}); 
 };
 
@@ -241,5 +248,6 @@ module.exports = {
 	removePins,
 	addPins,
 	checkPin,
-	ipfsSwarmPeers
+	ipfsSwarmPeers,
+	ipfsGetData
 };
