@@ -16,7 +16,7 @@ var addCourse2 = function(data,dispatch){
 				"payload": course
 			});
 
-			console.log("beforeCourseRoot",course);
+//			console.log("beforeCourseRoot",course);
 		});
 }
 
@@ -54,41 +54,11 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 });
 
 
-var getFeaturedData = exports.getFeaturedData = createAliasedAction( "getFeaturedData", function (){
-	return function(dispatch){
-
-		courses.getSearchData({search_type:"",search_term:""},10).then(function({data}){
-					
-			setResultCount(dispatch,data);
-			
-			data.forEach(function(course){
-				dispatch({
-					"type": "addCourse2",
-					"payload": course
-			});
-
-			dispatch(getCourseRoot(course.content_address));
-
-		});
-			
-		}).catch(function(error){
-
-			console.log("getFeaturedData",error);
-		
-		});
-	};
-
-		
-});
-
-
-
-
  var dispatchCourseRoot = exports.dispatchCourseRoot = createAliasedAction("dispatchCourseRoot", function(course){
 
  	return function(dispatch){
 
-		console.log("dispatchCourseRoot",course);
+	//	console.log("dispatchCourseRoot",course);
 		
 		dispatch(getCourseRoot(course));
 
@@ -153,7 +123,7 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 			});
 
 			dispatch(getCourseDirectory(hash, data["Links"][0].Hash));
-
+	//		console.log("checkpin",hash,data["Links"][0].Hash);
 			dispatch(checkPin(hash, data["Links"][0].Hash));
 
 		}).catch(function(error){

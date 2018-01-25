@@ -30,6 +30,10 @@ body {
 
 }
 
+.form-control-attr {
+  width:20%;
+}
+
 .album {
   min-height: 50rem; /* Can be removed; just added for demo purposes */
   padding-top: 3rem;
@@ -57,6 +61,11 @@ footer p {
     z-index: 1;
     margin-top: 10%;
     position: absolute;
+}
+#search-count {
+  margin-bottom:2em;
+  font-size: large;
+  font-weight: bolder;
 }
 .card-img-top {
   

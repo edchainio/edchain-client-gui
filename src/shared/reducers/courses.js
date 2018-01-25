@@ -8,7 +8,7 @@ const initialState = {
     didInvalidate: false,
 	items: {},
 	resultCount:0,
-	pageSize:10
+	pageSize:9
 };
 
 var courseItem = function(course){
@@ -123,7 +123,7 @@ module.exports = createReducer(initialState, {
 		});
 	},
 	"setIsPinned": function(state, action){
-	
+//		console.log("pining:setIsPinned");	
 		return updateCourseItem(state, action, function(copy, action){
 
 			copy.META.isPinned = !!action.payload.value;

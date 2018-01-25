@@ -34,11 +34,6 @@
             var shell = require('electron').shell;
         
 
-
-
-
-
-
         </script>
 
     </head>
@@ -78,13 +73,19 @@
                 <h1 class="jumbotron-heading">
                     Featured Courses
                 </h1>
-                    <select id="search-types">
+                <div class="row form-group">
+                  
+                    <select class="col form-control" id="search-types">
                         <option value="course_title">Course Title</option>
                         <option value="subject_matter">Subject Matter</option>
                         <option value="instructor_name">Instructor Name</option>
-                       
                     </select>
-                    <input type="text" id="search-input"><input type="button" id="search-btn" value="search">
+                   
+                   
+                        <input type="text" class="col form-control" id="search-input">
+                    <input type="button" id="search-btn" class="btn btn-default" value="search">
+                    
+                 </div>      
                 <p class="lead text-muted">
                     edChain is a shared repository for educators to publish content onto.  No central servers are needed.
                 </p>
@@ -94,18 +95,20 @@
                         <div id="pagination-bar"></div>
                     </section>
                   </div>
-               
+              
             </div>
         </section>
         <div class="album text-muted">
-            <div id="search-count"></div>
+            
             <div class="container">
+                <div id="search-count"></div>
                 <div class="loader"></div>
                 <div class="card-columns" id="course-cards">
                 </div>
+              <input type="button" id="nxt-btn" class="btn btn-default" value="Next">
             </div>
         <!--     <input type="button" id="prev-btn" value="Previous"> -->
-            <input type="button" id="nxt-btn" value="Next">
+          
              
         </div>
         <footer class="text-muted">

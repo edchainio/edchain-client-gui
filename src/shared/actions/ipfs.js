@@ -88,8 +88,10 @@ var stop = exports.stop = createAliasedAction( "stop", function(){
 });
 
 var addPin = exports.addPin = createAliasedAction( "addPin", function(id, hash){
+
 	return function(dispatch){
 		ipfs.addPins(function(payload){
+//			console.log("pining:addPin",id,hash,payload);
 			dispatch(checkPin(id, hash));
 			// why just for this one
 		}, `/ipfs/${hash}`);
@@ -107,6 +109,7 @@ var removePin = exports.removePin = createAliasedAction( "removePin", function(i
 var checkPin = exports.checkPin = createAliasedAction( "checkPin", function(id, hash){
 	return function(dispatch){
 		ipfs.checkPin(function(payload){
+//			console.log("pining:setIsPinDispatch");
 			dispatch({ 
 				"type" : "setIsPinned", 
 				"payload" : {

@@ -14,7 +14,7 @@ const store = configureStore(initialState, 'renderer');
 
 var currentPage = 1;
  
-
+var totalPages=0;
 // these ping main process
 var __actions = {
     // should the main.store track the windows aswell?
@@ -49,8 +49,9 @@ var __ui = {
         }
     }, 
     createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseId, action){
-        $(".loader").hide();
+        __ui.loadingComplete(true);
         action = action || "...";
+   
         var rendered = Mustache.render(
             $("#course-card-template").html(),
             { image, title, indexURL, courseDirectoryHash, courseId, action }
@@ -65,6 +66,7 @@ var __ui = {
          $('#swarm-count').html(peerCount);
     },
     setPinStatus: function(id, isPinned){
+    
         var 
             action = (isPinned ? "unpin" : "pin"),
             $courseCard = $(`#${id}`),
@@ -77,6 +79,18 @@ var __ui = {
         $actionLink.removeClass( ( isPinned ? "unpinImage" : "pinImage") );
         $actionLink.addClass( ( isPinned ? "pinImage" : "unpinImage") );
     },
+    loadingComplete: function(bool){
+    
+        if(bool === false){
+            $(".loader").show();
+            $("#search-btn").attr("disabled",true);
+
+        }
+        else{
+            $(".loader").hide();
+            $("#search-btn").attr("disabled",false);
+        }
+    },
     nextResult: function(){
          __ui.clearCard();
         let data=store.getState().courses.pageMap;
@@ -86,10 +100,12 @@ var __ui = {
         currentPage=currentPage+1;
 
         data.forEach(function(val){
-         
-           if(i<pSize){
-          
-                store.dispatch(coursesActions.dispatchCourseRoot(data.get(startPointer)));
+       
+         var content=data.get(startPointer);
+   
+           if(i<=pSize && content !=null){
+                    
+                store.dispatch(coursesActions.dispatchCourseRoot(content));
                 i++;
                 startPointer++;
             }
@@ -111,7 +127,7 @@ var __ui = {
        data.forEach(function(val){
          
            if(i<pSize){
-                console.log("prev-startP",startPointer);
+  
                 store.dispatch(coursesActions.dispatchCourseRoot(data.get(startPointer)));
                 i++;
                 startPointer++;
@@ -120,7 +136,7 @@ var __ui = {
         })
     },
     search: function(searchParam, callback){
-        console.log("setsearch",true);
+  
         currentPage=1;
     
         store.dispatch(
@@ -135,13 +151,13 @@ var __ui = {
             type:"clearState",
             payload:store.getState()
         });
-        console.log("searchParam",searchParam);
+
         store.dispatch(coursesActions.getSearchData(searchParam)); 
       
         setTimeout(function(){
          
             let data= store.getState().courses.items;
-            console.log("search state",store.getState());
+ 
             let i=0;
             let p=store.getState().courses.pageSize;
            
@@ -165,11 +181,11 @@ var applyState = function applyState(state){
     __ui.setIPFSStatusButton(state.ipfs.isOnline);
     __ui.showPeerCount(state.ipfs.peers);
 
-    console.log("count1",Object.keys(state.courses.items).length );
-
+   //apply courses once all items are loaded
     if(Object.keys(state.courses.items).length === store.getState().courses.resultCount){
-        console.log("applystate",state.courses.items);
+
         applyCourses(state.courses.items);
+
     }
    
 };
@@ -177,8 +193,7 @@ var applyState = function applyState(state){
 
 var callback = function(value){
 
-       console.log("setsearch2",value);
-        store.dispatch(
+       store.dispatch(
         {
             type:'setSearch', 
             payload: value
@@ -188,8 +203,9 @@ var callback = function(value){
 };
 
 var setIsDisplayed= function (id,value){
+
     store.dispatch({ 
-        
+
         "type" : "setIsDisplayed", 
         "payload" : {
             "id": id, 
@@ -199,17 +215,34 @@ var setIsDisplayed= function (id,value){
 
 };
 
+var getTotalPages = function(cLen,pageSize){
+
+    let totalPages =0;
+    
+    if(cLen%pageSize === 0){
+        totalPages=cLen/pageSize;
+    }
+    else{
+        totalPages=cLen/pageSize+1;
+    }
+
+ return totalPages;
+
+}
 
 var applyCourses = function(items){
     courseKeys = Object.keys(items);
 
-    
+    let pageSize=store.getState().courses.pageSize;
     let cLen = store.getState().courses.resultCount;
     let displayedCourses = [];
     let itemProcessed=0;
     var displayCount =0;
-    if(cLen <= store.getState().courses.pageSize){
-        $('#nxt-btn').hide();
+    
+    totalPages = getTotalPages(cLen,pageSize);
+
+    if(Math.trunc(totalPages)===currentPage){
+         $('#nxt-btn').hide();
     }
     else{
          $('#nxt-btn').show();
@@ -223,28 +256,32 @@ var applyCourses = function(items){
         let meta = course.META;
 
         let isReady = meta.urls.image && meta.urls.index && meta.hashes.courseDirectoryHash && course.course_title;
-   
-        if(isReady){
+        __ui.setPinStatus(course.id, course.META.isPinned);
+       
+        if(isReady && !$courseCard.length){
 
-            itemProcessed = itemProcessed+1;    
-             
+        itemProcessed = itemProcessed+1;    
+          
            if(!course.isDisplayed && !$courseCard.length){
                 setIsDisplayed(course.id,true);
 
                 displayCount++;
                 displayedCourses.push(course.id);
-          
+               
+                
                 __ui.createHomePageCard(
                     meta.urls.image, course.course_title, meta.urls.index, 
                     meta.hashes.courseDirectoryHash, course.id
                 );
            
             }
-        } else if($courseCard.length) {
+
+        }
+        /* else if($courseCard.length) {
             
             __ui.setPinStatus(course.id, course.META.isPinned);
        
-        }
+        }*/
     
        if(itemProcessed === cLen){
             callback(false);
@@ -254,11 +291,27 @@ var applyCourses = function(items){
 
 };
 
+function onPageLoad(){
+        
+    var searchObj = {
+            "search_type":'',
+            "search_term":''
+          }
+        __ui.search(searchObj,function(){
+            $('#search-count').text("Results Returned: " + store.getState().courses.resultCount);
+    });
+
+}
+
 $(document).ready(function() {
+
+     __ui.loadingComplete(false);
+     onPageLoad();
 
     $('#course-cards').on("click", '.pin-course-link', function(event){
         event.preventDefault();
         var { action, id, hash } = $(this).data();
+   
         __actions[(action === "unpin" ? "removePin" : "addPin")](id, hash);
     });
 
@@ -267,20 +320,29 @@ $(document).ready(function() {
         __actions.showSettings();
     });
 
+
     $("#search-btn").on("click",function(event){
         event.preventDefault();
-        
-      
+       
+
+        if($("#search-input").val().trim() === ''){
+            alert("Please enter a value");
+            return;
+        }
+
+        __ui.loadingComplete(false);
+       
         var searchObj = {
-                        "search_type":$("#search-types option:selected").val(),
-                        "search_term":$("#search-input").val()
-                        }
+            "search_type":$("#search-types option:selected").val(),
+            "search_term":$("#search-input").val()
+          }
+
         __ui.search(searchObj,function(){
-            $('#search-count').text("Result Count" + store.getState().courses.resultCount);
+            $('#search-count').text("Results Returned: " + store.getState().courses.resultCount);
         });
 
     });
-
+ 
     $('#course-cards').on("click", ".card a.course-link", function(event){
         event.preventDefault();
         var url = $(this).data("url");
@@ -288,18 +350,18 @@ $(document).ready(function() {
     });
 
     $('#nxt-btn').on("click",function(event){
-        $(".loader").show();
+       __ui.loadingComplete(false);
         event.preventDefault();
         __ui.nextResult();
 
     })
   
-    $('#prev-btn').on("click",function(event){
+   /* $('#prev-btn').on("click",function(event){
         $(".loader").show();
         event.preventDefault();
         __ui.prevResult();
 
-    })
+    })*/
     
     applyState(store.getState());
  

@@ -183,11 +183,10 @@ var removePins = function(fn, hash){
 var addPins = function(fn, hash){
 	
 	getIPFS().pin.add(hash, function (err,pinset) {
-		// log.info('addPins', pinset);
+		 log.info('addPins', pinset);
 
 		if(err){
 			
-			// log.info(err);
 			fn(false);
 		
 		}else{
@@ -202,7 +201,7 @@ var addPins = function(fn, hash){
 var checkPin = function(fn, hash){
 
 	getIPFS().pin.ls(hash, function (err, pinset) {
-		// log.info("checkPin", pinset);
+//		console.log("pinset", hash,pinset);
 		if(err){
 			pinset="error"
 			isPinned = false;
@@ -210,6 +209,7 @@ var checkPin = function(fn, hash){
 		else{
 			isPinned = true;
 		}
+//		console.log("isPinned",isPinned);
 		fn(isPinned);
 
 	});
@@ -232,7 +232,7 @@ var ipfsGetData = function (hash,fn){
 		if(err){
 			log.info("ipfsGetData", err);
 		}
-		console.log("getipfsdata",node);
+//		console.log("getipfsdata",node);
 		fn(node);
 	}); 
 };
