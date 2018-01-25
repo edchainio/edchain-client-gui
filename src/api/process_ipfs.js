@@ -183,14 +183,10 @@ var removePins = function(fn, hash){
 var addPins = function(fn, hash){
 	
 	getIPFS().pin.add(hash, function (err,pinset) {
-		 log.info('addPins', pinset);
-
 		if(err){
-			
 			fn(false);
 		
 		}else{
-			// log.info("pinned", pinset);
 			fn(true);
 		
 		}

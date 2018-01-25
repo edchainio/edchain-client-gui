@@ -112,7 +112,7 @@ var __ui = {
             
         })
     },
-     prevResult: function(){
+    /* prevResult: function(){
         __ui.clearCard();
         let data=store.getState().courses.pageMap;
         let i=0;
@@ -134,17 +134,11 @@ var __ui = {
             }
             
         })
-    },
+    },*/
     search: function(searchParam, callback){
   
         currentPage=1;
     
-        store.dispatch(
-        {
-                type:'setSearch', 
-                payload: true
-        });
-
         __ui.clearCard();
         
         store.dispatch({
@@ -157,7 +151,6 @@ var __ui = {
         setTimeout(function(){
          
             let data= store.getState().courses.items;
- 
             let i=0;
             let p=store.getState().courses.pageSize;
            
@@ -267,9 +260,8 @@ var applyCourses = function(items){
 
                 displayCount++;
                 displayedCourses.push(course.id);
-               
-                
-                __ui.createHomePageCard(
+
+               __ui.createHomePageCard(
                     meta.urls.image, course.course_title, meta.urls.index, 
                     meta.hashes.courseDirectoryHash, course.id
                 );
@@ -277,12 +269,7 @@ var applyCourses = function(items){
             }
 
         }
-        /* else if($courseCard.length) {
-            
-            __ui.setPinStatus(course.id, course.META.isPinned);
-       
-        }*/
-    
+      
        if(itemProcessed === cLen){
             callback(false);
        }
@@ -294,12 +281,12 @@ var applyCourses = function(items){
 function onPageLoad(){
         
     var searchObj = {
-            "search_type":'',
-            "search_term":''
-          }
-        __ui.search(searchObj,function(){
-            $('#search-count').text("Results Returned: " + store.getState().courses.resultCount);
-    });
+        "search_type":'',
+        "search_term":''
+      }
+    __ui.search(searchObj,function(){
+        $('#search-count').text("Results Returned: " + store.getState().courses.resultCount);
+});
 
 }
 
@@ -311,7 +298,6 @@ $(document).ready(function() {
     $('#course-cards').on("click", '.pin-course-link', function(event){
         event.preventDefault();
         var { action, id, hash } = $(this).data();
-   
         __actions[(action === "unpin" ? "removePin" : "addPin")](id, hash);
     });
 
@@ -338,7 +324,7 @@ $(document).ready(function() {
           }
 
         __ui.search(searchObj,function(){
-            $('#search-count').text("Results Returned: " + store.getState().courses.resultCount);
+            $('#search-count').text("Results Returned:" + store.getState().courses.resultCount);
         });
 
     });
@@ -350,19 +336,12 @@ $(document).ready(function() {
     });
 
     $('#nxt-btn').on("click",function(event){
-       __ui.loadingComplete(false);
+        __ui.loadingComplete(false);
         event.preventDefault();
         __ui.nextResult();
 
     })
   
-   /* $('#prev-btn').on("click",function(event){
-        $(".loader").show();
-        event.preventDefault();
-        __ui.prevResult();
-
-    })*/
-    
     applyState(store.getState());
  
     store.subscribe(function(){

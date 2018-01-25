@@ -38,6 +38,8 @@ var getPostData = function(url,searchObj,fetchSize){
     var instructor_name="";
     var course_title="";
     var requestObj="";
+    var vars={};
+
     if(value === ''){
         fetchSizeValue=1;
     }
@@ -52,7 +54,7 @@ var getPostData = function(url,searchObj,fetchSize){
             headers:{'content-type':'application/json'},
             data: { 
                'response_size':9,
-                "copyright_holder": "MIT", 
+               "copyright_holder": "MIT", 
             }
       
         };
@@ -100,14 +102,11 @@ var getPostData = function(url,searchObj,fetchSize){
         };
     }
   
- 
-    console.log("requestObj",requestObj);
     return axios(requestObj);
 }
 
 
 var getIpfsData = function(hash){
- //   console.log("getipfsdata",hash);
     return getData(buildIpfsUrl(hash));
 };
 

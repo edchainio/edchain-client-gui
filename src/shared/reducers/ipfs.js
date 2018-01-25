@@ -41,10 +41,6 @@ module.exports = createReducer(initialState, {
 	"setSearch": function(state, action){
 		return Object.assign({}, state, { "isSearch": action.payload });
 	},
-/*	"ipfsGetData": function(state, action){
-		console.log("ipfsgetdata",state,actions);
-		return Object.assign({}, state, { "ipfsGetData": action.payload });
-	},*/
 	"checkStatus": function(state, action){
 		return Object.assign({}, state, { "status": action.payload });
 	},

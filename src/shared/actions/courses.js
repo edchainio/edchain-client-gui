@@ -15,8 +15,6 @@ var addCourse2 = function(data,dispatch){
 				"type": "addCourse2",
 				"payload": course
 			});
-
-//			console.log("beforeCourseRoot",course);
 		});
 }
 
@@ -39,7 +37,7 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 				dispatch({
 					"type": "addCourse2",
 					"payload": course
-			});
+				});
 	
 		});
 			
@@ -54,12 +52,10 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 });
 
 
- var dispatchCourseRoot = exports.dispatchCourseRoot = createAliasedAction("dispatchCourseRoot", function(course){
+var dispatchCourseRoot = exports.dispatchCourseRoot = createAliasedAction("dispatchCourseRoot", function(course){
 
  	return function(dispatch){
 
-	//	console.log("dispatchCourseRoot",course);
-		
 		dispatch(getCourseRoot(course));
 
  	}
@@ -71,16 +67,16 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 
 var setResultCount = function(dispatch,data){
 	dispatch({
-			"type": "setResultCount",
-			"payload": data.length
+		"type": "setResultCount",
+		"payload": data.length
 	});
 
 }
 
 var createPageMap = function(dispatch,data){
 	dispatch({
-			"type": "createPageMap",
-			"payload": data
+		"type": "createPageMap",
+		"payload": data
 	});
 
 }
@@ -99,6 +95,7 @@ var getFeatured = exports.getFeatured = createAliasedAction( "getFeatured", func
 				dispatch(getCourseRoot(course.hash));
 
 			});
+
 		}).catch(function(error){
 
 			console.log("getFeatured","Failed");
@@ -123,7 +120,6 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 			});
 
 			dispatch(getCourseDirectory(hash, data["Links"][0].Hash));
-	//		console.log("checkpin",hash,data["Links"][0].Hash);
 			dispatch(checkPin(hash, data["Links"][0].Hash));
 
 		}).catch(function(error){

@@ -85,10 +85,8 @@ module.exports = createReducer(initialState, {
 	},
 	"createPageMap": function(state,action){
 		
-		var pageMap = new Map();
-		
-		let i=0;
-		
+		var pageMap = new Map();		
+		let i=0;		
 		action.payload.forEach(function(val){
 		
 			pageMap.set(i++,val.content_address);
@@ -123,9 +121,7 @@ module.exports = createReducer(initialState, {
 		});
 	},
 	"setIsPinned": function(state, action){
-//		console.log("pining:setIsPinned");	
 		return updateCourseItem(state, action, function(copy, action){
-
 			copy.META.isPinned = !!action.payload.value;
 	
 		});
