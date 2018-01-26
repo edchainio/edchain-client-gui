@@ -53,7 +53,7 @@ var getPostData = function(url,searchObj,fetchSize){
             method: 'POST',
             headers:{'content-type':'application/json'},
             data: { 
-               'response_size':9,
+               'response_size':200,
                "copyright_holder": "MIT", 
             }
       
