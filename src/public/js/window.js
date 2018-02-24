@@ -25,6 +25,9 @@ var __actions = {
     showSettings: function(){
         ipcRenderer.send('openSettings');
     },
+     showStellar: function(){
+        ipcRenderer.send('openStellar');
+    },
     start: function(){
         store.dispatch(ipfsActions.start());
     },
@@ -318,6 +321,10 @@ $(document).ready(function() {
     $("#ipfs-icon-ref").on("click", function(event){
         event.preventDefault();
         __actions.showSettings();
+    });
+      $("#stellar-icon-ref").on("click", function(event){
+        event.preventDefault();
+        __actions.showStellar();
     });
 
 

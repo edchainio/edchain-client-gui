@@ -1,13 +1,13 @@
 const axios = require("axios");
 
-const elasticsearch = require('elasticsearch');
+/*const elasticsearch = require('elasticsearch');
 //const elasticSearchURL = "http://localhost:9200/twitter/_doc/2";
 const client = new elasticsearch.Client({
       host:'http://localhost:9200',
       log:'trace'
 });
-
-
+*/
+/*
 var isElasticSearchOnline = function(){
 
   return client.search({
@@ -17,6 +17,7 @@ var isElasticSearchOnline = function(){
 
 }
 
+*/
 var bulk= function (){
 
 	return client.bulk({
@@ -30,9 +31,7 @@ var bulk= function (){
 				{
 					title:'zoozozozo'
 				},
-				
-				
-			
+
 		]
 	});
 
@@ -56,7 +55,7 @@ var put = function(courseData){
 
 
 module.exports = {
-	isElasticSearchOnline,
+	//isElasticSearchOnline,
 	put,
 	bulk
 
