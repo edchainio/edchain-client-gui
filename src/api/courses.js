@@ -2,7 +2,6 @@
 const axios = require("axios");
 
 const httpURL = "http://localhost:8080/ipfs/";
-const edchainNodeURL = "http://45.55.235.198:5000/content/addresses/featured";
 const ipfsGetURL=  "http://localhost:5001/api/v0/object/get?arg=";
 const edchainNodeURL2 = "http://45.55.235.198:9000/edchain/courses/";
 
@@ -23,7 +22,7 @@ var buildImageUrl = function(hash){
 };
 
 var getData = function(url){
-//   console.log("url",url);
+ //  console.log("url",url);
    return axios({
         url: url,
         method: 'GET',
@@ -31,7 +30,7 @@ var getData = function(url){
 };
 
 var getPostData = function(url,searchObj,fetchSize){
-    console.log("searchObj",searchObj,"fetchSize",fetchSize);
+//    console.log("searchObj",searchObj,"fetchSize",fetchSize);
     var type=searchObj.search_type;
     var value=searchObj.search_term;
     var subject_matter="";
@@ -101,18 +100,13 @@ var getPostData = function(url,searchObj,fetchSize){
   
         };
     }
-  
+//    console.log(requestObj);
     return axios(requestObj);
 }
 
 
 var getIpfsData = function(hash){
     return getData(buildIpfsUrl(hash));
-};
-
-
-var getFeatured = function(){
-    return getData(edchainNodeURL);
 };
 
 var getSearchData = function(searchObj,fetchSize){
@@ -129,7 +123,6 @@ var getCourseDirectory = function(directoryHash){
 };
 
 module.exports = {
-	getFeatured,
     getSearchData,
 	getCourseRoot,
 	getCourseDirectory,

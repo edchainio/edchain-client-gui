@@ -31,6 +31,7 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 
 			data.forEach(function(course){
 				
+
 				course.paginationId = count+1;
 				count++;
 
@@ -42,7 +43,7 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 		});
 			
 		}).catch(function(error){
-		
+			
 			console.log("getSearchData",error);
 		
 		});

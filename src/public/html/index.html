@@ -42,27 +42,32 @@
             <div class="container">
                
                 <div class="row">
-                    <div class="col-sm-10 py-4">
+                    <div class="col-sm-8 py-4">
                         <h4 class="text-white"></h4>
                         <div id="IDs" class="well">
                             <img src="../img/header_logo.png">
                         </div>
                     </div>
-                    <div class="col-sm-2 py-4">
+                    
                         <h4 class="text-white"></h4>
-                        <div>
-                            <div id="nodeStatus" class="alert">
+                            
+                             <div id="stellarIcon" class="col-sm-1 alert">
+                                <a href="#" id="stellar-icon-ref" class="btn">
+                                    <img id="img-ipfs-icon" alt="offline" width="50px" src="../img/stellar-rocket.png"> 
+                                 </a>
+                            </div>
+                            <div id="nodeStatus" class="col-sm-3 alert">
                                 <a href="#" id="ipfs-icon-ref" class="btn btn-outline-danger ipfs-icon">
                                     <img id="img-ipfs-icon" alt="offline" width="30px" src="../img/ipfs-logo-128-white-outline.png"> 
                                  </a>
-                            </div>
-                            <p class="swarm-info">Peers: <span id="swarm-count"></span></p>
+                                 <p class="swarm-info">Peers: <span id="swarm-count"></span></p>
                             <div id="console"></div>
-                           <div id="data-container"></div>
-                       
-                                                      
-                        </div>                        
-                    </div>
+                           <div id="data-container"></div> 
+                            </div>
+
+                           
+                                      
+                    
                 </div>
             </div>
         </div>

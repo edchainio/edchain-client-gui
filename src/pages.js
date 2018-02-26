@@ -139,6 +139,7 @@ var createWindow = function createWindow(config){
         browserWindow.openDevTools();
    
     }
+//     browserWindow.openDevTools();
    
     return browserWindow;
 };
@@ -174,6 +175,15 @@ var createMainWindow = function createMainWindow(){
         );
         showChildWindow(settingsWindow);
     });
+
+    ipcMain.on('openStellar', function(event){
+        settingsWindow = createChildWindow(
+            mainWindow, `file://${__dirname}/steller-term/index.html`);
+           // 'file://' + __dirname + '/public/html/settings.html'
+        
+        showChildWindow(settingsWindow);
+    });
+
 
     ipcMain.on("closePage", function(event, id){
         __windows[id].close();

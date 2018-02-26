@@ -3,6 +3,7 @@ const { ipcRenderer, remote } = require('electron');
 
 const coursesActions = require("../../shared/actions/courses");
 const ipfsActions = require("../../shared/actions/ipfs");
+const searchActions = require("../../shared/actions/search-action");
 
 const configureStore = require('../../shared/store/configureStore');
 
@@ -23,6 +24,9 @@ var __actions = {
     },
     showSettings: function(){
         ipcRenderer.send('openSettings');
+    },
+     showStellar: function(){
+        ipcRenderer.send('openStellar');
     },
     start: function(){
         store.dispatch(ipfsActions.start());
@@ -155,13 +159,13 @@ var __ui = {
             let p=store.getState().courses.pageSize;
            
             Object.keys(data).forEach(function(val){
-
                 if(i<p){
                     store.dispatch(coursesActions.dispatchCourseRoot(val));
                     i++;
                 }
             });
-             callback();
+            
+            callback();
         },3000);
        
     }
@@ -278,22 +282,35 @@ var applyCourses = function(items){
 
 };
 
-function onPageLoad(){
+function searchComplete(){
+      __ui.loadingComplete(true);
+    if(store.getState().courses.resultCount === 0){
+       $('#search-count').text("No Results");
+
+    }
+    else{
+        $('#search-count').text("Results Returned: " + 
+             store.getState().courses.resultCount);
+    }
+}
+
+function resetSearch(){
         
     var searchObj = {
         "search_type":'',
         "search_term":''
       }
-    __ui.search(searchObj,function(){
-        $('#search-count').text("Results Returned: " + store.getState().courses.resultCount);
-});
+    __ui.search(searchObj,searchComplete);
 
 }
+
 
 $(document).ready(function() {
 
      __ui.loadingComplete(false);
-     onPageLoad();
+     resetSearch();
+     
+    
 
     $('#course-cards').on("click", '.pin-course-link', function(event){
         event.preventDefault();
@@ -304,6 +321,10 @@ $(document).ready(function() {
     $("#ipfs-icon-ref").on("click", function(event){
         event.preventDefault();
         __actions.showSettings();
+    });
+      $("#stellar-icon-ref").on("click", function(event){
+        event.preventDefault();
+        __actions.showStellar();
     });
 
 
@@ -341,7 +362,7 @@ $(document).ready(function() {
         __ui.nextResult();
 
     })
-  
+ //   store.dispatch(searchActions.getElasticSearch());
     applyState(store.getState());
  
     store.subscribe(function(){

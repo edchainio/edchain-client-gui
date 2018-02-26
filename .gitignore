@@ -60,6 +60,9 @@ typings/
 # dist
 dist/
 ip4/
+elastic-search/
+java/
+jdk-8u161-linux-i586.tar.gz
 
 # MAC
 .DS_Store
