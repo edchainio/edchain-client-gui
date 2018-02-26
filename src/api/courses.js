@@ -22,7 +22,7 @@ var buildImageUrl = function(hash){
 };
 
 var getData = function(url){
-   console.log("url",url);
+ //  console.log("url",url);
    return axios({
         url: url,
         method: 'GET',
@@ -30,7 +30,7 @@ var getData = function(url){
 };
 
 var getPostData = function(url,searchObj,fetchSize){
-    console.log("searchObj",searchObj,"fetchSize",fetchSize);
+//    console.log("searchObj",searchObj,"fetchSize",fetchSize);
     var type=searchObj.search_type;
     var value=searchObj.search_term;
     var subject_matter="";
@@ -100,7 +100,7 @@ var getPostData = function(url,searchObj,fetchSize){
   
         };
     }
-    console.log(requestObj);
+//    console.log(requestObj);
     return axios(requestObj);
 }
 

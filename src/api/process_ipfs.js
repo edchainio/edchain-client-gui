@@ -228,7 +228,7 @@ var ipfsGetData = function (hash,fn){
 		if(err){
 			log.info("ipfsGetData", err);
 		}
-		console.log("getipfsdata",node);
+//		console.log("getipfsdata",node);
 		fn(node);
 	}); 
 };
