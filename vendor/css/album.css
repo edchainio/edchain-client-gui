@@ -84,6 +84,25 @@ footer p {
   height:5em;
 }
 
+.card-columns .card {
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 576px) {
+  .card-columns {
+    display: : -webkit-flex;
+    -webkit-flex-direction: row;
+    -webkit-flex-flow: row wrap;
+  }
+  .card-columns .card {
+    flex: 0 0 30%;
+    margin-left: 1vw;
+    margin-right: 1vw;
+    display: inline-block;
+    width: 100%;
+  }
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
