@@ -114,17 +114,22 @@
         <div class="album text-muted">
             
             <div class="container">
+                
                 <div class="row">
                     <div id="search-count"></div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-3"></div>
-                    <div class="loader col-sm-6"></div>
+                    <div class="col-sm-6">
+                        <center><h2 id="loading-display-msg">Fetching data from the nodes</h2></center>
+                        <center><div class="loader"></div></center>
+                    </div>
                     <div class="col-sm-3"></div>
                 </div>
+                
                 <div class="row">
-                    <div class="card-columns" id="course-cards"></div>
+                    <div class="card-columns" id="course-cards"> </div>
                 </div>
                 <div class="row">
                     <input type="button" id="nxt-btn" class="btn btn-default" value="Next">

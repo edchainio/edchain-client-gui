@@ -87,12 +87,16 @@ var __ui = {
     
         if(bool === false){
             $(".loader").show();
+            $("#loading-display-msg").show();
             $("#search-btn").attr("disabled",true);
+            $("#allCourses-btn").attr("disabled",true);
 
         }
         else{
             $(".loader").hide();
+            $("#loading-display-msg").hide();
             $("#search-btn").attr("disabled",false);
+            $("#allCourses-btn").attr("disabled",false);
         }
     },
     nextResult: function(){
