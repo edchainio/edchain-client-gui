@@ -183,7 +183,7 @@ var createMainWindow = function createMainWindow(){
 
     ipcMain.on('openStellar', function(event){
         settingsWindow = createChildWindow(
-            mainWindow, `file://${__dirname}/steller-term/index.html`);
+            mainWindow, `file://${__dirname}/steller-term/wallet.html`);
            // 'file://' + __dirname + '/public/html/settings.html'
         
         showChildWindow(settingsWindow);

@@ -68,6 +68,7 @@ var __ui = {
     },
     showPeerCount: function(peerCount){
          $('#swarm-count').html(peerCount);
+         $('#loading-display-msg').html("Fetching data from "+peerCount+" peers");
     },
     setPinStatus: function(id, isPinned){
     
