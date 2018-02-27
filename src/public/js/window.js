@@ -283,19 +283,24 @@ var applyCourses = function(items){
 };
 
 function searchComplete(){
-      __ui.loadingComplete(true);
+      
     if(store.getState().courses.resultCount === 0){
        $('#search-count').text("No Results");
-
+       $('#nxt-btn').hide();
+       __ui.loadingComplete(true);
     }
     else{
         $('#search-count').text("Results Returned: " + 
              store.getState().courses.resultCount);
+        $('#nxt-btn').show();
     }
 }
 
 function resetSearch(){
-        
+
+    __ui.loadingComplete(false);
+    // Clear the search term
+    $('#search-input').val('');
     var searchObj = {
         "search_type":'',
         "search_term":''
@@ -307,7 +312,7 @@ function resetSearch(){
 
 $(document).ready(function() {
 
-     __ui.loadingComplete(false);
+     //__ui.loadingComplete(false);
      resetSearch();
      
     
@@ -345,11 +350,17 @@ $(document).ready(function() {
           }
 
         __ui.search(searchObj,function(){
-            $('#search-count').text("Results Returned:" + store.getState().courses.resultCount);
+            searchComplete();
+            //$('#search-count').text("Results Returned:" + store.getState().courses.resultCount);
         });
 
     });
- 
+
+    $('#allCourses-btn').on('click', function(event){
+        event.preventDefault();
+        resetSearch();
+    });
+
     $('#course-cards').on("click", ".card a.course-link", function(event){
         event.preventDefault();
         var url = $(this).data("url");
