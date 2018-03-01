@@ -57,10 +57,10 @@ footer p {
     width: 120px;
     height: 120px;
     animation: spin 2s linear infinite;
-    margin-left: 40%;
+    /*margin-left: 40%;*/
     z-index: 1;
     margin-top: 10%;
-    position: absolute;
+    /*position: absolute;*/
 }
 #search-count {
   margin-bottom:2em;
@@ -111,8 +111,16 @@ footer p {
 }
 
 .swarm-info {
-  font-size: small;
+  /*font-size: small;*/
+  
  
+}
+
+
+
+#stellar-logo-text{
+  margin-top:-30px;
+  margin-left:25px;
 }
 
 ul, li{

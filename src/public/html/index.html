@@ -12,6 +12,7 @@
 
         <link href="../../../vendor/js/bootstrap.js" rel="stylesheet">
         <link href="../../../vendor/css/album.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="../css/toggle-switch.css">
 
         <script>delete module.exports</script>
         <script src="../../../vendor/js/jquery-3.1.1.js"></script>
@@ -49,20 +50,25 @@
                         </div>
                     </div>
                     
-                        <h4 class="text-white"></h4>
-                            
+                    
+                        <h4 id="nav-bar-blank-space" class="text-white"></h4>
+                    
                              <div id="stellarIcon" class="col-sm-1 alert">
                                 <a href="#" id="stellar-icon-ref" class="btn">
-                                    <img id="img-ipfs-icon" alt="offline" width="50px" src="../img/stellar-rocket.png"> 
+                                    <img id="img-stellar-icon" alt="offline" width="75px" src="../img/stellar-rocket.png"> 
                                  </a>
+                                  <p id="stellar-logo-text">Wallet</p>
                             </div>
-                            <div id="nodeStatus" class="col-sm-3 alert">
+                            <div id="nodeStatus" class="col-sm-2 alert">
+                                <center>
                                 <a href="#" id="ipfs-icon-ref" class="btn btn-outline-danger ipfs-icon">
-                                    <img id="img-ipfs-icon" alt="offline" width="30px" src="../img/ipfs-logo-128-white-outline.png"> 
+                                    <img id="img-ipfs-icon" alt="offline" width="45px" src="../img/ipfs-logo-128-white-outline.png"> 
                                  </a>
                                  <p class="swarm-info">Peers: <span id="swarm-count"></span></p>
+                             </center>
                             <div id="console"></div>
                            <div id="data-container"></div> 
+                       
                             </div>
 
                            
@@ -76,8 +82,11 @@
           
             <div class="container">
                 <h1 class="jumbotron-heading">
-                    Featured Courses
+                    edChain
                 </h1>
+                <p class="lead text-muted">
+                    A Decentralized Educational Library
+                </p>
                 <div class="row form-group">
                   
                     <select class="col form-control" id="search-types">
@@ -88,12 +97,11 @@
                    
                    
                         <input type="text" class="col form-control" id="search-input">
-                    <input type="button" id="search-btn" class="btn btn-default" value="search">
+                    <input type="button" id="search-btn" class="btn btn-default" value="Search">
+                    <input type="button" id="allCourses-btn" class="btn btn-default" value="List all Courses">
                     
                  </div>      
-                <p class="lead text-muted">
-                    edChain is a shared repository for educators to publish content onto.  No central servers are needed.
-                </p>
+                
                   <div id="wrapper">
                     <section>
                         <div id="pagination-data-container"></div>
@@ -106,11 +114,26 @@
         <div class="album text-muted">
             
             <div class="container">
-                <div id="search-count"></div>
-                <div class="loader"></div>
-                <div class="card-columns" id="course-cards">
+                
+                <div class="row">
+                    <div id="search-count"></div>
                 </div>
-              <input type="button" id="nxt-btn" class="btn btn-default" value="Next">
+
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <center><h2 id="loading-display-msg">Fetching data from </h2></center>
+                        <center><div class="loader"></div></center>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+                
+                <div class="row">
+                    <div class="card-columns" id="course-cards"> </div>
+                </div>
+                <div class="row">
+                    <input type="button" id="nxt-btn" class="btn btn-default" value="Next">
+                </div>
             </div>
         <!--     <input type="button" id="prev-btn" value="Previous"> -->
           

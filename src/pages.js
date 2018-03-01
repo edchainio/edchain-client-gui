@@ -66,7 +66,12 @@ var createChildWindow = function (mainWindow, url) {
         parent: mainWindow, 
         modal:true, 
         show:true,
-        hasIpfsLogging: true
+        hasIpfsLogging: true,       
+        x: 400,
+        y: 180,
+        width: 1147,
+        height: 849
+
     });
 
     if (process.platform === 'darwin') {
@@ -140,7 +145,6 @@ var createWindow = function createWindow(config){
    
     }
 //     browserWindow.openDevTools();
-   
     return browserWindow;
 };
 
@@ -150,8 +154,9 @@ var createMainWindow = function createMainWindow(){
         settingsWindow, mainWindow;
 
     mainWindow = createWindow({
-        width: 960,
-        height: 540,
+        width: 1855,
+        height: 990,
+        fullscreen: true,
         //frame: false,
         icon: path.resolve(__dirname, "public/img/icon.png")
     });
@@ -178,7 +183,7 @@ var createMainWindow = function createMainWindow(){
 
     ipcMain.on('openStellar', function(event){
         settingsWindow = createChildWindow(
-            mainWindow, `file://${__dirname}/steller-term/index.html`);
+            mainWindow, `file://${__dirname}/steller-term/wallet.html`);
            // 'file://' + __dirname + '/public/html/settings.html'
         
         showChildWindow(settingsWindow);

@@ -68,6 +68,7 @@ var __ui = {
     },
     showPeerCount: function(peerCount){
          $('#swarm-count').html(peerCount);
+         $('#loading-display-msg').html("Fetching data from "+peerCount+" peers");
     },
     setPinStatus: function(id, isPinned){
     
@@ -87,12 +88,16 @@ var __ui = {
     
         if(bool === false){
             $(".loader").show();
+            $("#loading-display-msg").show();
             $("#search-btn").attr("disabled",true);
+            $("#allCourses-btn").attr("disabled",true);
 
         }
         else{
             $(".loader").hide();
+            $("#loading-display-msg").hide();
             $("#search-btn").attr("disabled",false);
+            $("#allCourses-btn").attr("disabled",false);
         }
     },
     nextResult: function(){
@@ -283,19 +288,24 @@ var applyCourses = function(items){
 };
 
 function searchComplete(){
-      __ui.loadingComplete(true);
+      
     if(store.getState().courses.resultCount === 0){
        $('#search-count').text("No Results");
-
+       $('#nxt-btn').hide();
+       __ui.loadingComplete(true);
     }
     else{
         $('#search-count').text("Results Returned: " + 
              store.getState().courses.resultCount);
+        $('#nxt-btn').show();
     }
 }
 
 function resetSearch(){
-        
+
+    __ui.loadingComplete(false);
+    // Clear the search term
+    $('#search-input').val('');
     var searchObj = {
         "search_type":'',
         "search_term":''
@@ -307,7 +317,7 @@ function resetSearch(){
 
 $(document).ready(function() {
 
-     __ui.loadingComplete(false);
+     //__ui.loadingComplete(false);
      resetSearch();
      
     
@@ -345,11 +355,17 @@ $(document).ready(function() {
           }
 
         __ui.search(searchObj,function(){
-            $('#search-count').text("Results Returned:" + store.getState().courses.resultCount);
+            searchComplete();
+            //$('#search-count').text("Results Returned:" + store.getState().courses.resultCount);
         });
 
     });
- 
+
+    $('#allCourses-btn').on('click', function(event){
+        event.preventDefault();
+        resetSearch();
+    });
+
     $('#course-cards').on("click", ".card a.course-link", function(event){
         event.preventDefault();
         var url = $(this).data("url");
