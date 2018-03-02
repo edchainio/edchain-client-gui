@@ -87,15 +87,14 @@ var __ui = {
     loadingComplete: function(bool){
     
         if(bool === false){
+            $('#search-count').hide();
+            $('#display-info').hide();
             $(".loader").show();
             $("#loading-display-msg").show();
             $("#search-btn").attr("disabled",true);
             $("#allCourses-btn").attr("disabled",true);
-
         }
         else{
-            $(".loader").hide();
-            $("#loading-display-msg").hide();
             $("#search-btn").attr("disabled",false);
             $("#allCourses-btn").attr("disabled",false);
         }
@@ -288,17 +287,28 @@ var applyCourses = function(items){
 };
 
 function searchComplete(){
-      
+
+    // Hide the loader and loading display block once the search is complete
+    $(".loader").hide();
+    $("#loading-display-msg").hide();
+
     if(store.getState().courses.resultCount === 0){
-       $('#search-count').text("No Results");
+       $('#search-count').hide();
+       $("#display-info").show();
+       $("#display-info").html("No Results found");
        $('#nxt-btn').hide();
        __ui.loadingComplete(true);
     }
     else{
+        //console.log("Some results - From Search Complete");
+        $('#search-count').show();
+        $("#display-info").hide();
         $('#search-count').text("Results Returned: " + 
              store.getState().courses.resultCount);
-        $('#nxt-btn').show();
+        //$('#nxt-btn').show();
     }
+
+    
 }
 
 function resetSearch(){

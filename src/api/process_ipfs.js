@@ -14,17 +14,29 @@ const { spawn, exec } = require('child_process');
 
 var ipfs = null;
 
+// Debug variable counter
+var counter = 0;
+
 // api
 var startIpfs = function(callback){
+	console.log("Process IPFS.js - IPFS Called!");
+	counter+=1;
+
 	const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
 	ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
 
 	ipfsProcess.stdout.on('data', function(data){
+		console.log("Successfully connected to ipfs!");
 		callback(data.toString());	
 	});
 
 	ipfsProcess.stderr.on('data', function(data){;
+		console.log("Failed to connect to ipfs");
 	 	callback('ipfs error:' + data.toString());
+	 	if(counter<=3){
+	 		console.log("Trying to reconnect - Attempt "+counter.toString());
+	 		startIpfs();
+	 	}
 	});
 
 	ipfsProcess.on('exit', function(code){

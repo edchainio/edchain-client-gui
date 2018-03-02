@@ -145,6 +145,7 @@ var ipfsGetData = exports.ipfsGetData = createAliasedAction( "ipfsGetData", func
 */
 
 var syncIpfs = exports.syncIpfs = createAliasedAction( "syncIpfs", function(){
+
 	return function(dispatch){
 		dispatch(isOnline());
         dispatch(getPeerId());
