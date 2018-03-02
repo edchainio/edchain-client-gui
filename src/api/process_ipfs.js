@@ -35,11 +35,12 @@ var startIpfs = function(callback){
 	 	callback('ipfs error:' + data.toString());
 	 	if(counter<=3){
 	 		console.log("Trying to reconnect - Attempt "+counter.toString());
-	 		startIpfs();
+	 		startIpfs(callback);
 	 	}
 	});
 
 	ipfsProcess.on('exit', function(code){
+		
 		callback('ipfs exit:' + code.toString());
 	});
 };

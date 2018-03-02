@@ -86,3 +86,7 @@ input:checked + .slider:before {
 	margin-left: 5px; 
 }
 
+
+#nxt-btn{
+	display: none;
+}

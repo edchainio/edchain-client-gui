@@ -133,6 +133,7 @@
                     <div class="card-columns" id="course-cards"> </div>
                 </div>
                 <div class="row">
+                    <input type="button" id="prev-btn" class="btn btn-default" value="Previous">
                     <input type="button" id="nxt-btn" class="btn btn-default" value="Next">
                 </div>
             </div>
@@ -154,12 +155,17 @@
         </footer>
 
         <script type="text/template" id="course-card-template">
-            <div class="card" id="{{courseId}}">
-                <img class="card-img-top" src="{{image}}">
+            <div class="card" id="{{courseId}}" >
+                <a class="card-link course-link" data-url="{{indexURL}}" href="#">
+                    <!--img class="card-img-top handle-img" src="{{image}}"-->
+                    <center><img class="handle-img" src="{{image}}"></center>
+                </a>
                 <div class="card-body">
-                    <a class="card-link course-link" data-url="{{indexURL}}" href="#">
-                        {{title}}
-                    </a>
+                    <!--a class="card-link course-link" data-url="{{indexURL}}" href="#"-->
+                    <center>
+                            <a id="course-title-label" href="#">{{title}}</a>
+                    </center>
+                    <!--/a-->
                 </div>
                 <div class="card-footer text-muted">
                     <p class="card-text">

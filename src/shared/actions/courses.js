@@ -111,6 +111,7 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 	
 		courses.getCourseRoot(hash).then(function({data}){
 
+
 			dispatch({
 				"type": "setHash",
 				"payload": {

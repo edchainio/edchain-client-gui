@@ -15,6 +15,8 @@ const store = configureStore(initialState, 'renderer');
 
 var currentPage = 1;
  
+var isLoading = true;
+
 var totalPages=0;
 // these ping main process
 var __actions = {
@@ -87,6 +89,8 @@ var __ui = {
     loadingComplete: function(bool){
     
         if(bool === false){
+            isLoading = true;
+            $('#nxt-btn').hide();
             $('#search-count').hide();
             $('#display-info').hide();
             $(".loader").show();
@@ -95,8 +99,13 @@ var __ui = {
             $("#allCourses-btn").attr("disabled",true);
         }
         else{
+            isLoading = false;
+            $('#search-count').show();
+            $(".loader").hide();
+            $("#loading-display-msg").hide();
             $("#search-btn").attr("disabled",false);
             $("#allCourses-btn").attr("disabled",false);
+
         }
     },
     nextResult: function(){
@@ -105,12 +114,13 @@ var __ui = {
         let i=0;
         let pSize = store.getState().courses.pageSize;
         let startPointer = pSize*currentPage+1;
+       
         currentPage=currentPage+1;
 
         data.forEach(function(val){
        
          var content=data.get(startPointer);
-   
+
            if(i<=pSize && content !=null){
                     
                 store.dispatch(coursesActions.dispatchCourseRoot(content));
@@ -118,9 +128,35 @@ var __ui = {
                 startPointer++;
             }
             
-        })
+        });
+
+        //loadingComplete
     },
-    /* prevResult: function(){
+    prevResult: function(){
+        if(currentPage>=2){
+            __ui.clearCard();
+            let data = store.getState().courses.pageMap;
+            let i=0;
+            let pSize = store.getState().courses.pageSize;
+            let startPointer = pSize*currentPage-17;
+            console.log("currentPage: "+currentPage.toString());
+            console.log(startPointer);
+
+            currentPage=currentPage-1;
+
+            data.forEach(function(val){
+                var content=data.get(startPointer);
+
+                    if(i<=pSize && content !=null){    
+                        store.dispatch(coursesActions.dispatchCourseRoot(content));
+                        i++;
+                        startPointer++;
+                    }
+        })
+        }
+        
+    },
+    /*prevResult: function(){
         __ui.clearCard();
         let data=store.getState().courses.pageMap;
         let i=0;
@@ -242,12 +278,19 @@ var applyCourses = function(items){
     
     totalPages = getTotalPages(cLen,pageSize);
 
-    if(Math.trunc(totalPages)===currentPage){
+
+    // Hiding the Next btn if no results found or if user reaches the last page
+    if(Math.trunc(totalPages)===currentPage || Math.trunc(totalPages)==0){
          $('#nxt-btn').hide();
     }
-    else{
+
+    else if(!isLoading){
          $('#nxt-btn').show();
     }
+
+
+    
+
 
     courseKeys.forEach(function(key){
         
@@ -293,7 +336,9 @@ function searchComplete(){
     $("#loading-display-msg").hide();
 
     if(store.getState().courses.resultCount === 0){
-       $('#search-count').hide();
+        // Load complete function shows the search count anyway
+        // So, nullify the search-count text if no results are found
+       $('#search-count').text("");
        $("#display-info").show();
        $("#display-info").html("No Results found");
        $('#nxt-btn').hide();
@@ -305,7 +350,7 @@ function searchComplete(){
         $("#display-info").hide();
         $('#search-count').text("Results Returned: " + 
              store.getState().courses.resultCount);
-        //$('#nxt-btn').show();
+        
     }
 
     
@@ -327,9 +372,11 @@ function resetSearch(){
 
 $(document).ready(function() {
 
-     //__ui.loadingComplete(false);
+
+    //__ui.loadingComplete(false);
      resetSearch();
-     
+    
+
     
 
     $('#course-cards').on("click", '.pin-course-link', function(event){
@@ -383,11 +430,22 @@ $(document).ready(function() {
     });
 
     $('#nxt-btn').on("click",function(event){
-        __ui.loadingComplete(false);
         event.preventDefault();
+        __ui.loadingComplete(false);
         __ui.nextResult();
+        
 
     })
+
+
+     $('#prev-btn').on("click",function(event){
+        event.preventDefault();
+        __ui.loadingComplete(false);
+        __ui.prevResult();
+        
+
+    })
+
  //   store.dispatch(searchActions.getElasticSearch());
     applyState(store.getState());
  
