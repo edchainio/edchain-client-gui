@@ -68,7 +68,7 @@ var createChildWindow = function (mainWindow, url) {
         show:true,
         hasIpfsLogging: true,       
         x: 420,
-        y: 240,
+        y: 350,
         width: 1100,
         height: 700
 
