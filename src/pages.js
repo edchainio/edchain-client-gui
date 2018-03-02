@@ -67,10 +67,10 @@ var createChildWindow = function (mainWindow, url) {
         modal:true, 
         show:true,
         hasIpfsLogging: true,       
-        x: 400,
-        y: 180,
-        width: 1147,
-        height: 849
+        x: 420,
+        y: 240,
+        width: 1100,
+        height: 700
 
     });
 
@@ -154,9 +154,10 @@ var createMainWindow = function createMainWindow(){
         settingsWindow, mainWindow;
 
     mainWindow = createWindow({
-        width: 1855,
-        height: 990,
-        fullscreen: true,
+        width: 1147,
+        height: 849,
+        x: 400,
+        y: 100,
         //frame: false,
         icon: path.resolve(__dirname, "public/img/icon.png")
     });
