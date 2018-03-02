@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <link rel="icon" href="../img/favicon.ico">
+
+        <title>edChain Settings</title>
+
+        <link href="../../../vendor/css/bootstrap.css" rel="stylesheet">
+        <link href="../../../vendor/css/album.css" rel="stylesheet">
+        <link href="../../../src/public/css/toggle-switch.css" rel="stylesheet">
+        <script>delete module.exports</script>
+        <script src="../../../vendor/js/jquery-3.1.1.js"></script>
+        <script src="../../../vendor/js/mustache.min.js"></script>
+        <script src="../../../vendor/js/jsoneditor.min.js"></script>
+        <script src="../../../vendor/js/popper.min.js"></script>
+        <script src="../../../vendor/js/bootstrap.js"></script>
+        <script src="../../../vendor/js/holder.min.js"></script>
+        <script>
+            $(function () {
+                Holder.addTheme("thumb", { background: "#55595c", foreground: "#eceeef", text: "Thumbnail" });
+            });
+        </script>
+        <script>
+           
+               
+        </script>
+    </head>
+    <body>
+
+
+
+
+        <div class="container ">
+            <div class="row" style="padding-bottom: 15px;"></div>
+
+            <!-- Showing the tab items-->
+            <div class="row">
+                <nav class="nav nav-tabs" role="tablist">
+                    <a class="nav-item nav-link" data-toggle="tab" id="logs-tab" href="#logs-pane" role="tab">Logs</a>
+                    <a class="nav-item nav-link active" data-toggle="tab" id="settings-tab" href="#settings-pane">Settings</a>
+                </nav>
+            </div>
+
+
+
+            <!-- Display the ipfs slider-->
+            <div class="row" style="padding-bottom: 10px;">
+                <div class="col-sm-9"></div>
+                <div class="col-sm-3">
+                    <div style="margin-left: -15px;">
+                        <strong><label>Toggle IPFS</label></strong>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="ipfs-slider">
+                            <span class="slider round"></span>
+                        </label>
+                </div>
+            </div>
+               
+            
+
+            <div class="tab-content text-center">
+
+                <!-- Logs Pane -->
+                <div class="tab-pane fade " id="logs-pane" role="tabpanel">
+                    <div class="container" style="height:500px;overflow:scroll">
+                        <div class="row">  
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-10">                                         
+                        <div class="text-left" id="console">
+                            <ul id="output-log">
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-1"></div>
+                    </div> 
+                </div>
+            </div>
+    
+                
+                
+                <!-- Settings Pane -->
+                <div class="tab-pane fade show active " id="settings-pane" role="tabpanel" style="text-align: left">
+                    
+
+                    <div class="row">
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-10" style="border-color: red">
+                    <!-- Peer ID -->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <strong><p>Peer ID:</p></strong>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <div id="peerId"></div> 
+                        </div>
+
+                    </div>
+
+
+                    <!-- Gateway Address -->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <strong><p>Gateway Address:</p></strong>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <div type="text" id="gateway-addr"></div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Datastore Path -->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <strong><p>Datastore Path:</p></strong>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <div type="text" id="ipfs-datastore-path"></div>
+                        </div>
+
+                    </div>
+
+                    <!-- API Addr -->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <strong><p>API Addr:</p></strong>
+                        </div>
+
+                        <div class="col-sm-9">
+                            <div type="text" id="ipfs-api-addr"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-sm-1"></div>
+
+
+                    
+                </div>
+
+            </div>
+        </div>
+            
+        
+            <footer class="text-muted">
+                <div class="container">
+                    <p class="float-right">
+                        <a href="#">Back to top</a>
+                    </p>
+                    <p>&copy; 2017 edChain</p>
+                </div>
+            </footer>
+        </div>
+        <script src="../js/settings.js"></script>
+    </body>
+</html>

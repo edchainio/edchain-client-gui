@@ -340,7 +340,7 @@ function searchComplete(){
         // So, nullify the search-count text if no results are found
        $('#search-count').text("");
        $("#display-info").show();
-       $("#display-info").html("No Results found");
+       $("#display-info").html("No Results found for keyword '"+$("#search-input").val()+"'");
        $('#nxt-btn').hide();
        __ui.loadingComplete(true);
     }
@@ -375,8 +375,10 @@ $(document).ready(function() {
 
     //__ui.loadingComplete(false);
      resetSearch();
-    
 
+
+     // Show the previous button - Still in development
+     $('#prev-btn').show();
     
 
     $('#course-cards').on("click", '.pin-course-link', function(event){

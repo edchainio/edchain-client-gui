@@ -177,7 +177,8 @@ var createMainWindow = function createMainWindow(){
     ipcMain.on('openSettings', function(event){
         settingsWindow = createChildWindow(
             mainWindow,
-            'file://' + __dirname + '/public/html/settings.html'
+            //'file://' + __dirname + '/public/html/settings.html'
+            'file://' + __dirname + '/public/html/settings-newlook.html'
         );
         showChildWindow(settingsWindow);
     });

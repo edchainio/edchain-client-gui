@@ -151,5 +151,6 @@ ul, li{
 
 .handle-img{
   width:auto;
+  max-width: 250px;
   height: 253px;
 }
