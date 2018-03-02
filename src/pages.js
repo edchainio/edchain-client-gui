@@ -67,8 +67,7 @@ var createChildWindow = function (mainWindow, url) {
         modal:true, 
         show:true,
         hasIpfsLogging: true,       
-        x: 420,
-        y: 350,
+        center: true,
         width: 1100,
         height: 700
 
@@ -156,8 +155,7 @@ var createMainWindow = function createMainWindow(){
     mainWindow = createWindow({
         width: 1147,
         height: 849,
-        x: 400,
-        y: 100,
+        center: true,
         //frame: false,
         icon: path.resolve(__dirname, "public/img/icon.png")
     });
