@@ -64,7 +64,7 @@ var createChildWindow = function (mainWindow, url) {
     
     var child = createWindow({
         parent: mainWindow, 
-        modal:true, 
+        modal:false, 
         show:true,
         hasIpfsLogging: true,       
         center: true,

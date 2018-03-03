@@ -378,7 +378,7 @@ $(document).ready(function() {
 
 
      // Show the previous button - Still in development
-     $('#prev-btn').show();
+     //$('#prev-btn').show();
     
 
     $('#course-cards').on("click", '.pin-course-link', function(event){

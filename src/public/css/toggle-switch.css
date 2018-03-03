@@ -89,4 +89,5 @@ input:checked + .slider:before {
 
 #nxt-btn, #prev-btn{
 	display: none;
+	margin-right: 5px;
 }

@@ -7,10 +7,12 @@ body {
 }
 
 .jumbotron {
-  padding-top: 6rem;
-  padding-bottom: 6rem;
+  /*padding-top: 6rem;
+  padding-bottom: 6rem;*/
+  padding-top:1rem;
+  padding-bottom:0.8rem;
   margin-bottom: 0rem;
-  background-color: #fff;
+  background-color: #ededed;
 }
 
 .jumbotron p:last-child {
@@ -28,6 +30,8 @@ body {
 .bottom-margin-zero {
   margin-bottom: 0rem;
 
+
+
 }
 
 .form-control-attr {
@@ -36,7 +40,7 @@ body {
 
 .album {
   min-height: 50rem; /* Can be removed; just added for demo purposes */
-  padding-top: 3rem;
+  padding-top: 1.5rem;
   padding-bottom: 3rem;
   background-color: #f7f7f7;
 }
@@ -91,6 +95,7 @@ footer p {
 .edchain-header {
     
     background-color:rgba(103, 162, 220, 1);
+    max-height: 6.5rem;
 
 }
 
