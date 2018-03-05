@@ -22,7 +22,11 @@ var addCourse2 = function(data,dispatch){
 var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (searchObj){
 	return function(dispatch){
 
+		
+
 		courses.getSearchData(searchObj,100).then(function({data}){
+
+
 			let count =0;		
 			
 			setResultCount(dispatch,data);
@@ -42,6 +46,9 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 	
 		});
 			
+
+		
+		
 		}).catch(function(error){
 			
 			console.log("getSearchData",error);

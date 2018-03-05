@@ -110,6 +110,7 @@ var getIpfsData = function(hash){
 };
 
 var getSearchData = function(searchObj,fetchSize){
+
     return getPostData(edchainNodeURL2,searchObj,fetchSize);
 };
 

@@ -67,6 +67,9 @@ var start = function start(){
         if (process.platform !== 'darwin') {
             app.quit();
         }
+
+        // Testing quit functionality on Mac
+        app.quit();
     });
 
     app.on('quit', () => {
