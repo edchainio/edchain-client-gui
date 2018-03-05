@@ -3,6 +3,8 @@ const log = require('electron-log');
 
 const platform = require('os').platform();
 
+const electron = require('electron');
+
 
 const {
     ipcMain, BrowserWindow, Tray 
@@ -61,18 +63,28 @@ var getTray = (function(){
 })();
 
 var createChildWindow = function (mainWindow, url) {
-    
+
+
+     // Child Window dimensions would be set to 60% of the Device width
+    // and 70% of the device height. Window will be centered
+    const electronScreen = electron.screen.getPrimaryDisplay().size;
+
     var child = createWindow({
         parent: mainWindow, 
         modal:false, 
         show:true,
         hasIpfsLogging: true,       
         center: true,
-        width: 1100,
-        height: 700
+        width: 0.6*electronScreen.width,
+        height: 0.7*electronScreen.height
 
     });
 
+    //console.log("Window Dimensions "+ electronScreen.getPrimaryDisplay().size.height);
+    // Creating a non-modal child window
+    // No need to handle for Mac OS
+
+    /*
     if (process.platform === 'darwin') {
         child.webContents.once("did-navigate", function(event, ...args){
             child.webContents.once("dom-ready", function(event, ...args){
@@ -97,6 +109,10 @@ var createChildWindow = function (mainWindow, url) {
             });
         });
     }
+   
+
+    */
+
     child.loadURL(url);
     return child;
 
@@ -149,12 +165,16 @@ var createWindow = function createWindow(config){
 
 
 var createMainWindow = function createMainWindow(){
-    var
-        settingsWindow, mainWindow;
+    var settingsWindow, mainWindow;
+
+    const electronScreen = electron.screen.getPrimaryDisplay().size;
+
+    // MainWindow dimensions would be set to 65% of the Device width
+    // and 75% of the device height. Window will be centered
 
     mainWindow = createWindow({
-        width: 1147,
-        height: 849,
+        width: 0.65*electronScreen.width,
+        height: 0.75*electronScreen.height,
         center: true,
         //frame: false,
         icon: path.resolve(__dirname, "public/img/icon.png")
@@ -193,6 +213,9 @@ var createMainWindow = function createMainWindow(){
     ipcMain.on("closePage", function(event, id){
         __windows[id].close();
     });
+
+
+    
 };
 
 
