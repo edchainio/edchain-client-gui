@@ -136,11 +136,12 @@ var __ui = {
         if(currentPage>=2){
             __ui.clearCard();
             let data = store.getState().courses.pageMap;
+
             let i=0;
             let pSize = store.getState().courses.pageSize;
             let startPointer = pSize*currentPage-17;
             console.log("currentPage: "+currentPage.toString());
-            console.log(startPointer);
+            
 
             currentPage=currentPage-1;
 
@@ -152,6 +153,7 @@ var __ui = {
                         i++;
                         startPointer++;
                     }
+                    console.log(startPointer);
         })
         }
         
@@ -378,7 +380,7 @@ $(document).ready(function() {
 
 
      // Show the previous button - Still in development
-     //$('#prev-btn').show();
+     $('#prev-btn').show();
     
 
     $('#course-cards').on("click", '.pin-course-link', function(event){
