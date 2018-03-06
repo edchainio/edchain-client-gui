@@ -366,7 +366,7 @@ function searchComplete(){
     // Hide the loader and loading display block once the search is complete
     $(".loader").hide();
     $("#loading-display-msg").hide();
-    
+
 
     if(store.getState().courses.resultCount === 0){
         // Load complete function shows the search count anyway
@@ -428,15 +428,13 @@ $(document).ready(function() {
     // On Page Reload
     isIpfsOnline = store.getState()['ipfs'].isOnline;
 
-    
-
 
     //__ui.loadingComplete(false);
      resetSearch();
 
 
      // Show the previous button - Still in development
-     $('#prev-btn').show();
+     //$('#prev-btn').show();
     
 
     $('#course-cards').on("click", '.pin-course-link', function(event){
