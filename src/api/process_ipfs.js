@@ -15,15 +15,6 @@ const { spawn, exec } = require('child_process');
 
 var ipfs = null;
 
-var isIpfsReady = false;
-
-
-
-// Keep updating the global variable 'isIpfsReady'
-
-function updateIPFSAvailability(){
-	setTimeout()
-}
 
 // api
 var startIpfs = function(callback){

@@ -80,7 +80,7 @@ var createChildWindow = function (mainWindow, url) {
 
     });
 
-    //console.log("Window Dimensions "+ electronScreen.getPrimaryDisplay().size.height);
+    
     // Creating a non-modal child window
     // No need to handle for Mac OS
 
