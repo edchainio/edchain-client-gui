@@ -20,9 +20,9 @@ var checkOnline = function(){
 var applyState = function(state){
 	var ipfs = state.ipfs;
 	$("#peerId").text(ipfs.peerId);
-	$("#gateway-addr").val(ipfs.gatewayAddress);
-	$("#ipfs-api-addr").val(ipfs.apiAddress);
-	$("#ipfs-datastore-path").val(ipfs.dataStorePath);
+	$("#gateway-addr").text(ipfs.gatewayAddress);
+	$("#ipfs-api-addr").text(ipfs.apiAddress);
+	$("#ipfs-datastore-path").text(ipfs.dataStorePath);
 	
 	$("#ipfs-slider").prop("checked", ipfs.isOnline);
 	var $outputElement = $('#console');

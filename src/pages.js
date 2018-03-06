@@ -173,7 +173,7 @@ var createMainWindow = function createMainWindow(){
     // and 75% of the device height. Window will be centered
 
     mainWindow = createWindow({
-        width: 0.65*electronScreen.width,
+        width: 0.70*electronScreen.width,
         height: 0.75*electronScreen.height,
         center: true,
         //frame: false,

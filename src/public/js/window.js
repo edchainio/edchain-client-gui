@@ -17,6 +17,14 @@ var currentPage = 1;
  
 var isLoading = true;
 
+// To store if ipfs is accessible
+var isIpfsOnline = false;
+
+
+// Reconnecting State
+var isReconnecting = false;
+
+
 var totalPages=0;
 // these ping main process
 var __actions = {
@@ -47,11 +55,18 @@ var __actions = {
 var __ui = {
     setIPFSStatusButton: function (isOnline){
         if(isOnline){
-          $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
-          $('#img-ipfs-icon').prop("alt",'IPFS Online');
+            $('#ipfs-icon-ref').removeClass('btn-warning');
+            $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
+            $('#img-ipfs-icon').prop("alt",'IPFS Online');
         }
-        else{
+        else if(!isReconnecting){
+            $('#ipfs-icon-ref').removeClass('btn-warning');
             $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
+        }
+
+        if(isReconnecting){
+            $('#ipfs-icon-ref').removeClass('btn-success');
+            $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-warning');
         }
     }, 
     createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseId, action){
@@ -70,7 +85,15 @@ var __ui = {
     },
     showPeerCount: function(peerCount){
          $('#swarm-count').html(peerCount);
-         $('#loading-display-msg').html("Fetching data from "+peerCount+" peers");
+         if(!isReconnecting){
+            if(peerCount<=1){
+                $('#loading-display-msg').html("Fetching data from IPFS..");
+            }
+            else{
+                $('#loading-display-msg').html("Fetching data from "+peerCount+" peers");    
+            }
+            
+         }
     },
     setPinStatus: function(id, isPinned){
     
@@ -94,6 +117,9 @@ var __ui = {
             $('#search-count').hide();
             $('#display-info').hide();
             $(".loader").show();
+
+
+            //$('#loading-display-msg').html("Fetching data from "+$('#swarm-count').html()+" peers");
             $("#loading-display-msg").show();
             $("#search-btn").attr("disabled",true);
             $("#allCourses-btn").attr("disabled",true);
@@ -192,8 +218,10 @@ var __ui = {
             payload:store.getState()
         });
 
+        
         store.dispatch(coursesActions.getSearchData(searchParam)); 
-      
+
+
         setTimeout(function(){
          
             let data= store.getState().courses.items;
@@ -219,6 +247,8 @@ var __ui = {
 var applyState = function applyState(state){
     __ui.setIPFSStatusButton(state.ipfs.isOnline);
     __ui.showPeerCount(state.ipfs.peers);
+
+
 
    //apply courses once all items are loaded
     if(Object.keys(state.courses.items).length === store.getState().courses.resultCount){
@@ -336,6 +366,7 @@ function searchComplete(){
     // Hide the loader and loading display block once the search is complete
     $(".loader").hide();
     $("#loading-display-msg").hide();
+    
 
     if(store.getState().courses.resultCount === 0){
         // Load complete function shows the search count anyway
@@ -353,26 +384,51 @@ function searchComplete(){
         $('#search-count').text("Results Returned: " + 
              store.getState().courses.resultCount);
         
-    }
+    }    
+}
 
-    
+
+function isSearchPanelDisabled(bool){
+    document.getElementById('search-input').disabled = bool;
+    document.getElementById('search-types').disabled = bool;
+    document.getElementById('search-btn').disabled = bool;
+    document.getElementById('allCourses-btn').disabled = bool;
 }
 
 function resetSearch(){
 
-    __ui.loadingComplete(false);
-    // Clear the search term
-    $('#search-input').val('');
-    var searchObj = {
-        "search_type":'',
-        "search_term":''
-      }
-    __ui.search(searchObj,searchComplete);
+    if(isIpfsOnline){
+        isReconnecting = false;
+        __ui.loadingComplete(false);
+        // Clear the search term
+        $('#search-input').val('');
+        var searchObj = {
+            "search_type":'',
+            "search_term":''
+          }
+        __ui.search(searchObj,searchComplete);
+    }
+
+    else{
+        isReconnecting = true;
+        $('#loading-display-msg').html("Connecting to IPFS..");
+        console.log("Trying to Reconnect...")
+        setTimeout(function(){
+            resetSearch();
+        }, 1000);     
+    }
+
 
 }
 
 
 $(document).ready(function() {
+
+
+    // On Page Reload
+    isIpfsOnline = store.getState()['ipfs'].isOnline;
+
+    
 
 
     //__ui.loadingComplete(false);
@@ -456,6 +512,25 @@ $(document).ready(function() {
     store.subscribe(function(){
         // executed when something could have changed the state
           applyState(store.getState());
-       
+
+          isIpfsOnline = store.getState()['ipfs'].isOnline;
+          if(!isIpfsOnline){
+            // Freeze the search panel
+            isSearchPanelDisabled(true);
+
+
+             // Wait for 10 Sec and attempt reconnect to the IPFS
+            /*
+            setTimeout(function(){
+                console.log("Trying to reconnect to the IPFS");
+                __actions.start();
+            }, 10000);
+            */
+          }
+          else{
+            // Unfreeze the search panel
+            isSearchPanelDisabled(false);
+          }
+
     });
 });

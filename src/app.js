@@ -30,7 +30,9 @@ var start = function start(){
         global.state = store.getState();
     });
 
+
     store.dispatch(actions.ipfs.start());
+
 
     var throttle = function(callback, wait){
         callback();

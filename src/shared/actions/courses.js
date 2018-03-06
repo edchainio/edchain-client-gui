@@ -82,6 +82,7 @@ var setResultCount = function(dispatch,data){
 }
 
 var createPageMap = function(dispatch,data){
+
 	dispatch({
 		"type": "createPageMap",
 		"payload": data

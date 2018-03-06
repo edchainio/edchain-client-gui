@@ -76,7 +76,16 @@ var start = exports.start = createAliasedAction( "start", function(){
 	return function(dispatch){
 		dispatch(logOutput('starting..'));
 		dispatch(logOutput('Starting IPFS...'));
+
 		ipfs.startIpfs((message)=> dispatch(logOutput(message)));
+
+		var cust = function(msg){
+			console.log("Handling...");
+			console.log(msg);
+		};
+
+		//ipfs.startIpfs(cust);
+		
 	};
 });
 

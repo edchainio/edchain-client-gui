@@ -12,27 +12,41 @@ var log = require('electron-log');
 const { spawn, exec } = require('child_process');
 
 
+
 var ipfs = null;
 
+var isIpfsReady = false;
+
+
+
+// Keep updating the global variable 'isIpfsReady'
+
+function updateIPFSAvailability(){
+	setTimeout()
+}
 
 // api
 var startIpfs = function(callback){
 
-	const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
-	ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
+		const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
 
-	ipfsProcess.stdout.on('data', function(data){
-		callback(data.toString());	
-	});
+		ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
 
-	ipfsProcess.stderr.on('data', function(data){;
-	 	callback('ipfs error:' + data.toString());
-	});
 
-	ipfsProcess.on('exit', function(code){
-		
-		callback('ipfs exit:' + code.toString());
-	});
+		ipfsProcess.stdout.on('data', function(data){
+			callback(data.toString());	
+		});
+
+		ipfsProcess.stderr.on('data', function(data){;
+		 	callback('ipfs error:' + data.toString());
+		});
+
+		ipfsProcess.on('exit', function(code){
+			
+			callback('ipfs exit:' + code.toString());
+		});
+	
+	
 };
 
 var ipfsStop = function(callback){
@@ -53,6 +67,9 @@ var ipfsStop = function(callback){
 		ipfs = null
 	});
 };
+
+
+// IPFS specific config
 
 var ipfsPeerId = function(fn){
 	
@@ -110,6 +127,8 @@ var ipfsLogTail = function(fn){
 	});
 };
 
+
+
 var ipfsStatus = function(func){
  
     ipfs.version().then((res) => {
@@ -138,6 +157,9 @@ var ipfsId = function(fn){
 		// log.info("ipfsId", identity);
 		if(err){
 			// log.info(err);
+			//console.log('Error Connecting to ipfs');
+		}
+		else{
 		}
 		
 		fn(identity);
@@ -151,12 +173,14 @@ var ipfsId = function(fn){
 
 
 var getIPFS = function(){
+
 	if(!ipfs){
 		try{
 			ipfs = ipfsAPI('localhost','5001',{protocol:'http'});
 		}
 		catch(e){
 			// log.info("cannot connect to ipfs");
+			
 		}
 	
 	}
