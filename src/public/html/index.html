@@ -11,9 +11,7 @@
         <title>edChain</title>
 
         <link href="../../../vendor/js/bootstrap.js" rel="stylesheet">
-        <link href="../../../vendor/css/album.css" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="../css/toggle-switch.css">
-
+        
         <script>delete module.exports</script>
         <script src="../../../vendor/js/jquery-3.1.1.js"></script>
        
@@ -21,6 +19,9 @@
         <script src="../../../vendor/js/jsoneditor.min.js"></script>
         <script src="../js/window.js"></script>
         <link href="../../../vendor/css/bootstrap.css" rel="stylesheet">
+        <link href="../../../vendor/css/album.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="../css/toggle-switch.css">
+
         <script src="../../../vendor/js/popper.min.js"></script>
         <script src="../../../vendor/js/holder.min.js"></script>
         <script src="../../../vendor/js/pagination.min.js"></script>
@@ -39,9 +40,15 @@
 
     </head>
     <body>
+
+
+
+
         <div class="edchain-header" id="navbarHeader">
             <div class="container">
                
+
+
                 <div class="row">
                     <div class="col-sm-8 py-4">
                         <h4 class="text-white"></h4>
@@ -53,12 +60,13 @@
                     
                         <h4 id="nav-bar-blank-space" class="text-white"></h4>
                     
-                             <div id="stellarIcon" class="col-sm-1 alert">
+                             <div id="stellarIcon" class="col-sm-2 alert">
                                 <a href="#" id="stellar-icon-ref" class="btn">
                                     <img id="img-stellar-icon" alt="offline" width="75px" src="../img/stellar-rocket.png"> 
                                  </a>
                                   <p id="stellar-logo-text">Wallet</p>
                             </div>
+
                             <div id="nodeStatus" class="col-sm-2 alert">
                                 <center>
                                 <a href="#" id="ipfs-icon-ref" class="btn btn-outline-danger ipfs-icon">
@@ -81,24 +89,22 @@
         <section class="jumbotron text-center bottom-margin-zero">
           
             <div class="container">
-                <h1 class="jumbotron-heading">
-                    edChain
-                </h1>
+             
                 <p class="lead text-muted">
                     A Decentralized Educational Library
                 </p>
                 <div class="row form-group">
                   
-                    <select class="col form-control" id="search-types">
-                        <option value="course_title">Course Title</option>
+                    <select class="col form-control" id="search-types" style="max-width: 150px;" disabled="true">
                         <option value="subject_matter">Subject Matter</option>
+                        <option value="course_title">Course Title</option>
                         <option value="instructor_name">Instructor Name</option>
                     </select>
                    
                    
-                        <input type="text" class="col form-control" id="search-input">
-                    <input type="button" id="search-btn" class="btn btn-default" value="Search">
-                    <input type="button" id="allCourses-btn" class="btn btn-default" value="List all Courses">
+                        <input type="text" class="col form-control" id="search-input" placeholder="Physics" disabled="true">
+                    <input type="button" id="search-btn" class="btn btn-default" value="Search" disabled="true">
+                    <input type="button" id="allCourses-btn" class="btn btn-default" value="List all Courses" disabled="true">
                     
                  </div>      
                 
@@ -119,10 +125,12 @@
                     <div id="search-count"></div>
                 </div>
 
+
                 <div class="row">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-6">
-                        <center><h2 id="loading-display-msg">Fetching data from </h2></center>
+                        <center><h2 id="display-info"></h2></center>
+                        <center><h2 id="loading-display-msg"></h2></center>
                         <center><div class="loader"></div></center>
                     </div>
                     <div class="col-sm-3"></div>
@@ -132,11 +140,21 @@
                     <div class="card-columns" id="course-cards"> </div>
                 </div>
                 <div class="row">
+                    <input type="button" id="prev-btn" class="btn btn-default" value="Previous">
                     <input type="button" id="nxt-btn" class="btn btn-default" value="Next">
                 </div>
             </div>
         <!--     <input type="button" id="prev-btn" value="Previous"> -->
           
+
+
+
+
+
+
+
+
+
              
         </div>
         <footer class="text-muted">
@@ -153,13 +171,19 @@
         </footer>
 
         <script type="text/template" id="course-card-template">
-            <div class="card" id="{{courseId}}">
-                <img class="card-img-top" src="{{image}}">
+            <div class="card" id="{{courseId}}" >
+                <a class="card-link course-link" data-url="{{indexURL}}" href="#">
+                    <!--img class="card-img-top handle-img" src="{{image}}"-->
+                    <center><img class="handle-img" src="{{image}}"></center>
+                
                 <div class="card-body">
-                    <a class="card-link course-link" data-url="{{indexURL}}" href="#">
-                        {{title}}
-                    </a>
+                    <!--a class="card-link course-link" data-url="{{indexURL}}" href="#"-->
+                    <center>
+                            <h5 id="course-title-label">{{title}}</h5>
+                    </center>
+                    <!--/a-->
                 </div>
+                </a>
                 <div class="card-footer text-muted">
                     <p class="card-text">
                         <span class="pin-status">

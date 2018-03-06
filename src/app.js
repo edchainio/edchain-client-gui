@@ -30,7 +30,9 @@ var start = function start(){
         global.state = store.getState();
     });
 
+
     store.dispatch(actions.ipfs.start());
+
 
     var throttle = function(callback, wait){
         callback();
@@ -67,6 +69,9 @@ var start = function start(){
         if (process.platform !== 'darwin') {
             app.quit();
         }
+
+        // Testing quit functionality on Mac
+        app.quit();
     });
 
     app.on('quit', () => {

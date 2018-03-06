@@ -86,3 +86,12 @@ input:checked + .slider:before {
 	margin-left: 5px; 
 }
 
+
+#nxt-btn, #prev-btn{
+	display: none;
+	margin-right: 5px;
+}
+
+.handle-img{
+	padding-top: 10px;
+}

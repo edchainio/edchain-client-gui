@@ -22,7 +22,11 @@ var addCourse2 = function(data,dispatch){
 var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData", function (searchObj){
 	return function(dispatch){
 
+		
+
 		courses.getSearchData(searchObj,100).then(function({data}){
+
+
 			let count =0;		
 			
 			setResultCount(dispatch,data);
@@ -42,6 +46,9 @@ var getSearchData = exports.getSearchData = createAliasedAction( "getSearchData"
 	
 		});
 			
+
+		
+		
 		}).catch(function(error){
 			
 			console.log("getSearchData",error);
@@ -75,6 +82,7 @@ var setResultCount = function(dispatch,data){
 }
 
 var createPageMap = function(dispatch,data){
+
 	dispatch({
 		"type": "createPageMap",
 		"payload": data
@@ -110,6 +118,7 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 	return function(dispatch){
 	
 		courses.getCourseRoot(hash).then(function({data}){
+
 
 			dispatch({
 				"type": "setHash",

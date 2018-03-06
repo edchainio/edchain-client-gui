@@ -76,7 +76,10 @@ var start = exports.start = createAliasedAction( "start", function(){
 	return function(dispatch){
 		dispatch(logOutput('starting..'));
 		dispatch(logOutput('Starting IPFS...'));
+
 		ipfs.startIpfs((message)=> dispatch(logOutput(message)));
+
+		
 	};
 });
 
@@ -145,6 +148,7 @@ var ipfsGetData = exports.ipfsGetData = createAliasedAction( "ipfsGetData", func
 */
 
 var syncIpfs = exports.syncIpfs = createAliasedAction( "syncIpfs", function(){
+
 	return function(dispatch){
 		dispatch(isOnline());
         dispatch(getPeerId());
