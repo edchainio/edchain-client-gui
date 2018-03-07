@@ -423,6 +423,7 @@ function resetSearch(){
 }
 
 
+
 $(document).ready(function() {
 
 
@@ -433,7 +434,7 @@ $(document).ready(function() {
     //__ui.loadingComplete(false);
      resetSearch();
 
-
+    
      // Show the previous button - Still in development
      //$('#prev-btn').show();
     

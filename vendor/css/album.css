@@ -78,11 +78,59 @@ footer p {
 
 }
 
+
+/* Overlay Effect */
 .card {
   
   width: 250px;
+  position: relative;
  
 }
+
+.card:hover .overlay {
+  opacity: 0.90;
+}
+
+.card:hover .goto-course-btn{
+  opacity: 1;
+}
+
+.card:hover .card-body{
+  opacity: 0.2;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: #000000;
+}
+
+
+.goto-course-btn{
+  position: absolute;
+  bottom: 30px;
+  left: 28%;
+  color: white;
+}
+
+.overlay-course-title{
+  padding: 10%;
+  padding-top: 15px;
+  text-align: center;
+  font-weight: bolder;
+  color: white;
+}
+
+
+/* End of the overlay Effect */
+
 
 .card-body{
   height:5em;
@@ -160,3 +208,6 @@ ul, li{
   max-width: 250px;
   height: 253px;
 }
+
+
+

@@ -25,7 +25,8 @@
         <script src="../../../vendor/js/popper.min.js"></script>
         <script src="../../../vendor/js/holder.min.js"></script>
         <script src="../../../vendor/js/pagination.min.js"></script>
-        
+
+
 
        
         <script>
@@ -99,8 +100,8 @@
                     </select>
                    
                     <input type="text" class="col form-control" id="search-input" placeholder="Physics" disabled="true">
-                    <input type="button" id="search-btn" class="btn btn-success" value="Search" disabled="true">
-                    <input type="button" id="allCourses-btn" class="btn btn-info" value="List all Courses" disabled="true">
+                    <input type="button" id="search-btn" class="btn btn-success" value="Search" disabled="true" role="button">
+                    <input type="button" id="allCourses-btn" class="btn btn-info" value="List all Courses" disabled="true" role="button">
                     
                 </div>      
                 
@@ -144,8 +145,8 @@
                 </div>
                 
                 <div class="row">
-                    <input type="button" id="prev-btn" class="btn btn-default" value="Previous">
-                    <input type="button" id="nxt-btn" class="btn btn-primary" value="Next">
+                        <input type="button" id="prev-btn" class="btn btn-default" role="button" value="Previous">
+                        <input type="button" id="nxt-btn" class="btn btn-primary" role="button" value="Next">
                 </div>
             
             </div>       
@@ -171,19 +172,38 @@
         <script type="text/template" id="course-card-template">
             
             <div class="card" id="{{courseId}}" style="box-shadow: 1px 1px;">
-                <a class="card-link course-link" data-url="{{indexURL}}" href="#">
-                    <!--img class="card-img-top handle-img" src="{{image}}"-->
-                    <center>
-                        <img class="handle-img" src="{{image}}">
-                    </center>
-                
-                    <div class="card-body">
-                        <center>
-                            <h5 id="course-title-label" style="overflow: hidden; max-width: 350px; line-height: 1.4; max-height: 60px;">{{title}}</h5>
-                        </center>
-                    </div>
-                </a>
+                <div>
 
+                    <a class="card-link course-link" data-url="{{indexURL}}" href="#">
+                        <!--img class="card-img-top handle-img" src="{{image}}"-->
+                        <center>
+                            <img class="handle-img" src="{{image}}">
+                        </center>
+                    
+                        <div class="card-body">
+                            <center>
+                                <h5 id="course-title-label" style="overflow: hidden; max-width: 350px; line-height: 1.4; max-height: 60px;">{{title}}</h5>
+                            </center>
+                        </div>
+                    </a>
+                </div>
+
+
+
+                <!-- Overlay effect starts here -->
+                <div class="overlay">     
+                    <div class="overlay-course-title">
+                        <h4>{{title}}</h4>
+                    </div>
+                     
+                    <div class="goto-course-btn">
+                        <a class="btn btn-success course-link" data-url="{{indexURL}}" role="button" >Go to the Course</a>
+                    </div>
+                               
+                </div>
+                <!-- Overlay effect ends -->
+
+                
                 <!-- Pinning Functionality -->
                 <!--div class="card-footer text-muted">
                     <p class="card-text">
