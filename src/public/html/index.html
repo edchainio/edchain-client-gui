@@ -41,7 +41,7 @@
         </script>
 
     </head>
-    <body>
+    <body >
 
 
 
@@ -81,68 +81,12 @@
     </nav>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!--div class="edchain-header" id="navbarHeader">
-            
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-8 py-4">
-                        <h4 class="text-white"></h4>
-                        <div id="IDs" class="well">
-                            <img src="../img/header_logo.png">
-                        </div>
-                    </div>
-                    
-            
-                    <h4 id="nav-bar-blank-space" class="text-white"></h4>
-                    
-                    <div id="stellarIcon" class="col-sm-2 alert">
-                        <a href="#" id="stellar-icon-ref" class="btn">
-                            <img id="img-stellar-icon" alt="offline" width="75px" src="../img/stellar-rocket.png"> 
-                        </a>
-                        <p id="stellar-logo-text">Wallet</p>
-                    </div>
-
-                    <div id="nodeStatus" class="col-sm-2 alert">
-                        <center>
-                            <a href="#" id="ipfs-icon-ref" class="btn btn-outline-danger ipfs-icon">
-                                <img id="img-ipfs-icon" alt="offline" width="45px" src="../img/ipfs-logo-128-white-outline.png"> 
-                            </a>
-                            <p class="swarm-info">Peers: <span id="swarm-count"></span></p>
-                        </center>
-                        
-                        <div id="console"></div>
-                        <div id="data-container"></div> 
-                    </div>
-                                                          
-                </div>
-            </div>
-        </div-->
-
         
         <section class="jumbotron text-center bottom-margin-zero">
           
             <div class="container">
              
-                <p class="lead text-muted">
+                <p class="lead text-muted" style="font-size: 25px;">
                     A Decentralized Educational Library
                 </p>
                 
@@ -155,8 +99,8 @@
                     </select>
                    
                     <input type="text" class="col form-control" id="search-input" placeholder="Physics" disabled="true">
-                    <input type="button" id="search-btn" class="btn btn-default" value="Search" disabled="true">
-                    <input type="button" id="allCourses-btn" class="btn btn-default" value="List all Courses" disabled="true">
+                    <input type="button" id="search-btn" class="btn btn-success" value="Search" disabled="true">
+                    <input type="button" id="allCourses-btn" class="btn btn-info" value="List all Courses" disabled="true">
                     
                 </div>      
                 
@@ -226,7 +170,7 @@
 
         <script type="text/template" id="course-card-template">
             
-            <div class="card" id="{{courseId}}">
+            <div class="card" id="{{courseId}}" style="box-shadow: 1px 1px;">
                 <a class="card-link course-link" data-url="{{indexURL}}" href="#">
                     <!--img class="card-img-top handle-img" src="{{image}}"-->
                     <center>
@@ -235,7 +179,7 @@
                 
                     <div class="card-body">
                         <center>
-                            <h5 id="course-title-label">{{title}}</h5>
+                            <h5 id="course-title-label" style="overflow: hidden; max-width: 350px; line-height: 1.4; max-height: 60px;">{{title}}</h5>
                         </center>
                     </div>
                 </a>
