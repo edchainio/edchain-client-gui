@@ -26,6 +26,8 @@
         <script src="../../../vendor/js/holder.min.js"></script>
         <script src="../../../vendor/js/pagination.min.js"></script>
         
+
+       
         <script>
             // COMMENT: Why does this need to be here?
             // BUG: This does not work on macOS
@@ -43,12 +45,64 @@
 
 
 
+    <nav class="navbar navbar-toggleable-sm navbar-light " style="background-color: rgba(103, 162, 220, 1);">
+        
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <a class="navbar-brand" href="#">
+            <img src="../img/header_logo.png" height="70px" style="margin-top: -18px; padding-top: 10px;">
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item" maxheight="70px" maxwidth="50px">
 
-        <div class="edchain-header" id="navbarHeader">
-            <div class="container">
+                    <div id="stellarIcon">
+                        <a href="#" id="stellar-icon-ref" class="btn">
+                            <img id="img-stellar-icon" alt="offline" width="50px" maxheight="70px" src="../img/stellar-rocket.png"> 
+                            <p id="stellar-logo-text" style="color: black">Wallet</p>
+                        </a>
+                    </div>
+
+                </li>
+
+                <li class="nav-item" maxheight="70px" maxwidth="50px">
+                        <a href="#" id="ipfs-settings" class="btn">
+                        <div id="ipfs-icon-ref">
+                            <img alt="offline" width="50px" maxheight="70px" src="../img/ipfs-logo-128-white-outline.png">  
+                        </div>
+                            <p id="swarm-count" style="color: black; margin-top: 11px;">IPFS</p>
+                        </a>
+                </li>
                
+            </ul>
+        </div>
+    </nav>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!--div class="edchain-header" id="navbarHeader">
+            
+            <div class="container">
                 <div class="row">
                     <div class="col-sm-8 py-4">
                         <h4 class="text-white"></h4>
@@ -57,35 +111,33 @@
                         </div>
                     </div>
                     
+            
+                    <h4 id="nav-bar-blank-space" class="text-white"></h4>
                     
-                        <h4 id="nav-bar-blank-space" class="text-white"></h4>
-                    
-                             <div id="stellarIcon" class="col-sm-2 alert">
-                                <a href="#" id="stellar-icon-ref" class="btn">
-                                    <img id="img-stellar-icon" alt="offline" width="75px" src="../img/stellar-rocket.png"> 
-                                 </a>
-                                  <p id="stellar-logo-text">Wallet</p>
-                            </div>
+                    <div id="stellarIcon" class="col-sm-2 alert">
+                        <a href="#" id="stellar-icon-ref" class="btn">
+                            <img id="img-stellar-icon" alt="offline" width="75px" src="../img/stellar-rocket.png"> 
+                        </a>
+                        <p id="stellar-logo-text">Wallet</p>
+                    </div>
 
-                            <div id="nodeStatus" class="col-sm-2 alert">
-                                <center>
-                                <a href="#" id="ipfs-icon-ref" class="btn btn-outline-danger ipfs-icon">
-                                    <img id="img-ipfs-icon" alt="offline" width="45px" src="../img/ipfs-logo-128-white-outline.png"> 
-                                 </a>
-                                 <p class="swarm-info">Peers: <span id="swarm-count"></span></p>
-                             </center>
-                            <div id="console"></div>
-                           <div id="data-container"></div> 
-                       
-                            </div>
-
-                           
-                                      
-                    
+                    <div id="nodeStatus" class="col-sm-2 alert">
+                        <center>
+                            <a href="#" id="ipfs-icon-ref" class="btn btn-outline-danger ipfs-icon">
+                                <img id="img-ipfs-icon" alt="offline" width="45px" src="../img/ipfs-logo-128-white-outline.png"> 
+                            </a>
+                            <p class="swarm-info">Peers: <span id="swarm-count"></span></p>
+                        </center>
+                        
+                        <div id="console"></div>
+                        <div id="data-container"></div> 
+                    </div>
+                                                          
                 </div>
             </div>
-        </div>
+        </div-->
 
+        
         <section class="jumbotron text-center bottom-margin-zero">
           
             <div class="container">
@@ -93,30 +145,32 @@
                 <p class="lead text-muted">
                     A Decentralized Educational Library
                 </p>
+                
                 <div class="row form-group">
-                  
-                    <select class="col form-control" id="search-types" style="max-width: 150px;" disabled="true">
+                   
+                    <select class="col form-control" id="search-types" style="max-width: 160px;" disabled="true">
                         <option value="subject_matter">Subject Matter</option>
                         <option value="course_title">Course Title</option>
                         <option value="instructor_name">Instructor Name</option>
                     </select>
                    
-                   
-                        <input type="text" class="col form-control" id="search-input" placeholder="Physics" disabled="true">
+                    <input type="text" class="col form-control" id="search-input" placeholder="Physics" disabled="true">
                     <input type="button" id="search-btn" class="btn btn-default" value="Search" disabled="true">
                     <input type="button" id="allCourses-btn" class="btn btn-default" value="List all Courses" disabled="true">
                     
-                 </div>      
+                </div>      
                 
-                  <div id="wrapper">
+                <div id="wrapper">
                     <section>
                         <div id="pagination-data-container"></div>
                         <div id="pagination-bar"></div>
                     </section>
-                  </div>
+                </div>
               
             </div>
         </section>
+
+
         <div class="album text-muted">
             
             <div class="container">
@@ -125,13 +179,18 @@
                     <div id="search-count"></div>
                 </div>
 
-
                 <div class="row">
                     <div class="col-sm-3"></div>
                     <div class="col-sm-6">
-                        <center><h2 id="display-info"></h2></center>
-                        <center><h2 id="loading-display-msg"></h2></center>
-                        <center><div class="loader"></div></center>
+                        <center>
+                            <h2 id="display-info"></h2>
+                        </center>
+                        <center>
+                            <h2 id="loading-display-msg"></h2>
+                        </center>
+                        <center>
+                            <div class="loader"></div>
+                        </center>
                     </div>
                     <div class="col-sm-3"></div>
                 </div>
@@ -139,52 +198,50 @@
                 <div class="row">
                     <div class="card-columns" id="course-cards"> </div>
                 </div>
+                
                 <div class="row">
                     <input type="button" id="prev-btn" class="btn btn-default" value="Previous">
-                    <input type="button" id="nxt-btn" class="btn btn-default" value="Next">
+                    <input type="button" id="nxt-btn" class="btn btn-primary" value="Next">
                 </div>
-            </div>
-        <!--     <input type="button" id="prev-btn" value="Previous"> -->
-          
-
-
-
-
-
-
-
-
-
-             
+            
+            </div>       
+            
         </div>
+
         <footer class="text-muted">
+
             <div class="container">
                 <p class="float-right">
                     <a href="#">
                         Back to top
                     </a>
                 </p>
+                
                 <p>
                     &copy; 2017 edChain
                 </p>
             </div>
+
         </footer>
 
         <script type="text/template" id="course-card-template">
-            <div class="card" id="{{courseId}}" >
+            
+            <div class="card" id="{{courseId}}">
                 <a class="card-link course-link" data-url="{{indexURL}}" href="#">
                     <!--img class="card-img-top handle-img" src="{{image}}"-->
-                    <center><img class="handle-img" src="{{image}}"></center>
-                
-                <div class="card-body">
-                    <!--a class="card-link course-link" data-url="{{indexURL}}" href="#"-->
                     <center>
-                            <h5 id="course-title-label">{{title}}</h5>
+                        <img class="handle-img" src="{{image}}">
                     </center>
-                    <!--/a-->
-                </div>
+                
+                    <div class="card-body">
+                        <center>
+                            <h5 id="course-title-label">{{title}}</h5>
+                        </center>
+                    </div>
                 </a>
-                <div class="card-footer text-muted">
+
+                <!-- Pinning Functionality -->
+                <!--div class="card-footer text-muted">
                     <p class="card-text">
                         <span class="pin-status">
                             {{#status}} 
@@ -197,10 +254,10 @@
 
                         <a class="pin-course-link" data-id="{{courseId}}" data-hash="{{courseDirectoryHash}}" data-action="{{action}}" href="#"></a>
                     </p>
-                </div>
+                </div-->
             </div>
+
         </script>
-        
 
     </body>
 </html>

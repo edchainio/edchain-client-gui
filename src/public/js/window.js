@@ -56,17 +56,18 @@ var __ui = {
     setIPFSStatusButton: function (isOnline){
         if(isOnline){
             $('#ipfs-icon-ref').removeClass('btn-warning');
-            $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
+            $('#ipfs-icon-ref').removeClass('btn-danger').addClass('btn-success');
             $('#img-ipfs-icon').prop("alt",'IPFS Online');
+
         }
         else if(!isReconnecting){
             $('#ipfs-icon-ref').removeClass('btn-warning');
-            $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
+            $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-danger');
         }
 
         if(isReconnecting){
             $('#ipfs-icon-ref').removeClass('btn-success');
-            $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-warning');
+            $('#ipfs-icon-ref').removeClass('btn-danger').addClass('btn-warning');
         }
     }, 
     createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseId, action){
@@ -84,7 +85,7 @@ var __ui = {
           $('#course-cards').empty();
     },
     showPeerCount: function(peerCount){
-         $('#swarm-count').html(peerCount);
+         $('#swarm-count').html("Peers: "+peerCount);
          if(!isReconnecting){
             if(peerCount<=1){
                 $('#loading-display-msg').html("Fetching data from IPFS..");
@@ -443,7 +444,7 @@ $(document).ready(function() {
         __actions[(action === "unpin" ? "removePin" : "addPin")](id, hash);
     });
 
-    $("#ipfs-icon-ref").on("click", function(event){
+    $("#ipfs-settings").on("click", function(event){
         event.preventDefault();
         __actions.showSettings();
     });
