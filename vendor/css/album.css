@@ -29,9 +29,6 @@ body {
 
 .bottom-margin-zero {
   margin-bottom: 0rem;
-
-
-
 }
 
 .form-control-attr {
@@ -172,10 +169,7 @@ footer p {
 
 
 
-.nav-item{
-  height: 50px;
-  margin-top: -35px;
-}
+
 
 
 #swarm-count{

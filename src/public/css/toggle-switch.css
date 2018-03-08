@@ -97,5 +97,5 @@ input:checked + .slider:before {
 }
 
 #navBar-Id{
-	max-height: 80px;
+	max-height: 100px;
 }
