@@ -95,3 +95,7 @@ input:checked + .slider:before {
 .handle-img{
 	padding-top: 10px;
 }
+
+#navBar-Id{
+	max-height: 80px;
+}

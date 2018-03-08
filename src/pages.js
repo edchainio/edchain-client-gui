@@ -75,8 +75,8 @@ var createChildWindow = function (mainWindow, url) {
         show:true,
         hasIpfsLogging: true,       
         center: true,
-        width: 0.6*electronScreen.width,
-        height: 0.7*electronScreen.height
+        width: 0.7*electronScreen.width,
+        height: 0.6*electronScreen.height
 
     });
 
@@ -109,9 +109,10 @@ var createChildWindow = function (mainWindow, url) {
             });
         });
     }
-   
-
+  
+ 
     */
+
 
     child.loadURL(url);
     return child;

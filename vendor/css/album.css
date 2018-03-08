@@ -66,6 +66,7 @@ footer p {
     margin-top: 10%;
     /*position: absolute;*/
 }
+
 #search-count {
   margin-bottom:2em;
   font-size: 20px;
@@ -88,7 +89,7 @@ footer p {
 }
 
 .card:hover .overlay {
-  opacity: 0.8;
+  opacity: 0.15;
 }
 
 .card:hover .goto-course-btn{
@@ -96,7 +97,7 @@ footer p {
 }
 
 .card:hover .card-body{
-  opacity: 0.1;
+  opacity: 1;
 }
 
 .overlay {
@@ -171,8 +172,18 @@ footer p {
 
 
 
+.nav-item{
+  height: 50px;
+  margin-top: -35px;
+}
+
+
+#swarm-count{
+  margin-top: 1px;
+}
+
 #stellar-logo-text{
-  margin-top:0px;
+  margin-top:-10px;
   margin-left:0px;
 }
 

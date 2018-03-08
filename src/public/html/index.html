@@ -46,7 +46,7 @@
 
 
 
-    <nav class="navbar navbar-toggleable-sm navbar-light " style="background-color: rgba(103, 162, 220, 1);">
+    <nav class="navbar navbar-toggleable-sm navbar-light" id="navBar-Id" style="background-color: rgba(103, 162, 220, 1);">
         
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -56,7 +56,13 @@
             <img src="../img/header_logo.png" height="70px" style="margin-top: -18px; padding-top: 10px;">
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
+
+            
+                
+            
+
             <ul class="navbar-nav ml-auto">
+
                 <li class="nav-item" maxheight="70px" maxwidth="50px">
 
                     <div id="stellarIcon">
@@ -73,7 +79,7 @@
                         <div id="ipfs-icon-ref">
                             <img alt="offline" width="50px" maxheight="70px" src="../img/ipfs-logo-128-white-outline.png">  
                         </div>
-                            <p id="swarm-count" style="color: black; margin-top: 11px;">IPFS</p>
+                            <p id="swarm-count" style="color: black;">IPFS</p>
                         </a>
                 </li>
                
@@ -100,8 +106,8 @@
                     </select>
                    
                     <input type="text" class="col form-control" id="search-input" placeholder="Physics" disabled="true">
-                    <input type="button" id="search-btn" class="btn btn-primary" value="Search" disabled="true" role="button">
-                    <input type="button" id="allCourses-btn" class="btn btn-primary" value="List all Courses" disabled="true" role="button">
+                    <input type="button" id="search-btn" class="btn btn-default" value="Search" disabled="true" role="button">
+                    <input type="button" id="allCourses-btn" class="btn btn-default" value="List all Courses" disabled="true" role="button">
                     
                 </div>      
                 
@@ -163,7 +169,7 @@
                 </p>
                 
                 <p>
-                    &copy; 2017 edChain
+                    &copy; 2018 edChain
                 </p>
             </div>
 
@@ -191,16 +197,17 @@
 
 
                 <!-- Overlay effect starts here -->
-                <div class="overlay">     
+                <a class="course-link" role="button" data-url="{{indexURL}}">
+                <div class="overlay">  
                     <div class="overlay-course-title">
-                        <h4>{{title}}</h4>
+                        <!--h4>{{title}}</h4-->
                     </div>
                      
                     <div class="goto-course-btn">
-                        <a class="btn btn-success course-link" data-url="{{indexURL}}" role="button" >Go to the Course</a>
-                    </div>
-                               
+                        <!--a class="btn btn-success course-link" data-url="{{indexURL}}" role="button" >Go to the Course</a-->
+                    </div>          
                 </div>
+                </a>
                 <!-- Overlay effect ends -->
 
 
