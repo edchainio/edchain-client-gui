@@ -39,6 +39,7 @@ var courseItem2 = function(course){
 };
 
 var updateCourseItem = function(state, action, update){
+
 	var item = {};
 
 	item[action.payload.id] = clone(state.items[action.payload.id]);
@@ -98,6 +99,7 @@ module.exports = createReducer(initialState, {
 },
 	
 	"addCourse2": function(state, action){
+
 		var item = {};
 
 		item[action.payload.content_address] = courseItem2(action.payload);

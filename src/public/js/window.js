@@ -73,7 +73,7 @@ var __ui = {
     createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseId, action){
         __ui.loadingComplete(true);
         action = action || "...";
-   
+
         var rendered = Mustache.render(
             $("#course-card-template").html(),
             { image, title, indexURL, courseDirectoryHash, courseId, action }
@@ -160,18 +160,28 @@ var __ui = {
         //loadingComplete
     },
     prevResult: function(){
-        if(currentPage>=2){
+        if(currentPage>1){
             __ui.clearCard();
             let data = store.getState().courses.pageMap;
 
             let i=0;
             let pSize = store.getState().courses.pageSize;
             let startPointer = pSize*currentPage-17;
-            console.log("currentPage: "+currentPage.toString());
             
 
             currentPage=currentPage-1;
 
+
+            for(i=0;i<=pSize;i++){
+                var content = data.get(startPointer);
+                if(content!=null){
+                    store.dispatch(coursesActions.dispatchCourseRoot(content));
+                    startPointer++;
+                }
+                console.log(startPointer);
+            }
+
+            /*
             data.forEach(function(val){
                 var content=data.get(startPointer);
 
@@ -181,7 +191,7 @@ var __ui = {
                         startPointer++;
                     }
                     console.log(startPointer);
-        })
+        }) */
         }
         
     },
@@ -250,12 +260,10 @@ var applyState = function applyState(state){
     __ui.showPeerCount(state.ipfs.peers);
 
 
-
    //apply courses once all items are loaded
     if(Object.keys(state.courses.items).length === store.getState().courses.resultCount){
 
         applyCourses(state.courses.items);
-
     }
    
 };
@@ -320,10 +328,6 @@ var applyCourses = function(items){
     else if(!isLoading){
          $('#nxt-btn').show();
     }
-
-
-    
-
 
     courseKeys.forEach(function(key){
         

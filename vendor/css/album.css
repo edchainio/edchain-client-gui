@@ -88,7 +88,7 @@ footer p {
 }
 
 .card:hover .overlay {
-  opacity: 0.90;
+  opacity: 0.8;
 }
 
 .card:hover .goto-course-btn{
@@ -96,7 +96,7 @@ footer p {
 }
 
 .card:hover .card-body{
-  opacity: 0.2;
+  opacity: 0.1;
 }
 
 .overlay {
