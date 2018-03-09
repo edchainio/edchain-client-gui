@@ -11,6 +11,13 @@ var log = require('electron-log');
 
 const { spawn, exec } = require('child_process');
 
+// Dedicated IPFS Node addresses
+const dedNode1 = "/ip4/45.55.43.166/tcp/4001/ipfs/QmWpUsfCh7gycv4jteChCP2pg9tRKctnujV7FVJrJxTVKa";
+
+const dedNode2 = "/ip4/138.197.68.168/tcp/4001/ipfs/QmR4TkYZKeConfKh2o5HTwsyQ7gCLSaExjroiEaoit5iMk";
+
+// Interval timer which connects to the dedicated nodes
+var intervalId = null;
 
 
 var ipfs = null;
@@ -36,6 +43,9 @@ var startIpfs = function(callback){
 			
 			callback('ipfs exit:' + code.toString());
 		});
+
+		intervalId = setInterval(connectToDedicatedNodes,5000);
+
 	
 	
 };
@@ -58,6 +68,40 @@ var ipfsStop = function(callback){
 		ipfs = null
 	});
 };
+
+
+var isOn = null;
+
+var connectToDedicatedNodes = function(){
+	// Attempt to connect, iff ipfs is online
+	isOnline(function(x){isOn = x;});
+	if(isOn){
+		clearInterval(intervalId);
+		// Connect to Node1
+		getIPFS().swarm.connect(dedNode1, function(err){
+			if(err){
+				log.info("Trouble connecting to the dedicated node 1!", err);
+			}
+			
+			else{
+				log.info("Connected to the dedicated node 1!");
+			}
+		}); 	
+
+		// Connect to Node2
+		getIPFS().swarm.connect(dedNode2, function(err){
+			if(err){
+				log.info("Trouble connecting to the dedicated node 2!", err);
+			}
+			
+			else{
+				log.info("Connected to the dedicated node 2!");
+			}
+		}); 	
+	}
+};
+
+
 
 
 // IPFS specific config

@@ -13,6 +13,7 @@ const initialState = remote.getGlobal('state');
 // create store
 const store = configureStore(initialState, 'renderer');
 
+
 var currentPage = 1;
  
 var isLoading = true;
@@ -430,10 +431,8 @@ function resetSearch(){
 
 $(document).ready(function() {
 
-
     // On Page Reload
     isIpfsOnline = store.getState()['ipfs'].isOnline;
-
 
     //__ui.loadingComplete(false);
      resetSearch();
