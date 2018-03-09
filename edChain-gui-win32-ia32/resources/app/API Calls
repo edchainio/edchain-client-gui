@@ -1,0 +1,45 @@
+Request to Attribution Engine
+POST - /courses/{count}
+
+Response from Attribution Engine:
+
+JSON:
+{ 
+"IPFSHash": {hash}, 
+"title": {title},
+"subject":{subject},
+"course-number":course-number,
+"version":{version},
+"Author":{author},
+"date":{date},
+}
+
+
+POST - /courses/all
+
+Response from Attribution Engine:
+
+JSON:
+{ 
+"IPFSHash": {hash}, 
+"title": {title},
+"subject":{subject},
+"course-number":course-number,
+"version":{version},
+"Author":{author},
+"date":{date},
+}
+
+POST - /search/{search-term}
+
+Response from Attribution Engine:
+JSON:
+ { 
+"IPFSHash": {hash}, 
+"title": {title},
+"subject":{subject},
+"course-number":course-number,
+"version":{version},
+"Author":{author},
+"date":{date},
+}

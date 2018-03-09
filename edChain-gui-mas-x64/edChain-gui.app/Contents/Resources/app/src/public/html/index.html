@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <link rel="icon" href="../img/favicon.ico">
+
+        <title>edChain</title>
+
+        <link href="../../../vendor/js/bootstrap.js" rel="stylesheet">
+        
+        <script>delete module.exports</script>
+        <script src="../../../vendor/js/jquery-3.1.1.js"></script>
+       
+        <script src="../../../vendor/js/mustache.min.js"></script>
+        <script src="../../../vendor/js/jsoneditor.min.js"></script>
+        <script src="../js/window.js"></script>
+        <link href="../../../vendor/css/bootstrap.css" rel="stylesheet">
+        <link href="../../../vendor/css/album.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="../css/toggle-switch.css">
+
+        <script src="../../../vendor/js/popper.min.js"></script>
+        <script src="../../../vendor/js/holder.min.js"></script>
+        <script src="../../../vendor/js/pagination.min.js"></script>
+
+
+
+       
+        <script>
+            // COMMENT: Why does this need to be here?
+            // BUG: This does not work on macOS
+            $(function () {
+                Holder.addTheme("thumb", { background: "#55595c", foreground: "#eceeef", text: "Thumbnail" });
+            });
+            // COMMENT: Why do we need the shell here?
+            var shell = require('electron').shell;
+        
+
+        </script>
+
+    </head>
+    <body >
+
+
+
+    <nav class="navbar navbar-toggleable-sm navbar-light" id="navBar-Id" >
+        
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <a class="navbar-brand" href="#">
+            <img src="../img/header_logo.png" id="header-img-id" >
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            
+                
+            
+
+            <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item" maxheight="70px" maxwidth="50px">
+
+                    <div id="stellarIcon">
+                        <a href="#" id="stellar-icon-ref" class="btn">
+                            <img id="img-stellar-icon" alt="offline" width="50px" maxheight="70px" src="../img/stellar-rocket.png"> 
+                            <p id="stellar-logo-text">Wallet</p>
+                        </a>
+                    </div>
+
+                </li>
+
+                <li class="nav-item" maxheight="70px" maxwidth="50px">
+                        <a href="#" id="ipfs-settings" class="btn">
+                        <div id="ipfs-icon-ref">
+                            <img alt="offline" width="50px" maxheight="70px" src="../img/ipfs-logo-128-white-outline.png">  
+                        </div>
+                            <p id="swarm-count">IPFS</p>
+                        </a>
+                </li>
+               
+            </ul>
+        </div>
+    </nav>
+
+
+        
+        <section class="jumbotron text-center bottom-margin-zero">
+          
+            <div class="container">
+             
+                <p class="lead text-muted" id="jumbotron-text">
+                    A Decentralized Educational Library
+                </p>
+                
+                <div class="row form-group">
+                   
+                    <select class="col form-control" id="search-types" disabled="true">
+                        <option value="subject_matter">Subject Matter</option>
+                        <option value="course_title">Course Title</option>
+                        <option value="instructor_name">Instructor Name</option>
+                    </select>
+                   
+                    <input type="text" class="col form-control" id="search-input" placeholder="Physics" disabled="true">
+                    <input type="button" id="search-btn" class="btn btn-default" value="Search" disabled="true" role="button">
+                    <input type="button" id="allCourses-btn" class="btn btn-default" value="List all Courses" disabled="true" role="button">
+                    
+                </div>      
+                
+                <div id="wrapper">
+                    <section>
+                        <div id="pagination-data-container"></div>
+                        <div id="pagination-bar"></div>
+                    </section>
+                </div>
+              
+            </div>
+        </section>
+
+
+        <div class="album text-muted">
+            
+            <div class="container">
+                
+                <div class="row">
+                    <div id="search-count"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <center>
+                            <h2 id="display-info"></h2>
+                        </center>
+                        <center>
+                            <h2 id="loading-display-msg"></h2>
+                        </center>
+                        <center>
+                            <div class="loader"></div>
+                        </center>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+                
+                <div class="row">
+                    <div class="card-columns" id="course-cards"> </div>
+                </div>
+                
+                <div class="row">
+                        <input type="button" id="prev-btn" class="btn btn-default" role="button" value="Previous">
+                        <input type="button" id="nxt-btn" class="btn btn-primary" role="button" value="Next">
+                </div>
+            
+            </div>       
+            
+        </div>
+
+        <footer class="text-muted">
+
+            <div class="container">
+                <p class="float-right">
+                    <a href="#">
+                        Back to top
+                    </a>
+                </p>
+                
+                <p>
+                    &copy; 2018 edChain
+                </p>
+            </div>
+
+        </footer>
+
+        <script type="text/template" id="course-card-template">
+            
+            <div class="card" id="{{courseId}}">
+                <div>
+
+                    <a class="card-link course-link" data-url="{{indexURL}}" href="#">
+                        <!--img class="card-img-top handle-img" src="{{image}}"-->
+                        <center>
+                            <img class="handle-img" src="{{image}}">
+                        </center>
+                    
+                        <div class="card-body">
+                            <center>
+                                <h5 id="course-title-label">{{title}}</h5>
+                            </center>
+                        </div>
+                    </a>
+                </div>
+
+
+
+                <!-- Overlay effect starts here -->
+                <a class="course-link" role="button" data-url="{{indexURL}}">
+                <div class="overlay">  
+                    <div class="overlay-course-title">
+                        <!--h4>{{title}}</h4-->
+                    </div>
+                     
+                    <div class="goto-course-btn">
+                        <!--a class="btn btn-success course-link" data-url="{{indexURL}}" role="button" >Go to the Course</a-->
+                    </div>          
+                </div>
+                </a>
+                <!-- Overlay effect ends -->
+
+
+                <!-- Pinning Functionality -->
+                <!--div class="card-footer text-muted">
+                    <p class="card-text">
+                        <span class="pin-status">
+                            {{#status}} 
+                                {{status}}
+                            {{/status}}
+                            {{^status}}
+                                ...
+                            {{/status}}
+                        </span>
+
+                        <a class="pin-course-link" data-id="{{courseId}}" data-hash="{{courseDirectoryHash}}" data-action="{{action}}" href="#"></a>
+                    </p>
+                </div-->
+            </div>
+
+        </script>
+
+    </body>
+</html>
