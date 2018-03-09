@@ -46,14 +46,14 @@
 
 
 
-    <nav class="navbar navbar-toggleable-sm navbar-light" id="navBar-Id" style="background-color: rgba(103, 162, 220, 1);">
+    <nav class="navbar navbar-toggleable-sm navbar-light" id="navBar-Id" >
         
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         
         <a class="navbar-brand" href="#">
-            <img src="../img/header_logo.png" height="70px" style="margin-top: -18px; padding-top: 10px;">
+            <img src="../img/header_logo.png" id="header-img-id" >
         </a>
         <div class="collapse navbar-collapse" id="navbarNav">
 
@@ -68,7 +68,7 @@
                     <div id="stellarIcon">
                         <a href="#" id="stellar-icon-ref" class="btn">
                             <img id="img-stellar-icon" alt="offline" width="50px" maxheight="70px" src="../img/stellar-rocket.png"> 
-                            <p id="stellar-logo-text" style="color: black">Wallet</p>
+                            <p id="stellar-logo-text">Wallet</p>
                         </a>
                     </div>
 
@@ -79,7 +79,7 @@
                         <div id="ipfs-icon-ref">
                             <img alt="offline" width="50px" maxheight="70px" src="../img/ipfs-logo-128-white-outline.png">  
                         </div>
-                            <p id="swarm-count" style="color: black;">IPFS</p>
+                            <p id="swarm-count">IPFS</p>
                         </a>
                 </li>
                
@@ -93,13 +93,13 @@
           
             <div class="container">
              
-                <p class="lead text-muted" style="font-size: 25px;">
+                <p class="lead text-muted" id="jumbotron-text">
                     A Decentralized Educational Library
                 </p>
                 
                 <div class="row form-group">
                    
-                    <select class="col form-control" id="search-types" style="max-width: 160px;" disabled="true">
+                    <select class="col form-control" id="search-types" disabled="true">
                         <option value="subject_matter">Subject Matter</option>
                         <option value="course_title">Course Title</option>
                         <option value="instructor_name">Instructor Name</option>
@@ -177,7 +177,7 @@
 
         <script type="text/template" id="course-card-template">
             
-            <div class="card" id="{{courseId}}" style="box-shadow: 1px 1px;">
+            <div class="card" id="{{courseId}}">
                 <div>
 
                     <a class="card-link course-link" data-url="{{indexURL}}" href="#">
@@ -188,7 +188,7 @@
                     
                         <div class="card-body">
                             <center>
-                                <h5 id="course-title-label" style="overflow: hidden; max-width: 350px; line-height: 1.4; max-height: 60px;">{{title}}</h5>
+                                <h5 id="course-title-label">{{title}}</h5>
                             </center>
                         </div>
                     </a>

@@ -69,19 +69,22 @@ footer p {
   font-size: 20px;
   font-weight: bolder;
 }
-.card-img-top {
-  
-  
-  height: 253px;
 
+.card-img-top {  
+  height: 253px;
+}
+
+
+#search-types{
+  max-width: 160px;
 }
 
 
 /* Overlay Effect */
 .card {
-  
   width: 250px;
   position: relative;
+  box-shadow: 1px 1px;
  
 }
 
@@ -167,6 +170,9 @@ footer p {
  
 }
 
+#jumbotron-text{
+  font-size: 25px;
+}
 
 
 
@@ -174,11 +180,13 @@ footer p {
 
 #swarm-count{
   margin-top: 1px;
+  color: black;
 }
 
 #stellar-logo-text{
   margin-top:-10px;
   margin-left:0px;
+  color: black;
 }
 
 ul, li{
@@ -206,6 +214,10 @@ ul, li{
 #course-title-label{
   color: black;
   margin-top: 10px;
+  overflow: hidden;
+  max-width: 350px;
+  line-height: 1.4;
+  max-height: 60px;
 }
 
 .handle-img{
