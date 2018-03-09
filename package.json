@@ -5,10 +5,11 @@
   "repository": "edchainio/client-gui",
   "author": "William Mantly <wmantly@gmail.com>",
   "license": "GPL-3.0",
+  "homepage": "https://edchain.io",
   "main": "src/app.js",
   "scripts": {
     "start": "electron src/app.js",
-    "build": "electron-packager . edChain --out dist/ --overwrite --ignore=electron-packager --icon=./build/icon.icns",
+    "build": "electron-packager . edChain --out dist/ --overwrite --ignore=electron-packager --icon=./build/icon.icns ",
     "rpm64": "electron-installer-redhat --src dist/edChain-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite",
     "deb64": "electron-installer-debian --src dist/edChain-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite",
     "darwin": "electron-installer-dmg dist/edChain-darwin-x64/ edchain --out dist/installers/ --overwrite --icon=./build/icon.icns"

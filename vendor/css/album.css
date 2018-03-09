@@ -29,9 +29,6 @@ body {
 
 .bottom-margin-zero {
   margin-bottom: 0rem;
-
-
-
 }
 
 .form-control-attr {
@@ -66,23 +63,75 @@ footer p {
     margin-top: 10%;
     /*position: absolute;*/
 }
+
 #search-count {
   margin-bottom:2em;
-  font-size: large;
+  font-size: 20px;
   font-weight: bolder;
 }
-.card-img-top {
-  
-  
-  height: 253px;
 
+.card-img-top {  
+  height: 253px;
 }
 
+
+#search-types{
+  max-width: 160px;
+}
+
+
+/* Overlay Effect */
 .card {
-  
   width: 250px;
+  position: relative;
+  box-shadow: 1px 1px;
  
 }
+
+.card:hover .overlay {
+  opacity: 0.15;
+}
+
+.card:hover .goto-course-btn{
+  opacity: 1;
+}
+
+.card:hover .card-body{
+  opacity: 1;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: #000000;
+}
+
+
+.goto-course-btn{
+  position: absolute;
+  bottom: 30px;
+  left: 28%;
+  color: black;
+}
+
+.overlay-course-title{
+  padding: 10%;
+  padding-top: 15px;
+  text-align: center;
+  font-weight: bolder;
+  color: white;
+}
+
+
+/* End of the overlay Effect */
+
 
 .card-body{
   height:5em;
@@ -121,11 +170,23 @@ footer p {
  
 }
 
+#jumbotron-text{
+  font-size: 25px;
+}
 
+
+
+
+
+#swarm-count{
+  margin-top: 1px;
+  color: black;
+}
 
 #stellar-logo-text{
-  margin-top:-30px;
-  margin-left:25px;
+  margin-top:-10px;
+  margin-left:0px;
+  color: black;
 }
 
 ul, li{
@@ -151,7 +212,12 @@ ul, li{
 
 
 #course-title-label{
-  color: gray;
+  color: black;
+  margin-top: 10px;
+  overflow: hidden;
+  max-width: 350px;
+  line-height: 1.4;
+  max-height: 60px;
 }
 
 .handle-img{
@@ -159,3 +225,6 @@ ul, li{
   max-width: 250px;
   height: 253px;
 }
+
+
+

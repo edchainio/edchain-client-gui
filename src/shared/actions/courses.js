@@ -141,6 +141,7 @@ var getCourseRoot = exports.getCourseRoot = createAliasedAction( "getCourseRoot"
 });
 
 var getCourseDirectory = exports.getCourseDirectory = createAliasedAction( "getCourseDirectory", function(id, hash){
+
 	return function(dispatch){
 		courses.getCourseDirectory(hash).then(function({data}){
 
@@ -181,6 +182,7 @@ var getCourseContentsDirectroy = exports.getCourseContentsDirectroy = createAlia
 							"value": courses.buildImageUrl(link.Hash)
 						}
 					});
+
                 } else if (link.Name.endsWith('index.htm')){
                     dispatch({
 						"type": "setUrl",

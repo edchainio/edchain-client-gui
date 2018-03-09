@@ -13,6 +13,7 @@ const initialState = remote.getGlobal('state');
 // create store
 const store = configureStore(initialState, 'renderer');
 
+
 var currentPage = 1;
  
 var isLoading = true;
@@ -56,23 +57,24 @@ var __ui = {
     setIPFSStatusButton: function (isOnline){
         if(isOnline){
             $('#ipfs-icon-ref').removeClass('btn-warning');
-            $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-success');
+            $('#ipfs-icon-ref').removeClass('btn-danger').addClass('btn-success');
             $('#img-ipfs-icon').prop("alt",'IPFS Online');
+
         }
         else if(!isReconnecting){
             $('#ipfs-icon-ref').removeClass('btn-warning');
-            $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-outline-danger');
+            $('#ipfs-icon-ref').removeClass('btn-success').addClass('btn-danger');
         }
 
         if(isReconnecting){
             $('#ipfs-icon-ref').removeClass('btn-success');
-            $('#ipfs-icon-ref').removeClass('btn-outline-danger').addClass('btn-warning');
+            $('#ipfs-icon-ref').removeClass('btn-danger').addClass('btn-warning');
         }
     }, 
     createHomePageCard: function(image, title, indexURL, courseDirectoryHash, courseId, action){
         __ui.loadingComplete(true);
         action = action || "...";
-   
+
         var rendered = Mustache.render(
             $("#course-card-template").html(),
             { image, title, indexURL, courseDirectoryHash, courseId, action }
@@ -84,7 +86,7 @@ var __ui = {
           $('#course-cards').empty();
     },
     showPeerCount: function(peerCount){
-         $('#swarm-count').html(peerCount);
+         $('#swarm-count').html("Peers: "+peerCount);
          if(!isReconnecting){
             if(peerCount<=1){
                 $('#loading-display-msg').html("Fetching data from IPFS..");
@@ -159,18 +161,28 @@ var __ui = {
         //loadingComplete
     },
     prevResult: function(){
-        if(currentPage>=2){
+        if(currentPage>1){
             __ui.clearCard();
             let data = store.getState().courses.pageMap;
 
             let i=0;
             let pSize = store.getState().courses.pageSize;
             let startPointer = pSize*currentPage-17;
-            console.log("currentPage: "+currentPage.toString());
             
 
             currentPage=currentPage-1;
 
+
+            for(i=0;i<=pSize;i++){
+                var content = data.get(startPointer);
+                if(content!=null){
+                    store.dispatch(coursesActions.dispatchCourseRoot(content));
+                    startPointer++;
+                }
+                console.log(startPointer);
+            }
+
+            /*
             data.forEach(function(val){
                 var content=data.get(startPointer);
 
@@ -180,7 +192,7 @@ var __ui = {
                         startPointer++;
                     }
                     console.log(startPointer);
-        })
+        }) */
         }
         
     },
@@ -249,12 +261,10 @@ var applyState = function applyState(state){
     __ui.showPeerCount(state.ipfs.peers);
 
 
-
    //apply courses once all items are loaded
     if(Object.keys(state.courses.items).length === store.getState().courses.resultCount){
 
         applyCourses(state.courses.items);
-
     }
    
 };
@@ -319,10 +329,6 @@ var applyCourses = function(items){
     else if(!isLoading){
          $('#nxt-btn').show();
     }
-
-
-    
-
 
     courseKeys.forEach(function(key){
         
@@ -422,17 +428,16 @@ function resetSearch(){
 }
 
 
-$(document).ready(function() {
 
+$(document).ready(function() {
 
     // On Page Reload
     isIpfsOnline = store.getState()['ipfs'].isOnline;
 
-
     //__ui.loadingComplete(false);
      resetSearch();
 
-
+    
      // Show the previous button - Still in development
      //$('#prev-btn').show();
     
@@ -443,7 +448,7 @@ $(document).ready(function() {
         __actions[(action === "unpin" ? "removePin" : "addPin")](id, hash);
     });
 
-    $("#ipfs-icon-ref").on("click", function(event){
+    $("#ipfs-settings").on("click", function(event){
         event.preventDefault();
         __actions.showSettings();
     });

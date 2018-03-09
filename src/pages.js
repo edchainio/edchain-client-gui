@@ -75,7 +75,7 @@ var createChildWindow = function (mainWindow, url) {
         show:true,
         hasIpfsLogging: true,       
         center: true,
-        width: 0.6*electronScreen.width,
+        width: 0.7*electronScreen.width,
         height: 0.7*electronScreen.height
 
     });
@@ -109,9 +109,10 @@ var createChildWindow = function (mainWindow, url) {
             });
         });
     }
-   
-
+  
+ 
     */
+
 
     child.loadURL(url);
     return child;
@@ -173,8 +174,8 @@ var createMainWindow = function createMainWindow(){
     // and 75% of the device height. Window will be centered
 
     mainWindow = createWindow({
-        width: 0.70*electronScreen.width,
-        height: 0.75*electronScreen.height,
+        width: Math.round(0.74*electronScreen.width),
+        height: 0.80*electronScreen.height,
         center: true,
         //frame: false,
         icon: path.resolve(__dirname, "public/img/icon.png")
