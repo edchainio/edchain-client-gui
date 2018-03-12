@@ -2,14 +2,14 @@
 
 var path = require('path');         // https://nodejs.org/api/path.html
 var url = require('url');           // https://nodejs.org/api/url.html
-var Menu = require("menu");
+
 
 const configureStore = require('./shared/store/configureStore');
 const log = require('electron-log');
 const platform = require('os').platform();
 
 const { 
-    ipcMain, app, protocol 
+    ipcMain, app, protocol, Menu
 } = require('electron');
 
 const { registry } = require('electron-redux');
@@ -100,8 +100,9 @@ app.on('ready', function(){
     start();
 
 
-    if(platform==="darwin"){
+    if(platform==="linux"){
 
+        console.log("linux called");
      // Create the Application's main menu
      var template = [{
         label: "Application",
