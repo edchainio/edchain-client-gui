@@ -78,26 +78,10 @@ var connectToDedicatedNodes = function(){
 	if(isOn){
 		clearInterval(intervalId);
 		// Connect to Node1
-		getIPFS().swarm.connect(dedNode1, function(err){
-			if(err){
-				log.info("Trouble connecting to the dedicated node 1!", err);
-			}
-			
-			else{
-				log.info("Connected to the dedicated node 1!");
-			}
-		}); 	
+		swarmConnect(dedNode1);
 
 		// Connect to Node2
-		getIPFS().swarm.connect(dedNode2, function(err){
-			if(err){
-				log.info("Trouble connecting to the dedicated node 2!", err);
-			}
-			
-			else{
-				log.info("Connected to the dedicated node 2!");
-			}
-		}); 	
+		swarmConnect(dedNode2);
 	}
 };
 
@@ -163,6 +147,17 @@ var ipfsLogTail = function(fn){
 };
 
 
+var swarmConnect = function(node){
+ 
+	ipfs.swarm.connect(node, function(err){
+		if(err){
+			log.info("Trouble connecting to the dedicated node!",node, err);
+		}
+		else{
+			log.info("Connected to the dedicated node",node);
+		}
+	});
+};
 
 var ipfsStatus = function(func){
  
