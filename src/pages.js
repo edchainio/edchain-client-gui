@@ -76,7 +76,8 @@ var createChildWindow = function (mainWindow, url) {
         hasIpfsLogging: true,       
         center: true,
         width: 0.7*electronScreen.width,
-        height: 0.7*electronScreen.height
+        height: 0.7*electronScreen.height,
+        useContentSize: true
 
     });
 
