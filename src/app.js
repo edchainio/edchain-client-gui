@@ -100,9 +100,7 @@ app.on('ready', function(){
     start();
 
 
-    if(platform==="linux"){
-
-        console.log("linux called");
+    if(platform==="darwin"){
      // Create the Application's main menu
      var template = [{
         label: "Application",
