@@ -28,7 +28,13 @@ var startIpfs = function(callback){
 
 		const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
 
+		if(platform==='win32'){
+			console.log("IPFS Path: "+ipfsPath);
+		ipfsProcess = spawn(ipfsPath+'.exe ', ['daemon', '--init']);	
+		}
+		else{
 		ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
+		}
 
 
 		ipfsProcess.stdout.on('data', function(data){
