@@ -80,7 +80,7 @@ var createChildWindow = function (mainWindow, url) {
         width: 0.7*electronScreen.width,
         height: 0.7*electronScreen.height,
         webPreferences:{
-            zoomFactor: 1.0
+            zoomFactor: 0.75
         }
 
     });

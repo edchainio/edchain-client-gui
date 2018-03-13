@@ -1,6 +1,6 @@
 {
   "name": "edChain-gui",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Desktop client for edChain",
   "repository": "edchainio/client-gui",
   "author": "William Mantly <wmantly@gmail.com>",
@@ -31,7 +31,6 @@
     "ipfs-api": "^15.0.1",
     "menu": "^0.2.5",
     "mustache": "^2.3.0",
-    "redux-thunk": "^2.2.0",
-    "self-update": "0.0.1"
+    "redux-thunk": "^2.2.0"
   }
 }
