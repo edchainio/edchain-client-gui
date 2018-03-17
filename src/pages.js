@@ -17,7 +17,8 @@ var __logSubscribers = {};
 var getIcon = (function(){
     var iconMap = {
         "darwin": "/public/img/icon.icns",
-        "linux": "/public/img/icon.png"
+        "linux": "/public/img/icon.png",
+        "win32": "/public/img/icon.png"
     };
 
     return function(){
@@ -75,6 +76,7 @@ var createChildWindow = function (mainWindow, url) {
         show:true,
         hasIpfsLogging: true,       
         center: true,
+        autoHideMenuBar: true,
         width: 0.7*electronScreen.width,
         height: 0.7*electronScreen.height,
         webPreferences:{
@@ -180,6 +182,7 @@ var createMainWindow = function createMainWindow(){
         width: Math.round(0.74*electronScreen.width),
         height: 0.80*electronScreen.height,
         center: true,
+        autoHideMenuBar: true,
         //frame: false,
         icon: path.resolve(__dirname, "public/img/icon.png")
     });
