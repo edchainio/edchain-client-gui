@@ -22,13 +22,23 @@ var intervalId = null;
 
 var ipfs = null;
 
-
 // api
 var startIpfs = function(callback){
 
 		const ipfsPath = path.resolve(__dirname, '../../bin', platform, 'ipfs');
 
-		ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
+		if(platform==='win32'){
+			// Remove the lock files, if any
+			ipfsUnlock = spawn(ipfsPath+'.exe ', ['repo', 'fsck']);
+			ipfsUnlock.on('error', (err)=>{
+				console.log("Removing IPFS lock files failed!");
+			});
+			
+			ipfsProcess = spawn(ipfsPath+'.exe ', ['daemon', '--init']);	
+		}
+		else{
+			ipfsProcess = spawn(ipfsPath, ['daemon', '--init']);
+		}
 
 
 		ipfsProcess.stdout.on('data', function(data){
