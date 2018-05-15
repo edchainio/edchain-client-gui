@@ -5,10 +5,11 @@ const platform = require('os').platform();
 
 const electron = require('electron');
 
-
 const {
     ipcMain, BrowserWindow, Tray 
 } = require('electron');
+
+require('electron-reload')(__dirname);
 
 var __windows = {};
 var __logSubscribers = {};
