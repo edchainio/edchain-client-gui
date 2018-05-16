@@ -1,6 +1,6 @@
 # Desktop client for edChain
 
-This is a client for edchain based on the electron framework. At present, this works on linux but we are working to make is macos and windows compatible. 
+This is a client for edchain based on the electron framework.
 
 Note: Version 6x, or higher, of NodeJS is required.
 
@@ -16,14 +16,35 @@ Enter the following commands to get edChain up-and-running:
 
 Note: You have have to preface some of these commands with `sudo` to meet privilege requirements defined by your operating system.
 
+### Download & Installation
+
 * Clone this repository:
 `git clone https://github.com/edchainio/client-gui.git`
 
 * Move into the directory of the project:
 `cd client-gui`
 
-* Install the NodeJS requirements:
+* Install the NodeJS dependencies:
 `npm install`
+
+### Development Build
+
+* Run start script:
+`npm start`
+
+### Production Build
+
+* For Windows:
+`npm run build`
+The output distribution files will be located at edchain-client-gui/dist/edChain-win32-x64
+
+* For Linux Dist:
+`npm run deb64`
+The output distribution files will be located at edchain-client-gui/dist/installer
+
+* For MacOS/Darwin Dist:
+`npm run darwin`
+The output distribution files will be located at edchain-client-gui/dist/installer
 
 ## Readings
 If you are not familiar with git, please look at this tutorial: https://try.github.io/levels/1/challenges/1

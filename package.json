@@ -11,15 +11,14 @@
     "start": "electron src/app.js",
     "build": "electron-packager . edChain --out dist/ --overwrite --ignore=electron-packager --icon=./build/edchain-logo.icns",
     "rpm64": "electron-installer-redhat --src dist/edChain-linux-x64/ --dest dist/installers/ --arch x86_64 --overwrite",
-    "deb64": "electron-installer-debian --src dist/edChain-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite",
-    "darwin": "electron-installer-dmg dist/edChain-darwin-x64/ edchain --out dist/installers/ --overwrite --icon=./build/edchain-logo.icns"
+    "deb64": "npm install electron-installer-debian && npm run build && electron-installer-debian --src dist/edChain-linux-x64/ --dest dist/installers/ --arch amd64 --overwrite",
+    "darwin": "npm install electron-installer-dmg && npm run build && electron-installer-dmg dist/edChain-darwin-x64/ edchain --out dist/installers/ --overwrite --icon=./build/edchain-logo.icns"
   },
   "devDependencies": {
     "electron": "^1.7.9",
-    "electron-installer-debian": "^0.6.0",
-    "electron-installer-dmg": "^0.2.1",
     "electron-log": "^2.2.11",
-    "electron-packager": "^9.1.0"
+    "electron-packager": "^9.1.0",
+    "electron-reload": "^1.2.2"
   },
   "dependencies": {
     "axios": "^0.17.1",
