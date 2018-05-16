@@ -19,7 +19,8 @@
     "electron-installer-debian": "^0.6.0",
     "electron-installer-dmg": "^0.2.1",
     "electron-log": "^2.2.11",
-    "electron-packager": "^9.1.0"
+    "electron-packager": "^9.1.0",
+    "electron-reload": "^1.2.2"
   },
   "dependencies": {
     "axios": "^0.17.1",
